@@ -1,0 +1,71 @@
+body{
+    background-color: #FDFFB8;
+}
+
+#title{
+    display: flex;
+	justify-content: center;
+	text-align: center;
+    margin-top: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+    width: 450px;
+	height: 120px;
+}
+
+#form{
+    display: flex;
+	justify-content: center;
+	text-align: center;
+    margin-top: auto;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+    background: white;
+    width: 680px;
+    height: 400px;
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px 0 grey ;
+}
+
+#login{
+    font-size: 40px;
+    margin-top: 10px;
+}
+
+#text_line{
+    display: flex;
+	justify-content: center;
+    margin-top: -25px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 35px;
+    font-size: 15px;
+    width: 500px;
+    height: 25px;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+}
+
+#submit_bottun{
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	width: 200px;
+	height: 50px;
+    border-radius: 10px;
+	background-color: #FFA954;
+	border:1px solid #000000;
+	color: #ffffff;
+	font-size: 1.5rem;
+	margin-top: -15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+}
+
+#gorilla{
+    color: #15B7B7;
+}
