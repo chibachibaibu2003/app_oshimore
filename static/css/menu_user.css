@@ -1,0 +1,73 @@
+#calendar {
+    float: left;
+    margin-left: 50px;
+}
+
+.cal {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.caltitle {
+    margin-left: 45px;
+}
+
+.calback {
+    float: left;
+    margin-top: 95px;
+    width: 4.2vw;
+}
+
+.calnext {
+    float: right;
+    margin-top: 95px;
+    width: 4vw;
+}
+
+.calwe {
+    text-align: center;
+}
+
+.calday {
+    border: 1.5px solid black;
+    padding: 5px 30px 20px 5px;
+}
+
+.event {
+    display: inline-block;
+    width: 80px;
+    height: 18px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid black;
+    text-decoration: none;
+    color: black;
+    background-color: aquamarine;
+}
+
+.eventlink {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: black;
+    text-decoration: none;
+}
+
+
+.calday:first-child {
+    color: red;
+}
+
+.calday:last-child {
+    color: royalblue;
+}
+
+.calwe:first-child {
+    color: red;
+}
+
+.calwe:last-child {
+    color: royalblue;
+}
