@@ -18,11 +18,11 @@
         </div>
         <nav class="ham_nav">
             <ul>
-                <li><a class="ham_menu" href="">コミュニティ検索</a></li>
-                <li><a class="ham_menu" href="">プロフィール編集</a></li>
-                <li><a class="ham_menu" href="">カレンダー表示の設定</a></li>
-                <li><a class="ham_menu" href="">コミュニティ作成</a></li>
-                <li class="logout"><a class="ham_logout" href="">ログアウト</a></li>
+                <li class="ham_li"><a class="ham_menu" href="">コミュニティ検索</a></li>
+                <li class="ham_li"><a class="ham_menu" href="">プロフィール編集</a></li>
+                <li class="ham_li"><a class="ham_menu" href="">カレンダー表示の設定</a></li>
+                <li class="ham_li"><a class="ham_menu" href="">コミュニティ作成</a></li>
+                <li><a class="ham_logout" href="">ログアウト</a></li>
             </ul>
         </nav>
         <div class="black-bg" id="js-black-bg"></div>
@@ -32,7 +32,6 @@
             <td class="mypage"><a class="block" href="">マイページ</a></td>
         </table>
     </div>
-
     {% block content %}
     {% endblock %}
     
@@ -49,7 +48,7 @@
             nav.classList.remove('open');
         });
 
-        {% block content %}
+        {% block jscode %}
         {% endblock %}
         
     </script>
