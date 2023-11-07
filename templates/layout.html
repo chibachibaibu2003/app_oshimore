@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='/css/layout.css')}}">
+    {% block css %}
+    {% endblock %}
+    <title>Oshi More!</title>
+</head>
+<body>
+    <header id="js-header">
+        <img class="title" src="{{url_for('static',filename='/imges/icon.png')}}">
+        <div class="hamburger" id="js-hamburger">
+            <span class="hamburger_line hamburger_line-1"></span>
+            <span class="hamburger_line hamburger_line-2"></span>
+            <span class="hamburger_line hamburger_line-3"></span>
+        </div>
+        <nav class="ham_nav">
+            <ul>
+                <li><a class="ham_menu" href="">コミュニティ検索</a></li>
+                <li><a class="ham_menu" href="">プロフィール編集</a></li>
+                <li><a class="ham_menu" href="">カレンダー表示の設定</a></li>
+                <li><a class="ham_menu" href="">コミュニティ作成</a></li>
+                <li class="logout"><a class="ham_logout" href="">ログアウト</a></li>
+            </ul>
+        </nav>
+        <div class="black-bg" id="js-black-bg"></div>
+    </header>
+    <div class="community_line">
+        <table class="community_box">
+            <td class="mypage"><a class="block" href="">マイページ</a></td>
+        </table>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+    
+    <script>
+        //ハンバーガーメニュー
+        var nav = document.getElementById("js-header");
+        var hamburger = document.getElementById('js-hamburger');
+        var blackBg = document.getElementById('js-black-bg');
+
+        hamburger.addEventListener('click', function () {
+            nav.classList.toggle('open');
+        });
+        blackBg.addEventListener('click', function () {
+            nav.classList.remove('open');
+        });
+
+        {% block content %}
+        {% endblock %}
+        
+    </script>
+
+</body>
+</html>
