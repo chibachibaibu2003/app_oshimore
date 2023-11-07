@@ -1,5 +1,6 @@
 body {
     margin: 0px;
+    font-family: 'Meiryo';
 }
 
 h1 {
@@ -9,18 +10,17 @@ h1 {
 header {
     background-color: #FDFFB8;
     width: auto;
-    height: 10vh;
-    padding-top: 10px
+    height: 8vh;
 }
 
 .title {
-    height: 50px;
+    height: 40px;
 }
 
 .hamburger {
     position: absolute;
     right: 20px;
-    top: 20px;
+    top: 10px;
     width: 50px;
     height: 40px;
     cursor: pointer;
@@ -29,7 +29,7 @@ header {
 
 .hamburger_line {
     position: absolute;
-    width: 50px;
+    width: 40px;
     height: 3px;
     right: 0;
     background-color: #000;
@@ -41,11 +41,11 @@ header {
 }
 
 .hamburger_line-2 {
-    top: 18px;
+    top: 12px;
 }
 
 .hamburger_line-3 {
-    top: 36px;
+    top: 24px;
 }
 
 .open .hamburger_line-1 {
@@ -64,9 +64,9 @@ header {
 
 .ham_nav {
     position: fixed;
-    top: 74px;
+    top: 50px;
     right: 0;
-    height: 88.3vh;
+    height: 92vh;
     width: 20%;
     background-color: white;
     border: 1px solid gray;
@@ -107,17 +107,22 @@ ul {
 
 li {
     list-style: none;
+}
+
+.ham_li {
     margin-bottom: 30px;
 }
 
 .ham_menu {
     display: inline-block;
     text-decoration: none;
-    width: 90%;
-    padding: 10px;
+    width: 80%;
+    padding: 7px;
+    margin-left: 15px;
     border: 2px solid #707070;
     border-radius: 20px;
     color: white;
+    font-size: 0.8rem;
     background-color: #FFA954;
     text-align: center;
 }
@@ -125,19 +130,21 @@ li {
 .ham_logout {
     display: inline-block;
     text-decoration: none;
-    width: 90%;
-    padding: 10px;
-    margin-top: 100px;
+    width: 80%;
+    padding: 7px;
+    margin-top: 200px;
+    margin-left: 15px;
     border: 2px solid #707070;
     border-radius: 20px;
     color: white;
+    font-size: 0.8rem;
     background-color: red;
     text-align: center;
 }
 
 .community_line {
     float: left;
-    height: 88.3vh;
+    height: 92vh;
     width: 150px;
     background-color: #D9D9D9;
 }
