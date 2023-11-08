@@ -1,6 +1,7 @@
 #calendar {
     float: left;
-    margin-left: 50px;
+    margin-left: 20px;
+    margin-top: 30px;
 }
 
 .cal {
@@ -14,13 +15,17 @@
 
 .calback {
     float: left;
-    margin-top: 95px;
+    margin-left: 50px;
+    margin-top: 170px;
+    cursor: pointer;
     width: 4.2vw;
 }
 
 .calnext {
     float: right;
-    margin-top: 95px;
+    margin-right: 110px;
+    margin-top: 170px;
+    cursor: pointer;
     width: 4vw;
 }
 
@@ -45,6 +50,18 @@
     text-decoration: none;
     color: black;
     background-color: aquamarine;
+}
+
+.empty_event {
+    display: inline-block;
+    width: 80px;
+    height: 18px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    color: white;
 }
 
 .eventlink {
