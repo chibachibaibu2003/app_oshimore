@@ -10,7 +10,7 @@
 </head>
 <body>
     <header id="js-header">
-        <img class="title" src="{{url_for('static',filename='/imges/icon.png')}}">
+        <a  href="{{url_for('top')}}"><img class="title"src="{{url_for('static',filename='/imges/icon.png')}}"><a>
         <div class="hamburger" id="js-hamburger">
             <span class="hamburger_line hamburger_line-1"></span>
             <span class="hamburger_line hamburger_line-2"></span>
@@ -28,8 +28,25 @@
         <div class="black-bg" id="js-black-bg"></div>
     </header>
     <div class="community_line">
-        <table class="community_box">
-            <td class="mypage"><a class="block" href="">マイページ</a></td>
+        <table class="community_box" >
+            <tr>
+                <td><a class="block" href="{{url_for('top')}}">マイページ</a></td>
+            </tr>
+            {%for data in datas%}
+            <tr>
+                <td><a class="block" href="{{url_for('top')}}">{{data}}</a></td>
+            </tr>
+            {%endfor%}
+        </table>
+        <table class="invitations_box">
+            <tr>
+                <td><a class="block">招待されています</a></td>
+            </tr>
+            {%for data in invitations%}
+            <tr>
+                <td><a class="block" href="{{url_for('top')}}">{{data}}</a></td>
+            </tr>
+            {%endfor%}
         </table>
     </div>
     {% block content %}
