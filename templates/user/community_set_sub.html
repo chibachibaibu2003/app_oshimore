@@ -1,0 +1,18 @@
+{% extends "header.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
+<link rel="stylesheet" href="/static/css/community_set_master.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+
+{% endblock %}
+
+{%block content%}
+    <div>
+        <h1 class="h1">コミュニティ設定</h1>
+        <i class="fa-solid fa-arrow-right fontawesome-size"></i>
+    </div>
+    <a href="" class="btn_1">コミュニティ編集</a>
+    <a href="" class="btn_2">通報があった投稿</a>
+    <a href="" class="btn_4-2">コミュニティ招待</a>
+    <a href="" class="btn_6">コミュニティ退会</a>
+{%endblock%}
