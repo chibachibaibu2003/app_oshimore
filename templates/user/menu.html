@@ -4,15 +4,17 @@
 {% endblock %}
 
 {% block content %}
+<a href="{{url_for('monthback')}}"><img class="calback" href="{{url_for('monthback')}}"src="{{url_for('static',filename='/imges/calback.png')}}"></a>
 <div id="calendar"></div>
+<a href="{{url_for('monthnext')}}"><img class="calnext"href="{{url_for('monthnext')}}" src="{{url_for('static',filename='/imges/calnext.png')}}"></a>
 {% endblock %}
 
 
 {%block jscode%}
 const weeks = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const date = new Date()
-const year = date.getFullYear()
-const month = date.getMonth() + 1
+const year = {{year}}
+const month = {{month}}
 const startDate = new Date(year, month - 1, 1) // 月の最初の日を取得
 const endDate = new Date(year, month, 0) // 月の最後の日を取得
 const endDayCount = endDate.getDate() // 月の末日
@@ -20,7 +22,7 @@ const startDay = startDate.getDay() // 月の最初の日の曜日を取得
 let dayCount = 1 // 日にちのカウント
 let calendarHtml = '' // HTMLを組み立てる変数
 calendarHtml += '<h1 class="caltitle">' + year + '/' + month + '</h1>'
-calendarHtml += '<table class="cal"><img class="calback" src="{{url_for('static',filename='/imges/calback.png')}}">'
+calendarHtml += '<table class="cal">'
 //カレンダーのイベントをflaskから配列で日付ごとに入れたのを受け取る
 // 曜日の行を作成
 for (let i = 0; i < weeks.length; i++) {
@@ -33,10 +35,10 @@ for (let w = 0; w < 5; w++) {
     for (let d = 0; d < 7; d++) {
         if (w == 0 && d < startDay) {
             // 1行目で1日の曜日の前
-            calendarHtml += '<td class="calday"></td>'
+            calendarHtml += '<td class="calday"><a style="color:white">1</a><br><a class="empty_event">イベント名</a><br></td>'
         } else if (dayCount > endDayCount) {
             // 末尾の日数を超えた
-            calendarHtml += '<td class="calday"></td>'
+            calendarHtml += '<td class="calday"><a style="color:white">1</a><br><a class="empty_event">イベント名</a><br></td>'
         } else {
             //イベントが入っていない日付は色を消したのを入れる。
             calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="event"href="">' + 'イベント名' + '</a><br>' + '</td>'
@@ -45,7 +47,7 @@ for (let w = 0; w < 5; w++) {
     }
     calendarHtml += '</tr>'
 }
-calendarHtml += '<img class="calnext" src="{{url_for('static',filename='/imges/calnext.png')}}"></table>'
+calendarHtml += '</table>'
 
 document.querySelector('#calendar').innerHTML = calendarHtml
 {%endblock%}
