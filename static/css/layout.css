@@ -144,7 +144,7 @@ li {
 
 .community_line {
     float: left;
-    height: 92vh;
+    height: 91.7vh;
     width: 150px;
     overflow-y: scroll;
     text-overflow: ellipsis;

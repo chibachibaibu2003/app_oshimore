@@ -21,6 +21,7 @@ const endDayCount = endDate.getDate() // 月の末日
 const startDay = startDate.getDay() // 月の最初の日の曜日を取得
 let dayCount = 1 // 日にちのカウント
 let calendarHtml = '' // HTMLを組み立てる変数
+let monthevent=[] //dayeventの1ヶ月分のイベント情報を日ごとに保存しておくリスト
 calendarHtml += '<h1 class="caltitle">' + year + '/' + month + '</h1>'
 calendarHtml += '<table class="cal">'
 //カレンダーのイベントをflaskから配列で日付ごとに入れたのを受け取る
@@ -41,8 +42,28 @@ for (let w = 0; w < 5; w++) {
             calendarHtml += '<td class="calday"><a style="color:white">1</a><br><a class="empty_event">イベント名</a><br></td>'
         } else {
             //イベントが入っていない日付は色を消したのを入れる。
-            calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="event"href="">' + 'イベント名' + '</a><br>' + '</td>'
-            dayCount++
+            let countnum=0
+            let searchDay={{searchDay|tojson}}+dayCount
+            let eventList={{eventList|tojson}}
+            let dayevent=[] //各日付のイベント情報を保存しておくリスト
+
+            for (let i = 0; i <{{num1}}; i++ ){
+                for (let k = 0; k < eventList[i].length; k++){
+                    if (eventList[i][k][2]==searchDay){
+                        countnum++
+                        dayevent.push(eventList[i][k])
+                    }
+                }
+            }
+            console.log(dayevent)
+            if (countnum!=0){
+                let checkday=dayCount-1
+                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="event"href="">'+ dayevent[0][1] +'</a><br>'+'<a class="hidden" style="display:none;">'+dayevent+'</a>' + '</td>'
+            }else{
+                monthevent.push(0)
+                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="empty_event">'+ 'イベント名'+'</a><br></td>'
+            }
+            dayCount++    
         }
     }
     calendarHtml += '</tr>'
@@ -50,4 +71,5 @@ for (let w = 0; w < 5; w++) {
 calendarHtml += '</table>'
 
 document.querySelector('#calendar').innerHTML = calendarHtml
+
 {%endblock%}
