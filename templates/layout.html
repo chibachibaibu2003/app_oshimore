@@ -34,17 +34,17 @@
             </tr>
             {%for data in datas%}
             <tr>
-                <td><a class="block" href="{{url_for('top')}}">{{data}}</a></td>
+                <td><a class="block" href="{{url_for('top')}}">{{ data[0][1] }}</a></td>
             </tr>
             {%endfor%}
         </table>
         <table class="invitations_box">
             <tr>
-                <td><a class="block">招待されています</a></td>
+                <td><a class="block">招待コミュニティ</a></td>
             </tr>
             {%for data in invitations%}
             <tr>
-                <td><a class="block" href="{{url_for('top')}}">{{data}}</a></td>
+                <td><a class="block" href="{{url_for('top')}}">{{ data[0][1] }}</a></td>
             </tr>
             {%endfor%}
         </table>
