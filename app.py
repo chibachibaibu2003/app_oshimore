@@ -43,7 +43,7 @@ def monthback():
     datas=[]
     invitations=[]
     eventList=[]
-    
+    changeday=False
     comIdList=db.getcomId_to_accId(1)
     comIdList2=db.getcomId_to_accId_invit(1)
     if(len(comIdList)!=0):

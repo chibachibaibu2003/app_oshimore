@@ -48,6 +48,7 @@
     text-overflow: ellipsis;
     border: 1px solid black;
     text-decoration: none;
+    cursor: pointer;
     color: black;
     background-color: aquamarine;
 }
@@ -87,4 +88,69 @@
 
 .calwe:last-child {
     color: royalblue;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 70vh;
+    width: 60vw;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: white;
+    border: 2px solid gray;
+    opacity: 1;
+    visibility: hidden;
+    overflow-y: scroll;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 200;
+}
+
+.popblackBg {
+    opacity: 0.3;
+    z-index: 200;
+    visibility: visible;
+}
+
+.pop {
+    opacity: 1;
+    visibility: visible;
+}
+
+.backbutton {
+    float: right;
+    cursor: pointer;
+    width: 4vw;
+}
+
+.popupList {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 75%;
+    width: 80%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.popupEventList {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    height: 100%;
+    width: 80%;
+    transform: translateX(-20%) translateY(-50%);
+}
+
+.popupevent {
+    display: inline-block;
+    color: black;
+    border: 1px solid black;
+    width: 100%;
+    height: 50%;
+    font-size: 1.5rem;
+    text-decoration: none;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

@@ -24,7 +24,7 @@ header {
     width: 50px;
     height: 40px;
     cursor: pointer;
-    z-index: 300;
+    z-index: 200;
 }
 
 .hamburger_line {
@@ -90,14 +90,14 @@ header {
     width: 100vw;
     height: 100vh;
     background-color: #000;
-    opacity: 0;
+    opacity: 0.3;
     visibility: hidden;
-    transition: all 0.5s;
     cursor: pointer;
     z-index: 100;
 }
 
 .open .black-bg {
+    top: 8vh;
     visibility: visible;
 }
 
