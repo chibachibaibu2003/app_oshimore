@@ -7,6 +7,10 @@
 <a href="{{url_for('monthback')}}"><img class="calback" href="{{url_for('monthback')}}"src="{{url_for('static',filename='/imges/calback.png')}}"></a>
 <div id="calendar"></div>
 <a href="{{url_for('monthnext')}}"><img class="calnext"href="{{url_for('monthnext')}}" src="{{url_for('static',filename='/imges/calnext.png')}}"></a>
+<div class="popup">
+    <a><img  class="backbutton"src="{{url_for('static',filename='/imges/back.png')}}"></a>
+    <ul class="popupList"></ul>
+</div>
 {% endblock %}
 
 
@@ -55,10 +59,13 @@ for (let w = 0; w < 5; w++) {
                     }
                 }
             }
-            console.log(dayevent)
+            
             if (countnum!=0){
                 let checkday=dayCount-1
-                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="event"href="">'+ dayevent[0][1] +'</a><br>'+'<a class="hidden" style="display:none;">'+dayevent+'</a>' + '</td>'
+                monthevent.push(dayevent)
+                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="event"id='
+                calendarHtml += checkday
+                calendarHtml +='>'+ dayevent[0][1] +'</a><br>'
             }else{
                 monthevent.push(0)
                 calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="empty_event">'+ 'イベント名'+'</a><br></td>'
@@ -68,8 +75,40 @@ for (let w = 0; w < 5; w++) {
     }
     calendarHtml += '</tr>'
 }
+console.log(monthevent)
 calendarHtml += '</table>'
 
 document.querySelector('#calendar').innerHTML = calendarHtml
+
+let popup=document.querySelector('.popup')
+let event=document.querySelectorAll('.event')
+let backbutton=document.querySelector('.backbutton')
+let ul=document.querySelector('.popupList')
+
+event.forEach(function(events){
+    events.addEventListener('click',function () {
+        let checkday=events.id
+        blackBg.classList.toggle('popblackBg');
+        for (let i=0;i<monthevent[checkday].length;i++){
+            let li=document.createElement('li')
+            ul.appendChild(li).innerHTML='<a class="popupevent"href="">'+monthevent[checkday][i][1]+'</a>'
+        }
+        popup.classList.toggle('pop');
+    })
+})
+
+backbutton.addEventListener('click',function () {
+    blackBg.classList.remove('popblackBg')
+    popup.classList.remove('pop')
+    ul.innerHTML=''
+})
+
+blackBg.addEventListener('click', function () {
+    nav.classList.remove('open')
+    blackBg.classList.remove('popblackBg')
+    popup.classList.remove('pop')
+    ul.innerHTML=''
+})
+
 
 {%endblock%}
