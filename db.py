@@ -62,3 +62,65 @@ def getevent_to_comId(id,day):
         cursor.close()
         connection.close()
     return list
+
+def register_community(data):
+    sql="insert into community values(default,%s,%s,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(data[0],data[1],data[2],data[3]))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def get_community_id():
+    sql="SELECT MAX(community_id) FROM community"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql)
+        id=cursor.fetchone()
+        
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+        # idはタプルです
+    return id
+
+def get_hidden_flag(com_id):
+    sql="SELECT public_private FROM community WHERE community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(com_id,))
+        get_hidden_flag=cursor.fetchone()
+        
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+        #タプルです
+    return get_hidden_flag
+
+def join_community_master(data):
+    sql="insert into register_community values(%s,%s,%s,%s,%s,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(data[0],data[1],data[2],data[3],data[4],data[5],data[6]))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
