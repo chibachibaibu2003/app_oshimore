@@ -107,6 +107,74 @@
     z-index: 200;
 }
 
+.popup_b {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 75vh;
+    width: 45vw;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: white;
+    border: 2px solid gray;
+    opacity: 0;
+    visibility: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 200;
+}
+
+.popup_b_title {
+    display: flex;
+    justify-content: center;
+    font-size: 2.2rem;
+}
+
+.popup_b_form {
+    position: fixed;
+    left: 60%;
+    width: 90%;
+    transform: translateX(-60%);
+}
+
+.popup_b_text {
+    margin-bottom: 10px;
+}
+
+.input_a {
+    width: 70%;
+    height: 22px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.com_explanation {
+    margin-top: 10px;
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid black;
+    white-space: pre-wrap;
+}
+
+.submit_button {
+    display: inline-block;
+    position: fixed;
+    left: 40%;
+    transform: translateX(-40%);
+    text-decoration: none;
+    width: 40%;
+    padding: 7px;
+    margin-left: 15px;
+    border: 2px solid #707070;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.8rem;
+    background-color: #FFA954;
+    text-align: center;
+}
+
+
 .popblackBg {
     opacity: 0.3;
     z-index: 200;

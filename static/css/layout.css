@@ -111,6 +111,7 @@ li {
 
 .ham_li {
     margin-bottom: 30px;
+    cursor: pointer;
 }
 
 .ham_menu {
