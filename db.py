@@ -124,3 +124,45 @@ def join_community_master(data):
         cursor.close()
         connection.close()
     return count
+
+def getcomtThread_list_tocomId(comId):
+    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s order by community_post.post_number asc"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+
+def getcomThread_good(compostId,accId):
+    sql="SELECT count(community_good_id) FROM community_good WHERE community_post_id=%s and account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(compostId,accId))
+        count=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def getcomThread_goodnum(compostId):
+    sql="SELECT count(community_good_id) FROM community_good WHERE community_post_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(compostId,))
+        count=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
