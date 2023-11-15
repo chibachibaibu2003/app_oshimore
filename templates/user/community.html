@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/community.css')}}">
+{% endblock %}
+
+{% block content %}
+<a href="{{url_for('com_monthback')}}"><img class="calback_mini"src="{{url_for('static',filename='/imges/calback_mini.png')}}"></a>
+<div id="calendar"></div>
+<a href="{{url_for('com_monthnext')}}"><img class="calnext_mini"src="{{url_for('static',filename='/imges/calnext_mini.png')}}"></a>
+
+<div class="community_thread">
+    <a class="community_thread_title">コミュニティスレッド</a>
+    <div class="community_thread_list"></div>
+    <form>
+        <input type="text"name="thread_text"class="thread_text"autocomplete="off"maxlength="256">
+        <input type="image"class="thread_img"src="{{url_for('static',filename='/imges/thread.png')}}">
+    </form>
+</div>
+
+<a class="register_event_button"href="">イベント追加</a>
+<a class="fanpoint_rank_button"href="">ファンポイントランキング</a>
+<a class="com_edit_button"href="">コミュニティ設定</a>
+
+<div class="popup">
+    <a><img  class="backbutton"src="{{url_for('static',filename='/imges/back.png')}}"></a>
+    <ul class="popupList"></ul>
+</div>
+
+<div class="popup_b">
+    <a><img  class="backbutton"src="{{url_for('static',filename='/imges/back.png')}}"></a>
+    <a class="popup_b_title">コミュニティ作成</a><br>
+    <form action="{{url_for('register_community')}}"method="post"class="popup_b_form"name="popup_b_form"onsubmit="return checkEmpty()">
+        
+        <a class="popup_b_text">コミュニティ名<span style="color:red;">　必須</span></a><br>
+        <input type="text" name="com_name"class="input_a"autocomplete="off"value="{{data.com_name if data is defined else ''}}"placeholder="new community"maxlength="32"><br>
+        
+        <a class="popup_b_text">推しの名前<span style="color:red;">　必須</span></a><br>
+        <input  type="text" name="fav_name"class="input_a"autocomplete="off"value="{{data.fav_name if data is defined else ''}}"placeholder="No name"maxlength="16"><br>
+        
+        <a class="popup_b_text">公開・非公開</a><br>
+        <input type="radio"name="com_public"value="0"checked><a>公開</a><br>
+        <input type="radio"name="com_public"value="1"><a>非公開</a><br>
+        
+        <a class="popup_b_text">概要<span style="color:red;">　必須</span></a><br>
+        <textarea class="com_explanation"name="com_explanation"rows="7"cols="70"value="{{data.com_explanation if data is defined else ''}}"maxlength="256"></textarea><br>
+        
+        <input type="submit"class="submit_button">
+    </form>
+</div>
+{% endblock %}
+
+{%block jscode%}
+const weeks = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+const date = new Date()
+const year = {{year}}
+const month = {{month}}
+const startDate = new Date(year, month - 1, 1) // 月の最初の日を取得
+const endDate = new Date(year, month, 0) // 月の最後の日を取得
+const endDayCount = endDate.getDate() // 月の末日
+const startDay = startDate.getDay() // 月の最初の日の曜日を取得
+let dayCount = 1 // 日にちのカウント
+let calendarHtml = '' // HTMLを組み立てる変数
+let monthevent=[] //dayeventの1ヶ月分のイベント情報を日ごとに保存しておくリスト
+calendarHtml += '<h1 class="caltitle">' + year + '/' + month + '</h1>'
+calendarHtml += '<table class="cal">'
+//カレンダーのイベントをflaskから配列で日付ごとに入れたのを受け取る
+// 曜日の行を作成
+for (let i = 0; i < weeks.length; i++) {
+    calendarHtml += '<td class="calwe">' + weeks[i] + '</td>'
+}
+
+for (let w = 0; w < 5; w++) {
+    calendarHtml += '<tr>'
+
+    for (let d = 0; d < 7; d++) {
+        if (w == 0 && d < startDay) {
+            // 1行目で1日の曜日の前
+            calendarHtml += '<td class="calday"><a style="color:white">1</a><br><a class="empty_event">イベント名</a><br></td>'
+        } else if (dayCount > endDayCount) {
+            // 末尾の日数を超えた
+            calendarHtml += '<td class="calday"><a style="color:white">1</a><br><a class="empty_event">イベント名</a><br></td>'
+        } else {
+            //イベントが入っていない日付は色を消したのを入れる。
+            let countnum=0
+            let searchDay={{searchDay|tojson}}+dayCount
+            let eventList={{eventList|tojson}}
+            let dayevent=[] //各日付のイベント情報を保存しておくリスト
+
+            for (let i = 0; i <{{num1}}; i++ ){
+                for (let k = 0; k < eventList[i].length; k++){
+                    if (eventList[i][k][2]==searchDay){
+                        countnum++
+                        dayevent.push(eventList[i][k])
+                    }
+                }
+            }
+            
+            if (countnum!=0){
+                let checkday=dayCount-1
+                monthevent.push(dayevent)
+                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="event"id='
+                calendarHtml += checkday
+                calendarHtml +='>'+ dayevent[0][1] +'</a><br>'
+            }else{
+                monthevent.push(0)
+                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="empty_event">'+ 'イベント名'+'</a><br></td>'
+            }
+            dayCount++    
+        }
+    }
+    calendarHtml += '</tr>'
+}
+calendarHtml += '</table>'
+document.querySelector('#calendar').innerHTML = calendarHtml
+
+let popup=document.querySelector('.popup')
+let event=document.querySelectorAll('.event')
+let backbutton=document.querySelectorAll('.backbutton')
+let ul=document.querySelector('.popupList')
+
+let hamRegi=nav.querySelector('#ham_regi')
+let popupB=document.querySelector('.popup_b')
+
+event.forEach(function(events){
+    events.addEventListener('click',function () {
+        let checkday=events.id
+        blackBg.classList.toggle('popblackBg');
+        for (let i=0;i<monthevent[checkday].length;i++){
+            let li=document.createElement('li');
+            ul.appendChild(li).innerHTML='<a class="popupevent"href="">'+monthevent[checkday][i][1]+'</a>'
+        }
+        popup.classList.toggle('pop');
+    })
+})
+
+hamRegi.addEventListener('click',function () {
+    nav.classList.remove('open');
+    blackBg.classList.toggle('popblackBg');
+    popupB.classList.toggle('pop');
+})
+
+backbutton.forEach(function(back){
+    back.addEventListener('click',function () {
+        blackBg.classList.remove('popblackBg');
+        popup.classList.remove('pop');
+        popupB.classList.remove('pop');
+        ul.innerHTML=''
+    })
+})
+
+
+blackBg.addEventListener('click', function () {
+    nav.classList.remove('open');
+    blackBg.classList.remove('popblackBg');
+    popup.classList.remove('pop');
+    popupB.classList.remove('pop');
+    ul.innerHTML=''
+})
+
+function checkEmpty(){
+    var text=document.popup_b_form.com_name.value;
+    var text2=document.popup_b_form.fav_name.value;
+    var text3=document.popup_b_form.com_explanation.value;
+    if(text.length === 0 || text2.length===0 || text3.length===0) {
+        alert('必須項目に入力してください。！');
+        return false;
+    }
+}
+{% endblock %}
