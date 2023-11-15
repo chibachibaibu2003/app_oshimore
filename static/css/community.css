@@ -115,7 +115,37 @@
     top: 20vh;
     width: 50vw;
     height: 68%;
+    overflow-y: scroll;
+
     background-color: antiquewhite;
+}
+
+.community_thread_box {
+    position: relative;
+    width: 95%;
+    border: 1px solid black;
+    border-radius: 30px;
+    margin-top: 15px;
+    margin-left: 15px;
+    background-color: whitesmoke;
+}
+
+.thread_box_img {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+}
+
+.thread_box_username {
+    position: absolute;
+    height: 25px;
+    top: 10px;
+}
+
+.thread_box_text {
+    display: block;
+    overflow-wrap: break-word;
+    margin: 0px 0px 10px 10px;
 }
 
 .thread_text {
@@ -134,6 +164,54 @@
     bottom: 5.5vh;
     margin-left: 47vw;
     width: 25px;
+}
+
+.thread_box_edit {
+    position: relative;
+    margin-left: 30vw;
+}
+
+.thread_good {
+    cursor: pointer;
+}
+
+.goodtext {
+    align-items: center;
+    display: flex;
+}
+
+.thread_good input {
+    display: none;
+}
+
+.thread_good input+.goodtext::before {
+    background-image: url("../imges/empty_good.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: "";
+    height: 15px;
+    position: relative;
+    width: 15px;
+}
+
+.thread_good input:checked+.goodtext::before {
+    background-image: url("../static/imges/good.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: "";
+    height: 15px;
+    position: relative;
+    width: 15px;
+}
+
+.thread_report {
+    position: absolute;
+    left: 100px;
+    top: -1px;
+    text-decoration: none;
+    color: red;
 }
 
 .register_event_button {

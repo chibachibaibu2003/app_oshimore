@@ -93,12 +93,11 @@ def community(id,checkcal):
     comIdList2=db.getcomId_to_accId_invit(1)
     if(len(comIdList)!=0):
         for comId in comIdList:
-            session['comId']=comId
             datas.append(db.getcomInfo_to_comId(comId))
     if(len(comIdList2)!=0):
             for comId in comIdList2:
                 invitations.append(db.getcomInfo_to_comId(comId))
-            
+    session['comId']=id
     eventList.append(db.getevent_to_comId(id,searchDay))
     searchDay=f"{session['year']}-{session['month']}-"
     community_thread_list=db.getcomtThread_list_tocomId(id)
@@ -109,6 +108,7 @@ def community(id,checkcal):
         community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
         cnt+=1
     print(community_thread_list_all)
+    print(session['comId'])
     return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all)
 
 """ 
@@ -121,7 +121,7 @@ def com_monthback():
         session['month']=12
         session['year']-=1
     
-    return redirect(url_for('community',id=session['comId'][0],checkcal=1))
+    return redirect(url_for('community',id=session['comId'],checkcal=1))
 
 """ 
 マイページ画面・次の月へ
@@ -134,7 +134,7 @@ def com_monthnext():
         session['month']=1
         session['year']+=1
     
-    return redirect(url_for('community',id=session['comId'][0],checkcal=1))
+    return redirect(url_for('community',id=session['comId'],checkcal=1))
 
 if __name__ == "__main__":
     app.run(debug=True)

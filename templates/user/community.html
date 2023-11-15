@@ -10,7 +10,22 @@
 
 <div class="community_thread">
     <a class="community_thread_title">コミュニティスレッド</a>
-    <div class="community_thread_list"></div>
+    <div class="community_thread_list">
+        {%for data in thread_list%}
+            <div class="community_thread_box">
+                <img class="thread_box_img"src="{{url_for('static',filename='/imges/user_icon.png')}}">
+                <a class="thread_box_username">{{data[5]}}</a><br>
+                <a class="thread_box_text">{{data[2]}}</a>
+                <div class="thread_box_edit">
+                    <label class="thread_good"for="thread_checkbox">
+                        <input type="checkbox"id="thread_checkbox">
+                        <span class="goodtext">いいね</span>
+                    </label>
+                    <a class="thread_report" href="">通報</a>
+                </div>
+            </div>
+        {%endfor%}
+    </div>
     <form>
         <input type="text"name="thread_text"class="thread_text"autocomplete="off"maxlength="256">
         <input type="image"class="thread_img"src="{{url_for('static',filename='/imges/thread.png')}}">
