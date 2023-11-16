@@ -43,6 +43,21 @@ def login(mail,password):
         
     return flg
 
+def get_accountInfo_toMail(mail):
+    sql="SELECT*FROM account WHERE mail=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(mail,))
+        list=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        list=()
+    finally:
+        cursor.close()
+        connection.close()
+        # listはタプルです
+    return list
+
 def get_account_id(id):
     b_id = bytes(id,'utf-8')
     account_id = hashlib.pdk
