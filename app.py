@@ -1,15 +1,18 @@
-
-from flask import Flask, render_template, url_for, request, redirect, session
-import random,string,os
-import db,mail,datetime
+from flask import Flask, render_template,redirect,url_for,request,session
+import random,string,db,datetime,os
 from hashids import Hashids
+from admin import admin_bp
+from user import user_bp
 
 app = Flask(__name__)
-app.secret_key = ''.join(random.choices(string.ascii_letters,k=256))
+app.secret_key=''.join(random.choices(string.ascii_letters,k=256))
 
-# ログイン画面
+app.register_blueprint(admin_bp)
+app.register_blueprint(user_bp)
+
 @app.route('/')
 def index():
+    session['msg']=''
     return render_template('index.html')
 
 @app.route('/')
@@ -119,6 +122,7 @@ def certification_mail():
 """ 
 マイページ画面・現在日時
 """
+
 @app.route('/top/<int:checkcal>')
 def top(checkcal):
     if (checkcal!=1):
@@ -127,6 +131,8 @@ def top(checkcal):
         session['month']=dt.month
         session['year']=dt.year
     searchDay=datetime.date(session['year'],session['month'],1)
+    msg=session['msg']
+    session['msg']=''
     datas=[]
     invitations=[]
     eventList=[]
@@ -141,7 +147,7 @@ def top(checkcal):
         for comId in comIdList2:
             invitations.append(db.getcomInfo_to_comId(comId))
     searchDay=f"{session['year']}-{session['month']}-"
-    return render_template('user/menu.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay)
+    return render_template('user/menu.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay, msg=msg)
 
 """ 
 マイページ画面・前の月へ
@@ -179,9 +185,11 @@ def register_community():
         hidden_flag=db.get_hidden_flag(com_id)
         data=[1,com_id[0],1,1,hidden_flag[0],0,0]
         count=db.join_community_master(data)
-        
-        return redirect(url_for('top'))
-    return render_template('index.html')
+        msg='コミュニティを作成しました！'
+    else:
+        msg='コミュニティを作成できませんでした。'
+    session['msg']=msg
+    return redirect(url_for('top',checkcal=0))
 
 
 @app.route('/community/<int:id>/<int:checkcal>')

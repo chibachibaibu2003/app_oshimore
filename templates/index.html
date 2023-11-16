@@ -15,15 +15,15 @@
         },50)
     </script>
     {% endif %}
-    <img class="title" src="../static/imges/icon.png" alt="icon">
-    <div class="form">
-            <form name="login_form" action="{{url_for('login')}}" method="post" onsubmit="return checkLogin()">
-                <p class="login">ログイン</p><br>
-                    <input class="text_line" type="mail" name="mail" value="{{data.mail if data is defined else ''}}" placeholder="Email"><br>
-                    <input class="text_line" type="password" name="password" placeholder="Password"><br>
-                    <input class="submit_bottun" type="submit" value="ログイン"><br>
-        <a class="gorilla" href="{{url_for('register_accounts')}}">新規登録はこちら</a><br>
-        <a class="gorilla" href="">パスワードを忘れた方はゴリラ</a>
+    <img id="title" src="../static/imges/icon.png" alt="icon">
+    <div id="form">
+            <form action="" method="post">
+                <p id="login">ログイン</p><br>
+                <input id="text_line" type="mail" name="mail" placeholder="Email"><br>
+                <input id="text_line" type="mail" name="mail" placeholder="Password"><br>
+                <input id="submit_bottun" type="submit" value="ログイン"><br>
+            <a id="gorilla" href="{{url_for('top',checkcal=0)}}">新規登録はこちら</a><br>
+            <a id="gorilla" href="">パスワードを忘れた方はゴリラ</a>
         </form>
     </div>
     <script>
