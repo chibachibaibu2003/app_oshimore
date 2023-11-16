@@ -245,5 +245,42 @@ def com_monthnext():
     
     return redirect(url_for('community',id=session['comId'],checkcal=1))
 
+@app.route('/community_set_master')
+def community_set_master():
+    return render_template('user/community_set_master.html')
+
+
+
+@app.route('/community_edit')
+def community_edit():
+    comId = session['comId']
+    community_detail = db.getcommunity_select(comId)
+    public = community_detail[4]
+    print(public)
+    return render_template('user/community_edit.html',community_detail=community_detail,public=public)
+
+
+@app.route('/community_edit_result',methods=['POST'])
+def community_edit_result():
+    com_id = request.form.get('com_id')
+    com_name = request.form.get('com_name')
+    fav_name = request.form.get('fav_name')
+    com_public = request.form.get('com_public')
+    com_explanation = request.form.get('com_explanation')
+    
+    count = db.community_update(com_id,com_name,fav_name,com_public,com_explanation)
+    
+    if count == 1:
+        return redirect(url_for('community_edit_end'))
+    else:
+        return redirect(url_for('community_edit'))
+    
+@app.route('/community_edit_end')
+def community_edit_end():
+    msg = 'コミュニティ編集しました。'
+    return render_template('user/community_set_master.html',header_msg=msg)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
