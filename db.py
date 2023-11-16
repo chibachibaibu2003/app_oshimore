@@ -166,3 +166,39 @@ def getcomThread_goodnum(compostId):
         cursor.close()
         connection.close()
     return count
+
+
+def getcommunity_select(comId):
+    sql = 'SELECT * FROM community WHERE community_id = %s'
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(comId,))
+        community_information = cursor.fetchone()
+        
+    
+    finally:
+        cursor.close()
+        connection.close()
+    
+    return community_information
+
+
+def community_update(com_id,com_name,fav_name,com_public,com_explanation):
+    sql = 'UPDATE community SET community_id=%s,community_name=%s,favorite_name=%s,community_exp=%s,public_private=%s WHERE community_id=%s;'
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(com_id,com_name,fav_name,com_explanation,com_public,com_id))
+        count = cursor.rowcount 
+        connection.commit()
+        
+    except psycopg2.DatabaseError :
+        count = 0
+    
+    finally :
+        cursor.close()
+        connection.close()
+    
+    return count
