@@ -4,6 +4,12 @@
 {% endblock %}
 
 {% block content %}
+
+{% block header_msg%}
+{% if msg!=null %}
+<a class="header_msg">{{msg}}</a>
+{% endif %}
+{%endblock%}
 <a href="{{url_for('monthback')}}"><img class="calback" href="{{url_for('monthback')}}"src="{{url_for('static',filename='/imges/calback.png')}}"></a>
 <div id="calendar"></div>
 <a href="{{url_for('monthnext')}}"><img class="calnext"href="{{url_for('monthnext')}}" src="{{url_for('static',filename='/imges/calnext.png')}}"></a>
@@ -87,10 +93,10 @@ for (let w = 0; w < 5; w++) {
                 monthevent.push(dayevent)
                 calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="event"id='
                 calendarHtml += checkday
-                calendarHtml +='>'+ dayevent[0][1] +'</a><br>'
+                calendarHtml +='>'+ dayevent[0][1] +'</a><br>'+'<img class="three_point" src="{{url_for('static',filename='/imges/three_point.png')}}"></td>'
             }else{
                 monthevent.push(0)
-                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="empty_event">'+ 'イベント名'+'</a><br></td>'
+                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="empty_event">'+ 'イベント名'+'</a><br>'+'<img class="three_point_invisible" src="{{url_for('static',filename='/imges/three_point.png')}}"></td>'
             }
             dayCount++    
         }

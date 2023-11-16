@@ -196,7 +196,7 @@
 }
 
 .thread_good input:checked+.goodtext::before {
-    background-image: url("../static/imges/good.png");
+    background-image: url("../imges/good.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
