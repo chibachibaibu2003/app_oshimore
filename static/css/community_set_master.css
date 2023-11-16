@@ -1,0 +1,272 @@
+body {
+    margin: 0px;
+    font-family: 'Meiryo';
+}
+
+.h1 {
+    font-size: 40px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.fontawesome-size{
+    font-size: 3.5em;
+    transform: rotate(180deg);
+    -webkit-text-stroke: 4px white;
+    position: absolute;
+    left: 20px;
+    top: 74px;
+}
+
+
+
+a.btn_1 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    margin:60px 0 0 190px;
+}
+a.btn_1:before {
+    content: "\f304";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+    left: -20px;
+    top:5px;
+}
+
+
+
+a.btn_2 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    margin:50px 0 0 190px;
+}
+a.btn_2:before {
+    content: "\f06a";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+   left: -20px;
+   top:5px;
+}
+
+
+
+a.btn_3 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    margin:50px 0 0 190px;
+}
+a.btn_3:before {
+    content: "\f1f8";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+   left: -20px;
+   top:5px;
+}
+
+
+
+a.btn_4 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    margin:-340px 0 0 720px;
+}
+a.btn_4:before {
+    content: "\f0e0";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+   left: -20px;
+   top:5px;
+}
+
+
+a.btn_4-2 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    margin:-210px 0 0 720px;
+}
+a.btn_4-2:before {
+    content: "\f0e0";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+   left: -20px;
+   top:5px;
+}
+
+a.btn_4-3 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    top: 80px;
+    left:36%;
+}
+a.btn_4-3:before {
+    content: "\f0e0";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+    left: -20px;
+    top:5px;
+}
+
+
+a.btn_5 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    margin:50px 0 0 720px;
+}
+a.btn_5:before {
+    content: "\f084";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+    left: -20px;
+    top:5px;
+}
+
+
+
+a.btn_6 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    margin:50px 0 0 720px;
+}
+a.btn_6:before {
+    content: "\f52b";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+   left: -20px;
+   top:5px;
+}
+
+a.btn_6-3 {
+	display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	position: relative;
+	width: 300px;
+	padding: 0.8rem 3.5rem;
+	font-weight: bold;
+	border-radius: 0.3rem;
+    border: 2px solid;
+	background: #ffffff;
+	color: #000000;
+    font-size: 25px;
+    padding-right: 10px;
+    top:130px;
+    left:36%;
+}
+a.btn_6-3:before {
+    content: "\f52b";
+    position: relative;
+    font-family: "Font Awesome 6 Free";
+    font-size: 45px;
+   left: -20px;
+   top:5px;
+}
+
+
+a {
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    background: #333;
+    padding: 18px 30px;
+    border-radius: 6px;
+    transition: .3s;
+  }
+  a:hover {
+    background: #FDFFB8;
+  }

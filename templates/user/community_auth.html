@@ -1,0 +1,56 @@
+{% extends "header.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
+<link rel="stylesheet" href="/static/css/community_auth.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+
+{% endblock %}
+
+{%block content%}
+    <div>
+        <h1 class="h1">権限変更</h1>
+        <i class="fa-solid fa-arrow-right fontawesome-size"></i>
+    </div>
+
+    <div class="word">
+        <p>変更したい権限を選択して下さい</p>
+    </div>
+
+    <div class="table">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th class="table_user_name">ユーザー名</th>
+                    <th class="table_auth">編集/招待権限</th>
+                    <th class="table_auth">副管理者</th>
+                </tr>
+            </thead>
+
+            <tbody class="scroll">
+                <div>
+                    <form>
+                    <tr>
+                        <td class="table_user_name">Sample</td>
+                        <td class="table_auth">
+                            <div class="toggle_button">
+                                <input id="toggle" class="toggle_input" type='checkbox' />
+                                <label for="toggle" class="toggle_label"/>
+                            </div>
+                        </td>
+                        <td class="table_auth">
+                            <div class="toggle_button">
+                                <input id="toggle" class="toggle_input" type='checkbox' />
+                                <label for="toggle" class="toggle_label"/>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <button type="submit" class="btn button005">保存</button>
+                    </form>
+                </div>
+            </tbody>
+        </table>
+    </div>
+   
+{%endblock%}

@@ -1,0 +1,397 @@
+#calendar {
+    float: right;
+    margin-right: 10px;
+}
+
+.cal {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.caltitle {
+    margin-left: 14.8vw;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+
+.calback_mini {
+    position: fixed;
+    float: left;
+    left: 65vw;
+    cursor: pointer;
+    height: 6vh;
+}
+
+.calnext_mini {
+    position: fixed;
+    float: right;
+    right: 0vw;
+    cursor: pointer;
+    height: 6vh;
+}
+
+.calwe {
+    text-align: center;
+    font-size: 13px;
+}
+
+.calday {
+    border: 1.5px solid black;
+    padding: 0px 20px 0px 2px;
+}
+
+.event {
+    display: inline-block;
+    width: 40px;
+    height: 15px;
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid black;
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+    background-color: aquamarine;
+}
+
+.empty_event {
+    display: inline-block;
+    width: 40px;
+    height: 15px;
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    color: white;
+}
+
+.eventlink {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: black;
+    text-decoration: none;
+}
+
+
+.calday:first-child {
+    color: red;
+}
+
+.calday:last-child {
+    color: royalblue;
+}
+
+.calwe:first-child {
+    color: red;
+}
+
+.calwe:last-child {
+    color: royalblue;
+}
+
+.community_thread {
+    position: fixed;
+    float: left;
+    top: 10vh;
+    left: 13vw;
+    width: 50vw;
+    height: 87vh;
+    border: 1px solid black;
+    background-color: whitesmoke;
+}
+
+.community_thread_title {
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+.community_thread_list {
+    position: fixed;
+    top: 20vh;
+    width: 50vw;
+    height: 68%;
+    overflow-y: scroll;
+
+    background-color: antiquewhite;
+}
+
+.community_thread_box {
+    position: relative;
+    width: 95%;
+    border: 1px solid black;
+    border-radius: 30px;
+    margin-top: 15px;
+    margin-left: 15px;
+    background-color: whitesmoke;
+}
+
+.thread_box_img {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+}
+
+.thread_box_username {
+    position: absolute;
+    height: 25px;
+    top: 10px;
+}
+
+.thread_box_text {
+    display: block;
+    overflow-wrap: break-word;
+    margin: 0px 0px 10px 10px;
+}
+
+.thread_text {
+    position: fixed;
+    bottom: 5vh;
+    margin-left: 10px;
+    width: 45vw;
+    height: 30px;
+    font-size: 1rem;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.thread_img {
+    position: fixed;
+    bottom: 5.5vh;
+    margin-left: 47vw;
+    width: 25px;
+}
+
+.thread_box_edit {
+    position: relative;
+    margin-left: 30vw;
+}
+
+.thread_good {
+    cursor: pointer;
+}
+
+.goodtext {
+    align-items: center;
+    display: flex;
+}
+
+.thread_good input {
+    display: none;
+}
+
+.thread_good input+.goodtext::before {
+    background-image: url("../imges/empty_good.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: "";
+    height: 15px;
+    position: relative;
+    width: 15px;
+}
+
+.thread_good input:checked+.goodtext::before {
+    background-image: url("../static/imges/good.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: "";
+    height: 15px;
+    position: relative;
+    width: 15px;
+}
+
+.thread_report {
+    position: absolute;
+    left: 100px;
+    top: -1px;
+    text-decoration: none;
+    color: red;
+}
+
+.register_event_button {
+    position: fixed;
+    bottom: 30vh;
+    right: 0.9vw;
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+    background-color: #FDFFB8;
+    border: 1px solid black;
+    border-radius: 20px;
+    width: 35vw;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.fanpoint_rank_button {
+    position: fixed;
+    bottom: 16vh;
+    right: 0.9vw;
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+    background-color: #FDFFB8;
+    border: 1px solid black;
+    border-radius: 20px;
+    width: 35vw;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+.com_edit_button {
+    position: fixed;
+    bottom: 2vh;
+    right: 0.9vw;
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+    background-color: #FDFFB8;
+    border: 1px solid black;
+    border-radius: 20px;
+    width: 35vw;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 70vh;
+    width: 60vw;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: white;
+    border: 2px solid gray;
+    opacity: 1;
+    visibility: hidden;
+    overflow-y: scroll;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 200;
+}
+
+.popup_b {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 75vh;
+    width: 45vw;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: white;
+    border: 2px solid gray;
+    opacity: 0;
+    visibility: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 200;
+}
+
+.popup_b_title {
+    display: flex;
+    justify-content: center;
+    font-size: 2.2rem;
+}
+
+.popup_b_form {
+    position: fixed;
+    left: 60%;
+    width: 90%;
+    transform: translateX(-60%);
+}
+
+.popup_b_text {
+    margin-bottom: 10px;
+}
+
+.input_a {
+    width: 70%;
+    height: 22px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.com_explanation {
+    margin-top: 10px;
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid black;
+    white-space: pre-wrap;
+}
+
+.submit_button {
+    display: inline-block;
+    position: fixed;
+    left: 40%;
+    transform: translateX(-40%);
+    text-decoration: none;
+    width: 40%;
+    padding: 7px;
+    margin-left: 15px;
+    border: 2px solid #707070;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.8rem;
+    background-color: #FFA954;
+    text-align: center;
+}
+
+
+.popblackBg {
+    opacity: 0.3;
+    z-index: 200;
+    visibility: visible;
+}
+
+.pop {
+    opacity: 1;
+    visibility: visible;
+}
+
+.backbutton {
+    float: right;
+    cursor: pointer;
+    width: 4vw;
+}
+
+.popupList {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 75%;
+    width: 80%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.popupEventList {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    height: 100%;
+    width: 80%;
+    transform: translateX(-20%) translateY(-50%);
+}
+
+.popupevent {
+    display: inline-block;
+    color: black;
+    border: 1px solid black;
+    width: 100%;
+    height: 50%;
+    font-size: 1.5rem;
+    text-decoration: none;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

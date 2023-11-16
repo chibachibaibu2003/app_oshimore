@@ -1,0 +1,47 @@
+{% extends "header.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
+<link rel="stylesheet" href="/static/css/community_edit.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+
+{% endblock %}
+
+{%block content%}
+    <div>
+        <h1 class="h1">コミュニティ編集</h1>
+        <i class="fa-solid fa-arrow-right fontawesome-size"></i>
+    </div>
+
+    <form class="formPosition">
+        <p>コミュニティ名</p>
+        <div class="inputMargin">
+            <input type="text" name="community_name" class="inputbox"><br>
+        </div>
+
+
+        <p>押しの名前</p>
+        <div class="inputMargin">
+            <input type="text" name="" class="inputbox"><br>
+        </div>
+    
+        <p>公開設定</p>
+        <div class="inputMargin2">
+            <div class="inline">
+                <p>公開：</p>
+            </div>
+                <input type="radio" name="x" class="inputRadio">
+            <div class="inline2">
+                <p>非公開：</p>
+            </div>
+                <input type="radio" name="x" class="inputRadio"><br>
+        </div>
+       <p>概要</p>
+       <div class="inputMargin">
+           <textarea type="text" name="" class="inputBoxArea"></textarea>
+       </div>
+
+
+       <button type="submit" class="btn button005">変更する</button>
+    </form>
+   
+{%endblock%}

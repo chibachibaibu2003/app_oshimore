@@ -1,0 +1,224 @@
+#calendar {
+    float: left;
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+.cal {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.caltitle {
+    margin-left: 45px;
+}
+
+.calback {
+    float: left;
+    margin-left: 50px;
+    margin-top: 170px;
+    cursor: pointer;
+    width: 4.2vw;
+}
+
+.calnext {
+    float: right;
+    margin-right: 110px;
+    margin-top: 170px;
+    cursor: pointer;
+    width: 4vw;
+}
+
+.calwe {
+    text-align: center;
+}
+
+.calday {
+    border: 1.5px solid black;
+    padding: 5px 30px 20px 5px;
+}
+
+.event {
+    display: inline-block;
+    width: 80px;
+    height: 18px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid black;
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+    background-color: aquamarine;
+}
+
+.empty_event {
+    display: inline-block;
+    width: 80px;
+    height: 18px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    color: white;
+}
+
+.eventlink {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: black;
+    text-decoration: none;
+}
+
+
+.calday:first-child {
+    color: red;
+}
+
+.calday:last-child {
+    color: royalblue;
+}
+
+.calwe:first-child {
+    color: red;
+}
+
+.calwe:last-child {
+    color: royalblue;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 70vh;
+    width: 60vw;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: white;
+    border: 2px solid gray;
+    opacity: 1;
+    visibility: hidden;
+    overflow-y: scroll;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 200;
+}
+
+.popup_b {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 75vh;
+    width: 45vw;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: white;
+    border: 2px solid gray;
+    opacity: 0;
+    visibility: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 200;
+}
+
+.popup_b_title {
+    display: flex;
+    justify-content: center;
+    font-size: 2.2rem;
+}
+
+.popup_b_form {
+    position: fixed;
+    left: 60%;
+    width: 90%;
+    transform: translateX(-60%);
+}
+
+.popup_b_text {
+    margin-bottom: 10px;
+}
+
+.input_a {
+    width: 70%;
+    height: 22px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.com_explanation {
+    margin-top: 10px;
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid black;
+    white-space: pre-wrap;
+}
+
+.submit_button {
+    display: inline-block;
+    position: fixed;
+    left: 40%;
+    transform: translateX(-40%);
+    text-decoration: none;
+    width: 40%;
+    padding: 7px;
+    margin-left: 15px;
+    border: 2px solid #707070;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.8rem;
+    background-color: #FFA954;
+    text-align: center;
+}
+
+
+.popblackBg {
+    opacity: 0.3;
+    z-index: 200;
+    visibility: visible;
+}
+
+.pop {
+    opacity: 1;
+    visibility: visible;
+}
+
+.backbutton {
+    float: right;
+    cursor: pointer;
+    width: 4vw;
+}
+
+.popupList {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 75%;
+    width: 80%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.popupEventList {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    height: 100%;
+    width: 80%;
+    transform: translateX(-20%) translateY(-50%);
+}
+
+.popupevent {
+    display: inline-block;
+    color: black;
+    border: 1px solid black;
+    width: 100%;
+    height: 50%;
+    font-size: 1.5rem;
+    text-decoration: none;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

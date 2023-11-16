@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='/css/layout.css')}}">
+    {% block css %}
+    {% endblock %}
+    <title>Oshi More!</title>
+</head>
+<body>
+    <header id="js-header">
+        <a><img class="title"src="{{url_for('static',filename='/imges/icon.png')}}"><a>
+        <div class="hamburger" id="js-hamburger">
+            <span class="hamburger_line hamburger_line-1"></span>
+            <span class="hamburger_line hamburger_line-2"></span>
+            <span class="hamburger_line hamburger_line-3"></span>
+        </div>
+        <nav class="ham_nav">
+            <ul>
+                <li class="ham_li"><a class="ham_menu" href="">コミュニティ検索</a></li>
+                <li class="ham_li"><a class="ham_menu" href="">プロフィール編集</a></li>
+                <li class="ham_li"><a class="ham_menu" href="">カレンダー表示の設定</a></li>
+                <li class="ham_li"><a class="ham_menu" id="ham_regi">コミュニティ作成</a></li>
+                <li><a class="ham_logout" href="">ログアウト</a></li>
+            </ul>
+        </nav>
+        <div class="black-bg" id="js-black-bg"></div>
+    </header>
+    <div class="community_line">
+        <table class="community_box" >
+            <tr>
+                <td><a class="block" href="{{url_for('top',checkcal=0)}}">マイページ</a></td>
+            </tr>
+            {%for data in datas%}
+            <tr>
+                <td><a class="block" href="{{url_for('community',id=data[0][0],checkcal=0)}}">{{ data[0][1] }}</a></td>
+            </tr>
+            {%endfor%}
+        </table>
+        <table class="invitations_box">
+            <tr>
+                <td><a class="block">招待コミュニティ</a></td>
+            </tr>
+            {%for data in invitations%}
+            <tr>
+                <td><a class="block" href="">{{ data[0][1] }}</a></td>
+            </tr>
+            {%endfor%}
+        </table>
+    </div>
+    {% block content %}
+    {% endblock %}
+    
+    <script>
+        //ハンバーガーメニュー
+        var nav = document.getElementById("js-header");
+        var hamburger = document.getElementById('js-hamburger');
+        var blackBg = document.getElementById('js-black-bg');
+
+        hamburger.addEventListener('click', function () {
+            nav.classList.toggle('open');
+        });
+
+        {% block jscode %}
+        {% endblock %}
+        
+    </script>
+
+</body>
+</html>
