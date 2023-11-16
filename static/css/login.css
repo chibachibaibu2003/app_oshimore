@@ -1,8 +1,9 @@
 body{
     background-color: #FDFFB8;
+	font-family: "メイリオ";
 }
 
-#title{
+.title{
     display: flex;
 	justify-content: center;
 	text-align: center;
@@ -14,33 +15,45 @@ body{
 	height: 120px;
 }
 
-#form{
+.form{
     display: flex;
 	justify-content: center;
 	text-align: center;
     margin-top: auto;
 	margin-left: auto;
 	margin-right: auto;
-	margin-bottom: 5px;
+	margin-bottom: 2px;
     background: white;
     width: 680px;
     height: 400px;
     border-radius: 20px;
-    box-shadow: 10px 10px 10px 0 grey ;
+    box-shadow: 10px 10px 10px 0 grey;
 }
 
-#login{
+.login{
     font-size: 40px;
     margin-top: 10px;
 }
 
-#text_line{
+.text{
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	float: unset;
+	margin-top: auto;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+	font-size: 18px;
+}
+
+.text_line{
     display: flex;
 	justify-content: center;
     margin-top: -25px;
 	margin-left: auto;
 	margin-right: auto;
-	margin-bottom: 35px;
+	margin-bottom: 20px;
     font-size: 15px;
     width: 500px;
     height: 25px;
@@ -49,7 +62,26 @@ body{
     border-bottom: 1px solid black;
 }
 
-#submit_bottun{
+.submit_bottun{
+	font-family: "メイリオ";
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	width: 200px;
+	height: 50px;
+    border-radius: 10px;
+	background-color: #FFA954;
+	border:1px solid #000000;
+	color: #ffffff;
+	font-size: 1.5rem;
+	margin-top: -25px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+}
+
+.submit_bottun2{
+	font-family: "メイリオ";
 	display: flex;
 	justify-content: center;
 	text-align: center;
@@ -64,8 +96,153 @@ body{
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 5px;
+	float: right;
+}
+.submit_bottun3{
+	font-family: "メイリオ";
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	width: 200px;
+	height: 50px;
+    border-radius: 10px;
+	background-color: #FFA954;
+	border:1px solid #000000;
+	color: #ffffff;
+	font-size: 1.5rem;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
 }
 
-#gorilla{
+.back_bottun{
+	font-family: "メイリオ";
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	line-height:50px;
+	width: 200px;
+	height: 50px;
+    border-radius: 10px;
+	background-color: #ffffff;
+	border:1px solid #000000;
+	color: #000000;
+	text-decoration: none;
+	font-size: 1.5rem;
+	margin-top: -15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	float: left;
+}
+
+.back_bottun2{
+	font-family: "メイリオ";
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	line-height:50px;
+	width: 200px;
+	height: 50px;
+    border-radius: 10px;
+	background-color: #FFA954;
+	border:1px solid #000000;
+	color: #ffffff;
+	text-decoration: none;
+	font-size: 1.5rem;
+	margin-top: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+}
+
+.sub_title{
+	margin: -50px 0 -25px 0;
+	font-size: 1.1rem;
+	color: gray;
+}
+
+.text_line{
+    display: flex;
+	justify-content: center;
+    margin-top: -25px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 20px;
+    font-size: 15px;
+    width: 500px;
+    height: 25px;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+}
+
+.text_line2{
+    display: flex;
+	justify-content: center;
+    margin-top: -15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 25px;
+    font-size: 15px;
+    width: 500px;
+    height: 25px;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+}
+
+.check{
+	display: flex;
+	justify-content: left;
+	text-align: left;
+    margin-top: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 7px;
+    font-size: 15px;
+    width: 500px;
+    height: 25px;
+}
+
+.gorilla{
     color: #15B7B7;
 }
+
+@media screen and (max-width: 959px) {
+	/* 959px以下に適用されるCSS（タブレット用） */
+	body{
+		background-color: #FDFFB8;
+	}
+	
+	.title{
+		display: flex;
+		justify-content: center;
+		text-align: center;
+		margin-top: 15px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 5px;
+		width: 450px;
+		height: 120px;
+	}
+
+	.form{
+		display: flex;
+		justify-content: center;
+		text-align: center;
+		margin-top: auto;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 5px;
+		background: white;
+		width: 680px;
+		height: 400px;
+		border-radius: 20px;
+		box-shadow: 10px 10px 10px 0 grey ;
+	}
+}
+@media screen and (max-width: 480px) {
+	/* 480px以下に適用されるCSS（スマホ用） */
+}	
