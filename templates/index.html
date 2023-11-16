@@ -8,6 +8,13 @@
     <title>ログイン画面</title>
 </head>
 <body>
+    {% if error %}
+    <script>
+        const timer = setTimeout(()=>{
+            alert('メールアドレス、またはパスワードが違います')
+        },50)
+    </script>
+    {% endif %}
     <img id="title" src="../static/imges/icon.png" alt="icon">
     <div id="form">
             <form action="" method="post">
@@ -15,9 +22,21 @@
                 <input id="text_line" type="mail" name="mail" placeholder="Email"><br>
                 <input id="text_line" type="mail" name="mail" placeholder="Password"><br>
                 <input id="submit_bottun" type="submit" value="ログイン"><br>
-        <a id="gorilla" href="{{url_for('top',checkcal=0)}}">新規登録はこちら</a><br>
-        <a id="gorilla" href="">パスワードを忘れた方はゴリラ</a>
+            <a id="gorilla" href="{{url_for('top',checkcal=0)}}">新規登録はこちら</a><br>
+            <a id="gorilla" href="">パスワードを忘れた方はゴリラ</a>
         </form>
     </div>
+    <script>
+        function checkLogin(){
+            let text=document.login_form.mail.value;
+            let text2=document.login_form.password.value;
+            if(text.length === 0 || text2.length===0) {
+                alert('必須項目に入力してください。');
+                return false;
+            }else{
+                return true
+            }
+        }
+    </script>
 </body>
 </html>
