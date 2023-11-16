@@ -1,5 +1,5 @@
 from flask import Flask, render_template,redirect,url_for,request,session
-import random,string,db,datetime,os
+import random,string,db,datetime,os,mail
 from hashids import Hashids
 from admin import admin_bp
 from user import user_bp
@@ -25,8 +25,8 @@ def login():
     mail = request.form.get('mail')
     password = request.form.get('password')
     if db.login(mail,password):
-        session['user_info'] = mail
-        return render_template('mypage.html')
+        session['user_info'] = db.get_accountInfo_toMail(mail)
+        return redirect(url_for('top',checkcal=0))
     else:
         return back_index(mail)
 
@@ -58,7 +58,7 @@ def back_register():
 
 @app.route('/register_account', methods=['POST'])
 def send():
-    if db.address_check_first(session['mail']) and db.address_check_second(mail):
+    if db.address_check_first(session['mail']) and db.address_check_second(session['mail']):
         name = session['name']
         code = db.create_code()
         to = session['mail']
