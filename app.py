@@ -137,8 +137,8 @@ def top(checkcal):
     invitations=[]
     eventList=[]
     
-    comIdList=db.getcomId_to_accId(1)
-    comIdList2=db.getcomId_to_accId_invit(1)
+    comIdList=db.getcomId_to_accId(session['user_info'][0])
+    comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
             datas.append(db.getcomInfo_to_comId(comId))
@@ -183,7 +183,7 @@ def register_community():
     if (count==1):
         com_id=db.get_community_id()
         hidden_flag=db.get_hidden_flag(com_id)
-        data=[1,com_id[0],1,1,hidden_flag[0],0,0]
+        data=[session['user_info'][0],com_id[0],1,1,hidden_flag[0],0,0]
         count=db.join_community_master(data)
         msg='コミュニティを作成しました！'
     else:
@@ -206,8 +206,8 @@ def community(id,checkcal):
     community_thread_list_all=[]
     cnt=0
     
-    comIdList=db.getcomId_to_accId(1)
-    comIdList2=db.getcomId_to_accId_invit(1)
+    comIdList=db.getcomId_to_accId(session['user_info'][0])
+    comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
             datas.append(db.getcomInfo_to_comId(comId))
@@ -226,9 +226,22 @@ def community(id,checkcal):
         cnt+=1
     return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all)
 
-@app.route('/community_set_master')
-def community_set_master():
-    return render_template('user/community_set_master.html')
+@app.route('/community_set')
+def community_set():
+    if 'user_info' in session:
+        accId=session['user_info'][0]
+        comId=session['comId']
+        comAuth=db.get_comAuth(accId,comId)
+        print(comAuth)
+        if (comAuth[0]==0):
+            return render_template('user/community_set_user.html')
+        elif (comAuth[0]==1):
+            return render_template('user/community_set_master.html')
+        elif (comAuth[0]==2):
+            return render_template('user/community_set_sub.html')
+        return redirect(url_for('community',id=session['comId'],checkcal=0))
+    else:
+        return redirect(url_for('index'))
 
 
 """ 
