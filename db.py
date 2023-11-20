@@ -324,6 +324,40 @@ def join_community_master(data):
         connection.close()
     return count
 
+"""
+コミュニティ参加
+"""
+def join_community(account_id, community_id):
+    sql = "INSERT INTO register_community (account_id, community_id) VALUES (%s, %s)"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (account_id, community_id))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError:
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+"""
+参加拒否
+"""
+
+def reject_invitation(account_id, community_id):
+    sql = "DELETE FROM invitation WHERE account_id = %s AND community_id = %s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (account_id, community_id))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError:
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
 def getcomtThread_list_tocomId(comId):
     sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s order by community_post.post_number asc"
     try:

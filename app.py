@@ -224,9 +224,12 @@ def community(id,checkcal):
         good_num=db.getcomThread_goodnum(data[0])
         community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
         cnt+=1
-    print(community_thread_list_all)
-    print(session['comId'])
     return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all)
+
+@app.route('/community_set_master')
+def community_set_master():
+    return render_template('user/community_set_master.html')
+
 
 """ 
 コミュニティ画面・前の月へ
@@ -241,7 +244,7 @@ def com_monthback():
     return redirect(url_for('community',id=session['comId'],checkcal=1))
 
 """ 
-マイページ画面・次の月へ
+コミュニティ画面・次の月へ
 """
 
 @app.route('/com_monthnext')
@@ -253,11 +256,20 @@ def com_monthnext():
     
     return redirect(url_for('community',id=session['comId'],checkcal=1))
 
-@app.route('/community_set_master')
-def community_set_master():
-    return render_template('user/community_set_master.html')
-
-
+"""
+コミュニティ参加処理
+"""
+@app.route('/join_community/<int:community_id>', methods=['GET', 'POST'])
+def join_community(community_id):
+    # コミュニティへの参加処理
+    return redirect(url_for('community_page', community_id=community_id))
+"""
+コミュニティ拒否処理
+"""
+@app.route('/reject_invitation/<int:community_id>', methods=['GET', 'POST'])
+def reject_invitation(community_id):
+    # 招待の拒否処理
+    return redirect(url_for('home'))
 
 @app.route('/community_edit')
 def community_edit():
@@ -287,8 +299,6 @@ def community_edit_result():
 def community_edit_end():
     msg = 'コミュニティ編集しました。'
     return render_template('user/community_set_master.html',header_msg=msg)
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
