@@ -1,0 +1,96 @@
+/* ヘッダーのスタイル */
+.header {
+    background-color: #FDFFB8;
+    height: 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 24px; /* ロゴのサイズ調整 */
+}
+
+.hamburger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin-bottom: 5px;
+    background-color: #333;
+}
+.center {
+    text-align: center;
+}
+.back-btn{
+    position: absolute;
+    top:80px;
+    left:20px;
+    cursor: pointer; 
+}
+.h1{
+    font-size:20px;
+    align-items:left;
+    margin-bottom:2px;
+}
+.community-info{
+    margin-left:150px;
+}
+.underline {
+    text-decoration: underline;
+}
+
+.underline{
+    border-bottom:1px solid;
+    width: 1000px;
+    padding-bottom: 15px;
+}
+
+.rounded-border {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    user-select: none;
+    resize: none;
+    width: 1000px;
+    height: 150px;
+}
+
+.community-btn{
+    text-align: center;
+    width:max-content;
+}
+
+.invitation-btn{
+    color: white;
+    font-size:20px;
+    width:  350px;
+    height: 50px;
+    border-radius: 10px;
+    border-color: whitesmoke;
+    margin: right 200px;
+    background-color:#FFA954;
+    box-shadow: none;
+    cursor: pointer; 
+}
+.rejection{
+    font-size:20px;
+    width:  350px;
+    height: 50px;
+    border-radius: 10px;
+    border-color:whitesmoke;
+    margin-left : 50px;
+    margin-right:200px;
+    background-color:white;
+    box-shadow: none;
+    cursor: pointer; 
+}
+.invitation-btn:active{
+    transform: translateY(4px); /* ボタンが押されたときに文字も4px下に移動 */
+}
+.rejection:active{
+    transform: translateY(4px); /* ボタンが押されたときに文字も4px下に移動 */
+}

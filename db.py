@@ -124,3 +124,37 @@ def join_community_master(data):
         cursor.close()
         connection.close()
     return count
+
+"""
+コミュニティ参加
+"""
+def join_community(account_id, community_id):
+    sql = "INSERT INTO register_community (account_id, community_id) VALUES (%s, %s)"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (account_id, community_id))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError:
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+"""
+参加拒否
+"""
+
+def reject_invitation(account_id, community_id):
+    sql = "DELETE FROM invitation WHERE account_id = %s AND community_id = %s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (account_id, community_id))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError:
+        return False
+    finally:
+        cursor.close()
+        connection.close()

@@ -116,6 +116,21 @@ def register_community():
         searchDay=f"{dt.year}-{dt.month}-"
         return render_template('user/menu.html', month=dt.month, year=dt.year, datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay)
     return render_template('index.html')
+"""
+コミュニティ参加処理
+"""
+@app.route('/join_community/<int:community_id>', methods=['GET', 'POST'])
+def join_community(community_id):
+    # コミュニティへの参加処理
+    return redirect(url_for('community_page', community_id=community_id))
+"""
+コミュニティ拒否処理
+"""
+@app.route('/reject_invitation/<int:community_id>', methods=['GET', 'POST'])
+def reject_invitation(community_id):
+    # 招待の拒否処理
+    return redirect(url_for('home'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
