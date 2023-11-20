@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロフィール編集</title>
+    <link rel="stylesheet" href="../static/css/editprofile.css">
+</head>
+<body>
+   <a href="menu.html" ←</a>
+    <div class="container">
+        <h1>プロフィール編集</h1>
+        <form action""=method="post">
+            <p>ユーザー名:<input type="text" name="username" value=""></p>
+            <p>紹介文:<input type="text" name="introduction" value=""></p>
+            アップロードするファイルを選択してください。
+            <formaction="{{url_for('uploads')}}"method="post"enctype="multipart/form‐data">
+            <input type="file"name="file"> < br>
+            <button type="submit">Upload</button>
+    </div>
+
+</body>
+</html>
