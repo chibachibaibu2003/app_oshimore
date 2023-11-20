@@ -1,18 +1,41 @@
 {% extends "layout.html" %}
 {% block css %}
-<link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='/css/community.css')}}">
 {% endblock %}
 
 {% block content %}
-
-{% block header_msg%}
-{% if msg!=null %}
-<a class="header_msg">{{msg}}</a>
-{% endif %}
-{%endblock%}
-<a href="{{url_for('monthback')}}"><img class="calback" href="{{url_for('monthback')}}"src="{{url_for('static',filename='/imges/calback.png')}}"></a>
+<a href="{{url_for('com_monthback')}}"><img class="calback_mini"src="{{url_for('static',filename='/imges/calback_mini.png')}}"></a>
 <div id="calendar"></div>
-<a href="{{url_for('monthnext')}}"><img class="calnext"href="{{url_for('monthnext')}}" src="{{url_for('static',filename='/imges/calnext.png')}}"></a>
+<a href="{{url_for('com_monthnext')}}"><img class="calnext_mini"src="{{url_for('static',filename='/imges/calnext_mini.png')}}"></a>
+
+<div class="community_thread">
+    <a class="community_thread_title">コミュニティスレッド</a>
+    <div class="community_thread_list">
+        {%for data in thread_list%}
+            <div class="community_thread_box">
+                <img class="thread_box_img"src="{{url_for('static',filename='/imges/user_icon.png')}}">
+                <a class="thread_box_username">{{data[5]}}</a><br>
+                <a class="thread_box_text">{{data[2]}}</a>
+                <div class="thread_box_edit">
+                    <label class="thread_good"for="thread_checkbox">
+                        <input type="checkbox"id="thread_checkbox">
+                        <span class="goodtext">いいね</span>
+                    </label>
+                    <a class="thread_report" href="">通報</a>
+                </div>
+            </div>
+        {%endfor%}
+    </div>
+    <form>
+        <input type="text"name="thread_text"class="thread_text"autocomplete="off"maxlength="256">
+        <input type="image"class="thread_img"src="{{url_for('static',filename='/imges/thread.png')}}">
+    </form>
+</div>
+
+<a class="register_event_button"href="">イベント追加</a>
+<a class="fanpoint_rank_button"href="">ファンポイントランキング</a>
+<a class="com_edit_button"href="{{url_for('community_set_master')}}">コミュニティ設定</a>
+
 <div class="popup">
     <a><img  class="backbutton"src="{{url_for('static',filename='/imges/back.png')}}"></a>
     <ul class="popupList"></ul>
@@ -40,7 +63,6 @@
     </form>
 </div>
 {% endblock %}
-
 
 {%block jscode%}
 const weeks = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -93,19 +115,17 @@ for (let w = 0; w < 5; w++) {
                 monthevent.push(dayevent)
                 calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="event"id='
                 calendarHtml += checkday
-                calendarHtml +='>'+ dayevent[0][1] +'</a><br>'+'<img class="three_point" src="{{url_for('static',filename='/imges/three_point.png')}}"></td>'
+                calendarHtml +='>'+ dayevent[0][1] +'</a><br>'
             }else{
                 monthevent.push(0)
-                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="empty_event">'+ 'イベント名'+'</a><br>'+'<img class="three_point_invisible" src="{{url_for('static',filename='/imges/three_point.png')}}"></td>'
+                calendarHtml += '<td class="calday">' + '<a>' + dayCount + '</a><br>' + '<a class="empty_event">'+ 'イベント名'+'</a><br></td>'
             }
             dayCount++    
         }
     }
     calendarHtml += '</tr>'
 }
-console.log(monthevent)
 calendarHtml += '</table>'
-
 document.querySelector('#calendar').innerHTML = calendarHtml
 
 let popup=document.querySelector('.popup')
@@ -161,5 +181,4 @@ function checkEmpty(){
         return false;
     }
 }
-
-{%endblock%}
+{% endblock %}

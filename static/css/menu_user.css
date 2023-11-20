@@ -35,7 +35,7 @@
 
 .calday {
     border: 1.5px solid black;
-    padding: 5px 30px 20px 5px;
+    padding: 0px 30px 0px 5px;
 }
 
 .event {
@@ -53,6 +53,12 @@
     background-color: aquamarine;
 }
 
+.three_point {
+    width: 10px;
+    height: 25px;
+    padding-left: 40px;
+}
+
 .empty_event {
     display: inline-block;
     width: 80px;
@@ -63,6 +69,13 @@
     text-overflow: ellipsis;
     text-decoration: none;
     color: white;
+}
+
+.three_point_invisible {
+    width: 10px;
+    height: 25px;
+    padding-left: 40px;
+    visibility: hidden;
 }
 
 .eventlink {

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/login.css">
+    <title>新規アカウント登録</title>
+</head>
+<body>
+    {% if error %}
+    <script>
+        const timer = setTimeout(()=>{
+            alert('このメールアドレスは使用されています')
+        },50)
+    </script>
+    {% endif %}
+    <img class="title" src="../static/imges/icon.png" alt="icon">
+        <div class="form">
+            <form name='login_form' action="{{url_for('register_set')}}" method="post" onsubmit="return checkEmpty()">
+                <p class="login">新規アカウント登録</p><br>
+                <input class="text_line" type="text" name="name" placeholder="Account name" value="{{data.name if data is defined else ''}}"><br>
+                <input class="text_line" type="mail" name="mail" placeholder="Email" value="{{data.mail if data is defined else ''}}"><br>
+                <input class="text_line" type="password" name="password" placeholder="Password"><br>
+                <input class="text_line" type="password" name="check_password" placeholder="Check Password"><br>
+                <div>
+                    <a class='back_bottun' href="{{url_for('back_index')}}">戻る</a>
+                    <input class="submit_bottun2" type="submit" value="登録"><br>
+                </div>
+            </form>
+        </div>
+        <script>
+            function checkEmpty(){
+                let text=document.login_form.name.value;
+                let text2=document.login_form.mail.value;
+                let text3=document.login_form.password.value;
+                let text4=document.login_form.check_password.value;
+                if(text.length === 0 || text2.length===0 || text3.length===0 || text4.length===0) {
+                    alert('必須項目に入力してください。');
+                    return false;
+                }else if(match(text3)){
+                    if(text3===text4){
+                        return true
+                    }else{
+                        alert('パスワードが一致しません')
+                        return false
+                    }
+                }else{
+                    alert('パスワードは英数字8文字以上16文字以内で設定してください')
+                    return false
+                }
+            }
+            function match(text3){
+                let pattern = /^[a-zA-Z0-9]{8,16}$/
+                if(text3.search(pattern)==-1){
+                    return false
+                }else{
+                    return true
+                }
+            }
+        </script>
+</body>
+</html>

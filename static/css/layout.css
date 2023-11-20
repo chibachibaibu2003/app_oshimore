@@ -8,6 +8,7 @@ h1 {
 }
 
 header {
+    position: relative;
     background-color: #FDFFB8;
     width: auto;
     height: 8vh;
@@ -15,6 +16,13 @@ header {
 
 .title {
     height: 40px;
+}
+
+.header_msg {
+    position: absolute;
+    top: 13px;
+    left: 14vw;
+    color: red;
 }
 
 .hamburger {
