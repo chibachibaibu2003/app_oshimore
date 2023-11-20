@@ -324,6 +324,21 @@ def join_community_master(data):
         connection.close()
     return count
 
+def get_comAuth(accId,comId):
+    sql=" SELECT community_authority FROM register_community WHERE account_id=%s and community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,comId))
+        comAuth=cursor.fetchone()
+        
+    except psycopg2.DatabaseError:
+        comAuth=4
+    finally:
+        cursor.close()
+        connection.close()
+    return comAuth
+
 """
 コミュニティ参加
 """
