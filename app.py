@@ -209,7 +209,7 @@ def community(id,checkcal):
     community_thread_list_all=[]
     cnt=0
     
-    comIdList=db.getcomId_to_accId(session['user_info'][0])
+    comIdList=db.getcomId_to_accId_joined(session['user_info'][0])
     comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
@@ -314,7 +314,11 @@ def community_edit_result():
 @app.route('/community_edit_end')
 def community_edit_end():
     msg = 'コミュニティ編集しました。'
-    return render_template('user/community_set_master.html',header_msg=msg)
+    com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
+    if (com_auth==1):
+        return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,msg=msg)
+    else:
+        return render_template('user/community_set_sub.html',comId=session['comId'],checkcal=0,msg=msg)
 
 if __name__ == "__main__":
     app.run(debug=True)
