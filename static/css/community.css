@@ -216,7 +216,7 @@
 
 .register_event_button {
     position: fixed;
-    bottom: 30vh;
+    bottom: 25vh;
     right: 0.9vw;
     text-decoration: none;
     color: black;
@@ -225,14 +225,14 @@
     border: 1px solid black;
     border-radius: 20px;
     width: 35vw;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     text-align: center;
 }
 
 .fanpoint_rank_button {
     position: fixed;
-    bottom: 16vh;
+    bottom: 13vh;
     right: 0.9vw;
     text-decoration: none;
     color: black;
@@ -241,14 +241,14 @@
     border: 1px solid black;
     border-radius: 20px;
     width: 35vw;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     text-align: center;
 }
 
 .com_edit_button {
     position: fixed;
-    bottom: 2vh;
+    bottom: 1vh;
     right: 0.9vw;
     text-decoration: none;
     color: black;
@@ -257,8 +257,8 @@
     border: 1px solid black;
     border-radius: 20px;
     width: 35vw;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     text-align: center;
 }
 

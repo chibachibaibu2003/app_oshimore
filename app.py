@@ -138,13 +138,16 @@ def top(checkcal):
     eventList=[]
     
     comIdList=db.getcomId_to_accId(session['user_info'][0])
-    comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
+    comIdList2=db.getcomId_to_accId_joined(session['user_info'][0])
+    comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
-            datas.append(db.getcomInfo_to_comId(comId))
             eventList.append(db.getevent_to_comId(comId,searchDay))
     if(len(comIdList2)!=0):
         for comId in comIdList2:
+            datas.append(db.getcomInfo_to_comId(comId))
+    if(len(comIdList3)!=0):
+        for comId in comIdList3:
             invitations.append(db.getcomInfo_to_comId(comId))
     searchDay=f"{session['year']}-{session['month']}-"
     return render_template('user/menu.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay, msg=msg)
@@ -234,11 +237,11 @@ def community_set():
         comAuth=db.get_comAuth(accId,comId)
         print(comAuth)
         if (comAuth[0]==0):
-            return render_template('user/community_set_user.html')
+            return render_template('user/community_set_user.html',id=session['comId'])
         elif (comAuth[0]==1):
-            return render_template('user/community_set_master.html')
+            return render_template('user/community_set_master.html',id=session['comId'])
         elif (comAuth[0]==2):
-            return render_template('user/community_set_sub.html')
+            return render_template('user/community_set_sub.html',id=session['comId'])
         return redirect(url_for('community',id=session['comId'],checkcal=0))
     else:
         return redirect(url_for('index'))
