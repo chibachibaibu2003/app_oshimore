@@ -219,6 +219,19 @@ def getcomId_to_accId(id):
         connection.close()
     return list
 
+def getcomId_to_accId_joined(id):
+    sql="SELECT community_id FROM register_community WHERE account_id=%s order by community_id asc"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
 
 def getcomId_to_accId_invit(id):
     sql='SELECT community_id FROM invitation WHERE account_id=%s order by community_id asc'
