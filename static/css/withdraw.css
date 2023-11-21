@@ -1,0 +1,113 @@
+body{
+    margin: 0px;
+    font-family: 'Meiryo';
+    background-color: #FDFFB8;
+}
+
+.title{
+    display: flex;
+	justify-content: center;
+	text-align: center;
+    margin-top: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+    width: 450px;
+	height: 120px;
+}
+
+.form{
+    display: flex;
+	justify-content: center;
+	text-align: center;
+    margin-top: auto;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2px;
+    background: white;
+    width: 680px;
+    height: 400px;
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px 0 grey;
+}
+
+.font1{
+    font-size: 40px;
+    font-weight: lighter;
+    margin-top: 10px;
+}
+
+.font2{
+    font-size: 30px;
+    margin-top: -70px;
+}
+
+.title-button{
+    margin-top: 90px;
+}
+
+
+
+.submit_bottun2{
+	font-family: "メイリオ";
+	display: flex;
+	justify-content: center;
+	text-align: center;
+    line-height: 50px;
+	width: 200px;
+	height: 50px;
+    border-radius: 10px;
+	background-color: #FFA954;
+	border:1px solid #000000;
+	color: #ffffff;
+	font-size: 1.5rem;
+	margin-top: -15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	float: right;
+    text-decoration: none;
+}
+
+.submit_bottun3{
+	font-family: "メイリオ";
+	display: flex;
+	justify-content: center;
+	text-align: center;
+    line-height: 50px;
+	width: 200px;
+	height: 50px;
+    border-radius: 10px;
+	background-color: #FFA954;
+	border:1px solid #000000;
+	color: #ffffff;
+	font-size: 1.5rem;
+	margin-top: -15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+    text-decoration: none;
+}
+
+
+
+.back_bottun{
+	font-family: "メイリオ";
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	line-height:50px;
+	width: 200px;
+	height: 50px;
+    border-radius: 10px;
+	background-color: #ffffff;
+	border:1px solid #000000;
+	color: #000000;
+	text-decoration: none;
+	font-size: 1.5rem;
+	margin-top: -15px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	float: left;
+}
