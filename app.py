@@ -237,11 +237,11 @@ def community_set():
         comAuth=db.get_comAuth(accId,comId)
         print(comAuth)
         if (comAuth[0]==0):
-            return render_template('user/community_set_user.html',id=session['comId'])
+            return render_template('user/community_set_user.html',comId=comId,checkcal=0)
         elif (comAuth[0]==1):
-            return render_template('user/community_set_master.html',id=session['comId'])
+            return render_template('user/community_set_master.html',comId=comId,checkcal=0)
         elif (comAuth[0]==2):
-            return render_template('user/community_set_sub.html',id=session['comId'])
+            return render_template('user/community_set_sub.html',comId=comId,checkcal=0)
         return redirect(url_for('community',id=session['comId'],checkcal=0))
     else:
         return redirect(url_for('index'))
