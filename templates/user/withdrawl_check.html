@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/login.css">
+    <title>Oshi More!</title>
+</head>
+<body>
+    <img class="title" src="../static/imges/icon.png" alt="icon">
+    <div class="checkbox">
+        <a class="checktitle">コミュニティ退会</a><br>
+        <a class="checktext">このコミュニティから退会しますか？</a><br>
+        <div class="buttonbox">
+            <a class="back_bottun" href="{{url_for('community_set')}}">戻る</a>
+            <a class="submit_bottun2" href="{{url_for('community_withdrawal_result')}}">退会</a>
+        </div> 
+    </div>
+</body>
+</html>
