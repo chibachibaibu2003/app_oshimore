@@ -320,5 +320,44 @@ def community_edit_end():
     else:
         return render_template('user/community_set_sub.html',comId=session['comId'],checkcal=0,msg=msg)
 
+@app.route('/community_delete_check')
+def community_delete_check():
+    comname=db.getcommunity_select(session['comId'])
+    return render_template('user/community_delete_check.html',comname=comname[1])
+
+@app.route('/community_delete',methods=['POST'])
+def community_delete():
+    count=db.community_delete(session['comId'])
+    count2=db.register_community_delete(session['comId'])
+    if (count==1 and count2>0):
+        msg='コミュニティを削除しました!'
+    else:
+        msg='コミュニティを削除できませんでした...'
+    session['msg']=msg
+    return redirect(url_for('top',checkcal=0))
+
+@app.route('/community_withdrawal_check')
+def community_withdrawal_check():
+    return render_template('user/withdrawl_check.html')
+
+@app.route('/community_withdrawal_result')
+def community_withdrawal_result():
+    if 'user_info' in session:
+        com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
+        if (com_auth[0]==1):
+            db.remove_register_community(session['user_info'][0],session['comId'])
+            count=db.count_community_member_num(session['comId'])
+            if (count==0):
+                db.community_delete(session['comId'])
+            else:
+                accId=db.get_nextReader_num(session['comId'])
+                db.change_community_reader(accId[0],session['comId'])
+        else:
+            print(com_auth)
+            db.remove_register_community(session['user_info'][0],session['comId'])
+        return render_template('user/withdrawl_result.html')
+    else:
+        return redirect(url_for('index'))
+
 if __name__ == "__main__":
     app.run(debug=True)
