@@ -1,4 +1,3 @@
-
 import os, psycopg2, string, random, hashlib
 
 def get_connection():
@@ -305,8 +304,8 @@ def get_community_id():
         connection.close()
         # idはタプルです
     return id
-
-def get_hidden_flag(com_id):
+  
+  def get_hidden_flag(com_id):
     sql="SELECT public_private FROM community WHERE community_id=%s"
     try:
         connection=get_connection()
@@ -442,8 +441,9 @@ def getcommunity_select(comId):
         connection.close()
     
     return community_information
-
-
+"""
+コミュニティ編集
+"""
 def community_update(com_id,com_name,fav_name,com_public,com_explanation):
     sql = 'UPDATE community SET community_id=%s,community_name=%s,favorite_name=%s,community_exp=%s,public_private=%s WHERE community_id=%s;'
     
@@ -463,6 +463,27 @@ def community_update(com_id,com_name,fav_name,com_public,com_explanation):
     
     return count
 
+"""
+アカウント退会
+"""
+def account_withdraw(accId):
+    sql = 'UPDATE account SET del_flag=%s WHERE account_id=%s;'
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(1,accId))
+        count = cursor.rowcount 
+        connection.commit()
+        
+    except psycopg2.DatabaseError :
+        count = 0
+    
+    finally :
+        cursor.close()
+        connection.close()
+    return count
+  
 def community_search(keyword):
     sql = 'SELECT community_id,community_name,favorite_name,community_exp FROM community WHERE favorite_name LIKE %s AND public_private = 0 OR community_name LIKE %s AND public_private = 0'
     
@@ -584,8 +605,9 @@ def change_community_reader(accId,comId):
     finally:
         cursor.close()
         connection.close()
-    
     return count
+
+        
 
 def search_join_community(account_id, community_id):
     sql = "INSERT INTO register_community VALUES (%s, %s, 0, 0, 0, 0, 0)"

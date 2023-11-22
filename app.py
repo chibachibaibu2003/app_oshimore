@@ -245,8 +245,7 @@ def community_set():
         return redirect(url_for('community',id=session['comId'],checkcal=0))
     else:
         return redirect(url_for('index'))
-
-
+      
 """ 
 コミュニティ画面・前の月へ
 """
@@ -319,6 +318,30 @@ def community_edit_end():
         return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,msg=msg)
     else:
         return render_template('user/community_set_sub.html',comId=session['comId'],checkcal=0,msg=msg)
+      
+"""
+アカウント退会
+"""
+@app.route('/account_withdraw')
+def account_withdraw1():
+    return render_template('user/account_withdraw.html')
+
+
+@app.route('/account_withdraw2')
+def account_withdraw2():
+    return render_template('user/account_withdraw2.html',accId=session['user_info'][0])
+
+@app.route('/account_withdraw3',methods=['POST'])
+def account_withdraw3():    
+   
+    accId = request.form.get('accId')
+    count = db.account_withdraw(accId)
+    return redirect(url_for('ac_withdraw_result'))
+
+
+@app.route('/account_withdraw4')
+def ac_withdraw_result():
+    return render_template('user/account_withdraw3.html')
 
 @app.route('/community_delete_check')
 def community_delete_check():
@@ -391,6 +414,7 @@ def logout():
     print(session['user_info'])
     session.pop['user_info',None]
     return render_template('index.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
