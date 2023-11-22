@@ -34,13 +34,17 @@
     margin-bottom:2px;
 }
 .community-info{
-    margin-left:150px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 70vw;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .underline{
     font-size: 18px;
     border-bottom:1px solid;
-    width: 1000px;
+    width: 100%;
     padding-bottom: -3px;
     line-height: 25px;
 }
@@ -51,45 +55,50 @@
     border-left: 1px solid black;
     border-right: 1px solid black;
     border-radius: 10px;
-    padding: 10px;
     user-select: none;
     resize: none;
-    width: 1000px;
+    width: 100%;
     height: 150px;
 }
 
 .community-btn{
     text-align: center;
-    width:max-content;
+    width: 100%;
 }
 
 .invitation-btn{
+	text-align: center;
     color: white;
     font-size:20px;
-    width:  350px;
+    width:  250px;
     height: 50px;
+    line-height: 50px;
     text-align: center;
+    text-decoration: none;
     border-radius: 10px;
     border-color: whitesmoke;
-    margin: right 200px;
     background-color:#FFA954;
     box-shadow: none;
     cursor: pointer; 
     float: right;
     position: relative;
+    margin-right:20px ;
 }
 .rejection{
+	text-align: center;
     font-size:20px;
-    width:  350px;
+    width:  250px;
     height: 50px;
+    line-height: 50px;
+    border: 1px solid black;
     border-radius: 10px;
-    border-color:whitesmoke;
-    margin-left : 50px;
-    margin-right:200px;
+    border-color:black;
     background-color:white;
     box-shadow: none;
     cursor: pointer;
     float: left;
+    text-decoration: none;
+    margin-left: 20px;
 }
 .invitation-btn:active{
     transform: translateY(4px); /* ボタンが押されたときに文字も4px下に移動 */
