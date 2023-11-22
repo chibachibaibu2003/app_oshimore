@@ -195,3 +195,8 @@ li {
 tr td {
     padding: 0;
 }
+
+.pop {
+    opacity: 1;
+    visibility: visible;
+}

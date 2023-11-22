@@ -1,5 +1,5 @@
 from flask import Flask, render_template,redirect,url_for,request,session
-import random,string,db,datetime,os,mail
+import random,string,db,datetime,os,mail,urllib.parse
 from hashids import Hashids
 from admin import admin_bp
 from user import user_bp
@@ -26,6 +26,8 @@ def login():
     password = request.form.get('password')
     if db.login(mail,password):
         session['user_info'] = db.get_accountInfo_toMail(mail)
+        user = session['user_info']
+        print(user[0])
         return redirect(url_for('top',checkcal=0))
     else:
         return back_index(mail)
@@ -126,7 +128,6 @@ def certification_mail():
 @app.route('/top/<int:checkcal>')
 def top(checkcal):
     if (checkcal!=1):
-        print('test')
         dt=datetime.datetime.now()
         session['month']=dt.month
         session['year']=dt.year
@@ -208,8 +209,7 @@ def community(id,checkcal):
     community_thread_list=[]
     community_thread_list_all=[]
     cnt=0
-    
-    comIdList=db.getcomId_to_accId(session['user_info'][0])
+    comIdList=db.getcomId_to_accId_joined(session['user_info'][0])
     comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
@@ -245,8 +245,7 @@ def community_set():
         return redirect(url_for('community',id=session['comId'],checkcal=0))
     else:
         return redirect(url_for('index'))
-
-
+      
 """ 
 コミュニティ画面・前の月へ
 """
@@ -314,10 +313,12 @@ def community_edit_result():
 @app.route('/community_edit_end')
 def community_edit_end():
     msg = 'コミュニティ編集しました。'
-    return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,header_msg=msg)
-
-
-
+    com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
+    if (com_auth==1):
+        return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,msg=msg)
+    else:
+        return render_template('user/community_set_sub.html',comId=session['comId'],checkcal=0,msg=msg)
+      
 """
 アカウント退会
 """
@@ -341,6 +342,78 @@ def account_withdraw3():
 @app.route('/account_withdraw4')
 def ac_withdraw_result():
     return render_template('user/account_withdraw3.html')
+
+@app.route('/community_delete_check')
+def community_delete_check():
+    comname=db.getcommunity_select(session['comId'])
+    return render_template('user/community_delete_check.html',comname=comname[1])
+
+@app.route('/community_delete',methods=['POST'])
+def community_delete():
+    count=db.community_delete(session['comId'])
+    count2=db.register_community_delete(session['comId'])
+    if (count==1 and count2>0):
+        msg='コミュニティを削除しました!'
+    else:
+        msg='コミュニティを削除できませんでした...'
+    session['msg']=msg
+    return redirect(url_for('top',checkcal=0))
+
+@app.route('/community_withdrawal_check')
+def community_withdrawal_check():
+    return render_template('user/withdrawl_check.html')
+
+@app.route('/community_withdrawal_result')
+def community_withdrawal_result():
+    if 'user_info' in session:
+        com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
+        if (com_auth[0]==1):
+            db.remove_register_community(session['user_info'][0],session['comId'])
+            count=db.count_community_member_num(session['comId'])
+            if (count==0):
+                db.community_delete(session['comId'])
+            else:
+                accId=db.get_nextReader_num(session['comId'])
+                db.change_community_reader(accId[0],session['comId'])
+        else:
+            print(com_auth)
+            db.remove_register_community(session['user_info'][0],session['comId'])
+        return render_template('user/withdrawl_result.html')
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/community_search')
+def community_search():
+    return render_template('user/community_search.html')
+
+@app.route('/community_search_exe', methods=['POST'])
+def community_search_exe():
+    keyword = request.form.get('keyword')
+    result = db.community_search(keyword)
+    return render_template('user/community_search_result.html',result=result,keyword=keyword)
+
+@app.route('/search_join_community/<int:cnt>')
+def search_join_community(cnt):
+    community = db.select_community(cnt)
+    print(community)
+    community={
+        'name':community[0],
+        'oshiname':community[1],
+        'overview':community[2]
+    }
+    session['community_id'] = cnt
+    return render_template('user/search_join_community.html',community=community,cnt=cnt)
+
+@app.route('/join_commuinty_exe')
+def join_community_exe():
+    db.search_join_community(session['user_info'][0],session['community_id'])
+    return redirect(url_for('top',checkcal=1))
+
+@app.route('/')
+def logout():
+    print(session['user_info'])
+    session.pop['user_info',None]
+    return render_template('index.html')
 
 
 if __name__ == "__main__":

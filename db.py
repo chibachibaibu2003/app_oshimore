@@ -1,4 +1,3 @@
-
 import os, psycopg2, string, random, hashlib
 
 def get_connection():
@@ -60,7 +59,7 @@ def get_accountInfo_toMail(mail):
 
 def get_account_id(id):
     b_id = bytes(id,'utf-8')
-    account_id = hashlib.pdk
+    account_id = hashlib.pdk    
 
 def temporary_register(mail,name,password,salt,code):
     sql = 'INSERT INTO temporary_account VALUES(default, %s, %s, %s, %s,%s)'
@@ -305,8 +304,8 @@ def get_community_id():
         connection.close()
         # idはタプルです
     return id
-
-def get_hidden_flag(com_id):
+  
+  def get_hidden_flag(com_id):
     sql="SELECT public_private FROM community WHERE community_id=%s"
     try:
         connection=get_connection()
@@ -483,5 +482,143 @@ def account_withdraw(accId):
     finally :
         cursor.close()
         connection.close()
+    return count
+  
+def community_search(keyword):
+    sql = 'SELECT community_id,community_name,favorite_name,community_exp FROM community WHERE favorite_name LIKE %s AND public_private = 0 OR community_name LIKE %s AND public_private = 0'
+    
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        keyword = '%'+keyword+'%'
+        cursor.execute(sql,(keyword,keyword,))
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = None
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def select_community(id):
+    sql = 'SELECT community_name,favorite_name,community_exp FROM community WHERE community_id = %s'
+    
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        result=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        result = None
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+    
+
+def community_delete(comId):
+    sql="delete from community where community_id =%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
     
     return count
+
+def register_community_delete(comId):
+    sql="delete from register_community where community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    
+    return count
+
+def remove_register_community(accId,comId):
+    sql="delete from register_community where account_id=%s and community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,comId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    
+    return count
+
+def count_community_member_num(comId):
+    sql="select*from register_community where community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        count=cursor.rowcount
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def get_nextReader_num(comId):
+    sql="select account_id ,max(fan_point)from register_community where community_id=%s group by account_id"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        count=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        count=[[]]
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+    
+def change_community_reader(accId,comId):
+    sql="update register_community set authority=1 , community_authority=1 where account_id=%s and community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,comId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+        
+
+def search_join_community(account_id, community_id):
+    sql = "INSERT INTO register_community VALUES (%s, %s, 0, 0, 0, 0, 0)"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (account_id, community_id))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError:
+        return False
+    finally:
+        cursor.close()
+        connection.close()

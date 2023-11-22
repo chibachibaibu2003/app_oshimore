@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='/css/layout.css')}}">
+    {% block css %}
+    {% endblock %}
+    <title>Oshi More!</title>
+</head>
+<body>
+    <header id="js-header">
+        <img class="title" src="{{url_for('static',filename='/imges/icon.png')}}">
+    </header>
+    {% block content %}
+    {% endblock %}
+    
+    <script>
+        {% block jscode %}
+        {% endblock %}
+        
+    </script>
+
+</body>
+</html>
