@@ -6,7 +6,7 @@ import smtplib
 from email.mime.text import MIMEText
 
 def send_mail(to, subject, body):
-    ID = "mailtest.chiba.1st@gmail.com"
+    ID = "k.tsushima.sys22@morijyobi.ac.jp"
     PASS = os.environ['MAIL_PASS']
     HOST = 'smtp.gmail.com'
     PORT = 587

@@ -1,5 +1,5 @@
 from flask import Flask, render_template,redirect,url_for,request,session
-import random,string,db,datetime,os,mail
+import random,string,db,datetime,os,mail,urllib.parse
 from hashids import Hashids
 from admin import admin_bp
 from user import user_bp
@@ -26,6 +26,8 @@ def login():
     password = request.form.get('password')
     if db.login(mail,password):
         session['user_info'] = db.get_accountInfo_toMail(mail)
+        user = session['user_info']
+        print(user[0])
         return redirect(url_for('top',checkcal=0))
     else:
         return back_index(mail)
@@ -126,7 +128,6 @@ def certification_mail():
 @app.route('/top/<int:checkcal>')
 def top(checkcal):
     if (checkcal!=1):
-        print('test')
         dt=datetime.datetime.now()
         session['month']=dt.month
         session['year']=dt.year
@@ -137,8 +138,8 @@ def top(checkcal):
     invitations=[]
     eventList=[]
     
-    comIdList=db.getcomId_to_accId(1)
-    comIdList2=db.getcomId_to_accId_invit(1)
+    comIdList=db.getcomId_to_accId(session['user_info'][0])
+    comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
             datas.append(db.getcomInfo_to_comId(comId))
@@ -206,8 +207,10 @@ def community(id,checkcal):
     community_thread_list_all=[]
     cnt=0
     
-    comIdList=db.getcomId_to_accId(1)
-    comIdList2=db.getcomId_to_accId_invit(1)
+    user = session['user_info']
+    print(session['user_info'])
+    comIdList=db.getcomId_to_accId(user[0])
+    comIdList2=db.getcomId_to_accId_invit(user[0])
     if(len(comIdList)!=0):
         for comId in comIdList:
             datas.append(db.getcomInfo_to_comId(comId))
@@ -299,6 +302,41 @@ def community_edit_result():
 def community_edit_end():
     msg = 'コミュニティ編集しました。'
     return render_template('user/community_set_master.html',header_msg=msg)
+
+@app.route('/community_search')
+def community_search():
+    return render_template('user/community_search.html')
+
+@app.route('/community_search_exe', methods=['POST'])
+def community_search_exe():
+    keyword = request.form.get('keyword')
+    result = db.community_search(keyword)
+    cnt=0
+    return render_template('user/community_search_result.html',result=result,keyword=keyword,cnt=cnt)
+
+@app.route('/search_join_community/<int:cnt>')
+def search_join_community(cnt):
+    community = db.select_community(cnt)
+    print(community)
+    community={
+        'name':community[0],
+        'oshiname':community[1],
+        'overview':community[2]
+    }
+    session['community_id'] = cnt
+    return render_template('user/search_join_community.html',community=community)
+
+@app.route('/join_commuinty_exe')
+def join_community_exe():
+    user = session['user_info']
+    db.join_community(user[0],session['community_id'])
+    return redirect(url_for('top',checkcal=1))
+
+@app.route('/')
+def logout():
+    print(session['user_info'])
+    session.pop['user_info',None]
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -18,12 +18,19 @@
 
     <form action="{{url_for('community_search_exe')}}" method="post">
         <div>
-            <input type="search" placeholder=" 推しの名前で検索" name='keyword' class="search_var">
+            <input type="search" placeholder=" 推しの名前で検索" name='keyword' class="search_var" value="{{keyword}}">
         </div>
         <div>
-            <button type="submit" class="btn button005">検索</button>
+            <button type="submit" class="btn button005 search_buttun">検索</button>
         </div>
     </form>
+    <div class="search_result_box">
+        <ul>
+            {%for community in result%}
+            <a class="community_join" href="{{url_for('search_join_community',cnt=community)}}"><li class="search_result"><p class="community">{{community[1]}}</p><p class="oshi">{{community[2]}}</p><br></li></a>
+            {% endfor %} 
+        </ul>    
+    </div>
     
     
 {%endblock%}
