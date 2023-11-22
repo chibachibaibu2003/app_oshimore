@@ -442,8 +442,9 @@ def getcommunity_select(comId):
         connection.close()
     
     return community_information
-
-
+"""
+コミュニティ編集
+"""
 def community_update(com_id,com_name,fav_name,com_public,com_explanation):
     sql = 'UPDATE community SET community_id=%s,community_name=%s,favorite_name=%s,community_exp=%s,public_private=%s WHERE community_id=%s;'
     
@@ -451,6 +452,28 @@ def community_update(com_id,com_name,fav_name,com_public,com_explanation):
         connection = get_connection()
         cursor = connection.cursor()
         cursor.execute(sql,(com_id,com_name,fav_name,com_explanation,com_public,com_id))
+        count = cursor.rowcount 
+        connection.commit()
+        
+    except psycopg2.DatabaseError :
+        count = 0
+    
+    finally :
+        cursor.close()
+        connection.close()
+    
+    return count
+
+"""
+アカウント退会
+"""
+def account_withdraw(accId):
+    sql = 'UPDATE account SET del_flag=%s WHERE account_id=%s;'
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(1,accId))
         count = cursor.rowcount 
         connection.commit()
         

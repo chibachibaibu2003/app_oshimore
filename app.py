@@ -314,7 +314,34 @@ def community_edit_result():
 @app.route('/community_edit_end')
 def community_edit_end():
     msg = 'コミュニティ編集しました。'
-    return render_template('user/community_set_master.html',header_msg=msg)
+    return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,header_msg=msg)
+
+
+
+"""
+アカウント退会
+"""
+@app.route('/account_withdraw')
+def account_withdraw1():
+    return render_template('user/account_withdraw.html')
+
+
+@app.route('/account_withdraw2')
+def account_withdraw2():
+    return render_template('user/account_withdraw2.html',accId=session['user_info'][0])
+
+@app.route('/account_withdraw3',methods=['POST'])
+def account_withdraw3():    
+   
+    accId = request.form.get('accId')
+    count = db.account_withdraw(accId)
+    return redirect(url_for('ac_withdraw_result'))
+
+
+@app.route('/account_withdraw4')
+def ac_withdraw_result():
+    return render_template('user/account_withdraw3.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
