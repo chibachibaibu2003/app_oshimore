@@ -118,3 +118,55 @@ input:focus{
     height: 35px;
     margin: auto;
   }
+
+  .search_result{
+    text-align: center;
+    width: 600px;
+    height: 40px;
+    font-size: 25px;
+    vertical-align: middle;
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 15px;
+    border: 2px solid;
+    border-radius: 20px;
+  }
+
+  .search_result_box{
+    margin-top: 180px;
+  }
+
+  .search_buttun{
+    margin-top: -35px;
+    margin-bottom: 15px;
+  }
+
+  .community{
+    text-align: left;
+    margin: auto;
+    width: 240px;
+    margin-left: 15px;
+    float: left;
+    border-radius: 20px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;    
+    white-space: nowrap;
+  }
+
+  .oshi{
+    text-align: left;
+    width: 160px;
+    margin: auto;
+    margin-right: 15px;
+    float: right;
+    overflow-x: hidden;
+    text-overflow: ellipsis;    
+    white-space: nowrap;
+  }
+
+.community_join{
+    border: none;
+    color: black;
+    width: 100%;
+}

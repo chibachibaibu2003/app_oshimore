@@ -60,7 +60,7 @@ def get_accountInfo_toMail(mail):
 
 def get_account_id(id):
     b_id = bytes(id,'utf-8')
-    account_id = hashlib.pdk
+    account_id = hashlib.pdk    
 
 def temporary_register(mail,name,password,salt,code):
     sql = 'INSERT INTO temporary_account VALUES(default, %s, %s, %s, %s,%s)'
@@ -462,6 +462,38 @@ def community_update(com_id,com_name,fav_name,com_public,com_explanation):
         connection.close()
     
     return count
+
+def community_search(keyword):
+    sql = 'SELECT community_id,community_name,favorite_name,community_exp FROM community WHERE favorite_name LIKE %s AND public_private = 0 OR community_name LIKE %s AND public_private = 0'
+    
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        keyword = '%'+keyword+'%'
+        cursor.execute(sql,(keyword,keyword,))
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = None
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def select_community(id):
+    sql = 'SELECT community_name,favorite_name,community_exp FROM community WHERE community_id = %s'
+    
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        result=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        result = None
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+    
 
 def community_delete(comId):
     sql="delete from community where community_id =%s"

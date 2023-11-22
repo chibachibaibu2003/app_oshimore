@@ -36,14 +36,13 @@
 .community-info{
     margin-left:150px;
 }
-.underline {
-    text-decoration: underline;
-}
 
 .underline{
+    font-size: 18px;
     border-bottom:1px solid;
     width: 1000px;
-    padding-bottom: 15px;
+    padding-bottom: -3px;
+    line-height: 25px;
 }
 
 .rounded-border {
@@ -69,12 +68,15 @@
     font-size:20px;
     width:  350px;
     height: 50px;
+    text-align: center;
     border-radius: 10px;
     border-color: whitesmoke;
     margin: right 200px;
     background-color:#FFA954;
     box-shadow: none;
     cursor: pointer; 
+    float: right;
+    position: relative;
 }
 .rejection{
     font-size:20px;
@@ -86,7 +88,8 @@
     margin-right:200px;
     background-color:white;
     box-shadow: none;
-    cursor: pointer; 
+    cursor: pointer;
+    float: left;
 }
 .invitation-btn:active{
     transform: translateY(4px); /* ボタンが押されたときに文字も4px下に移動 */
