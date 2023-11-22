@@ -6,13 +6,69 @@
 
 {% endblock %}
 
+{% block header_msg%}
+{% if msg!=null %}
+<a class="header_msg">{{msg}}</a>
+{% endif %}
+{%endblock%}
+
 {%block content%}
     <div>
         <h1 class="h1">コミュニティ設定</h1>
-        <i class="fa-solid fa-arrow-right fontawesome-size"></i>
+        <a  href="{{url_for('community',id=comId,checkcal=checkcal)}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
     </div>
-    <a href="" class="btn_1">コミュニティ編集</a>
-    <a href="" class="btn_2">通報があった投稿</a>
-    <a href="" class="btn_4-2">コミュニティ招待</a>
-    <a href="" class="btn_6">コミュニティ退会</a>
+    <a href="{{url_for('community_edit')}}" class="btn_1 button-color">コミュニティ編集</a>
+    <a href="" class="btn_2 button-color">通報があった投稿</a>
+    <a href="" class="btn_4-2 button-color">コミュニティ招待</a>
+    <a href="" class="btn_6 button-color">コミュニティ退会</a>
+    <div class="popup_b">
+        <a><img  class="backbutton"src="{{url_for('static',filename='/imges/back.png')}}"></a>
+        <a class="popup_b_title">コミュニティ作成</a><br>
+        <form action="{{url_for('register_community')}}"method="post"class="popup_b_form"name="popup_b_form"onsubmit="return checkEmpty()">
+            
+            <a class="popup_b_text">コミュニティ名<span style="color:red;">　必須</span></a><br>
+            <input type="text" name="com_name"class="input_a"autocomplete="off"value="{{data.com_name if data is defined else ''}}"placeholder="new community"maxlength="32"><br>
+            
+            <a class="popup_b_text">推しの名前<span style="color:red;">　必須</span></a><br>
+            <input  type="text" name="fav_name"class="input_a"autocomplete="off"value="{{data.fav_name if data is defined else ''}}"placeholder="No name"maxlength="16"><br>
+            
+            <a class="popup_b_text">公開・非公開</a><br>
+            <input type="radio"name="com_public"value="0"checked><a>公開</a><br>
+            <input type="radio"name="com_public"value="1"><a>非公開</a><br>
+            
+            <a class="popup_b_text">概要<span style="color:red;">　必須</span></a><br>
+            <textarea class="com_explanation"name="com_explanation"rows="7"cols="70"value="{{data.com_explanation if data is defined else ''}}"maxlength="256"></textarea><br>
+            
+            <input type="submit"class="submit_button">
+        </form>
+    </div>
+{%endblock%}
+
+{%block jscode%}
+let backbutton=document.querySelectorAll('.backbutton')
+let ul=document.querySelector('.popupList')
+
+let hamRegi=nav.querySelector('#ham_regi')
+let popupB=document.querySelector('.popup_b')
+
+hamRegi.addEventListener('click',function () {
+    nav.classList.remove('open');
+    blackBg.classList.toggle('popblackBg');
+    popupB.classList.toggle('pop');
+})
+
+backbutton.forEach(function(back){
+    back.addEventListener('click',function () {
+        blackBg.classList.remove('popblackBg');
+        popupB.classList.remove('pop');
+        ul.innerHTML=''
+    })
+})
+
+blackBg.addEventListener('click', function () {
+    nav.classList.remove('open');
+    blackBg.classList.remove('popblackBg');
+    popupB.classList.remove('pop');
+    ul.innerHTML=''
+})
 {%endblock%}

@@ -139,13 +139,16 @@ def top(checkcal):
     eventList=[]
     
     comIdList=db.getcomId_to_accId(session['user_info'][0])
-    comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
+    comIdList2=db.getcomId_to_accId_joined(session['user_info'][0])
+    comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
-            datas.append(db.getcomInfo_to_comId(comId))
             eventList.append(db.getevent_to_comId(comId,searchDay))
     if(len(comIdList2)!=0):
         for comId in comIdList2:
+            datas.append(db.getcomInfo_to_comId(comId))
+    if(len(comIdList3)!=0):
+        for comId in comIdList3:
             invitations.append(db.getcomInfo_to_comId(comId))
     searchDay=f"{session['year']}-{session['month']}-"
     return render_template('user/menu.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay, msg=msg)
@@ -184,7 +187,7 @@ def register_community():
     if (count==1):
         com_id=db.get_community_id()
         hidden_flag=db.get_hidden_flag(com_id)
-        data=[1,com_id[0],1,1,hidden_flag[0],0,0]
+        data=[session['user_info'][0],com_id[0],1,1,hidden_flag[0],0,0]
         count=db.join_community_master(data)
         msg='コミュニティを作成しました！'
     else:
@@ -206,11 +209,8 @@ def community(id,checkcal):
     community_thread_list=[]
     community_thread_list_all=[]
     cnt=0
-    
-    user = session['user_info']
-    print(session['user_info'])
-    comIdList=db.getcomId_to_accId(user[0])
-    comIdList2=db.getcomId_to_accId_invit(user[0])
+    comIdList=db.getcomId_to_accId_joined(session['user_info'][0])
+    comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
             datas.append(db.getcomInfo_to_comId(comId))
@@ -229,9 +229,22 @@ def community(id,checkcal):
         cnt+=1
     return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all)
 
-@app.route('/community_set_master')
-def community_set_master():
-    return render_template('user/community_set_master.html')
+@app.route('/community_set')
+def community_set():
+    if 'user_info' in session:
+        accId=session['user_info'][0]
+        comId=session['comId']
+        comAuth=db.get_comAuth(accId,comId)
+        print(comAuth)
+        if (comAuth[0]==0):
+            return render_template('user/community_set_user.html',comId=comId,checkcal=0)
+        elif (comAuth[0]==1):
+            return render_template('user/community_set_master.html',comId=comId,checkcal=0)
+        elif (comAuth[0]==2):
+            return render_template('user/community_set_sub.html',comId=comId,checkcal=0)
+        return redirect(url_for('community',id=session['comId'],checkcal=0))
+    else:
+        return redirect(url_for('index'))
 
 
 """ 
@@ -301,7 +314,50 @@ def community_edit_result():
 @app.route('/community_edit_end')
 def community_edit_end():
     msg = 'コミュニティ編集しました。'
-    return render_template('user/community_set_master.html',header_msg=msg)
+    com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
+    if (com_auth==1):
+        return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,msg=msg)
+    else:
+        return render_template('user/community_set_sub.html',comId=session['comId'],checkcal=0,msg=msg)
+
+@app.route('/community_delete_check')
+def community_delete_check():
+    comname=db.getcommunity_select(session['comId'])
+    return render_template('user/community_delete_check.html',comname=comname[1])
+
+@app.route('/community_delete',methods=['POST'])
+def community_delete():
+    count=db.community_delete(session['comId'])
+    count2=db.register_community_delete(session['comId'])
+    if (count==1 and count2>0):
+        msg='コミュニティを削除しました!'
+    else:
+        msg='コミュニティを削除できませんでした...'
+    session['msg']=msg
+    return redirect(url_for('top',checkcal=0))
+
+@app.route('/community_withdrawal_check')
+def community_withdrawal_check():
+    return render_template('user/withdrawl_check.html')
+
+@app.route('/community_withdrawal_result')
+def community_withdrawal_result():
+    if 'user_info' in session:
+        com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
+        if (com_auth[0]==1):
+            db.remove_register_community(session['user_info'][0],session['comId'])
+            count=db.count_community_member_num(session['comId'])
+            if (count==0):
+                db.community_delete(session['comId'])
+            else:
+                accId=db.get_nextReader_num(session['comId'])
+                db.change_community_reader(accId[0],session['comId'])
+        else:
+            print(com_auth)
+            db.remove_register_community(session['user_info'][0],session['comId'])
+        return render_template('user/withdrawl_result.html')
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/community_search')
 def community_search():
