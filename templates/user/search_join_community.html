@@ -9,9 +9,6 @@
 {% block content %}
     <div class="center">
         <h2>コミュニティ参加</h2>
-        <div class="back-btn">
-            <i class="fas fa-arrow-left"></i>
-        </div>
     </div>
         <div class="community-info">
             <div class="community-name">
@@ -23,8 +20,8 @@
                 <p class="rounded-border" >{{ community.overview }}</p>
             </div>
             <div class="community-btn">
-                <a href="{{url_for('join_community_exe')}}" class="rejection">拒否する</a>
-                <a href="" class="invitation-btn">参加する</a>
+                <a href="" class="rejection">もどる</a>
+                <a href="{{url_for('join_community_exe')}}" class="invitation-btn">参加する</a>
             </div>
         </div>       
 

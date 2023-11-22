@@ -367,8 +367,7 @@ def community_search():
 def community_search_exe():
     keyword = request.form.get('keyword')
     result = db.community_search(keyword)
-    cnt=0
-    return render_template('user/community_search_result.html',result=result,keyword=keyword,cnt=cnt)
+    return render_template('user/community_search_result.html',result=result,keyword=keyword)
 
 @app.route('/search_join_community/<int:cnt>')
 def search_join_community(cnt):
@@ -380,12 +379,11 @@ def search_join_community(cnt):
         'overview':community[2]
     }
     session['community_id'] = cnt
-    return render_template('user/search_join_community.html',community=community)
+    return render_template('user/search_join_community.html',community=community,cnt=cnt)
 
 @app.route('/join_commuinty_exe')
 def join_community_exe():
-    user = session['user_info']
-    db.join_community(user[0],session['community_id'])
+    db.search_join_community(session['user_info'][0],session['community_id'])
     return redirect(url_for('top',checkcal=1))
 
 @app.route('/')

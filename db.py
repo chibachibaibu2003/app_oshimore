@@ -586,3 +586,17 @@ def change_community_reader(accId,comId):
         connection.close()
     
     return count
+
+def search_join_community(account_id, community_id):
+    sql = "INSERT INTO register_community VALUES (%s, %s, 0, 0, 0, 0, 0)"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (account_id, community_id))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError:
+        return False
+    finally:
+        cursor.close()
+        connection.close()
