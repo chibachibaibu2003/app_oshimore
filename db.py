@@ -305,7 +305,7 @@ def get_community_id():
         # idはタプルです
     return id
   
-  def get_hidden_flag(com_id):
+def get_hidden_flag(com_id):
     sql="SELECT public_private FROM community WHERE community_id=%s"
     try:
         connection=get_connection()
