@@ -171,45 +171,17 @@
     margin-left: 30vw;
 }
 
-.thread_good {
-    cursor: pointer;
+#test1 {
+    width: 20px;
+    height: 20px;
 }
 
-.goodtext {
-    align-items: center;
-    display: flex;
-}
-
-.thread_good input {
-    display: none;
-}
-
-.thread_good input+.goodtext::before {
-    background-image: url("../imges/empty_good.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    content: "";
-    height: 15px;
-    position: relative;
-    width: 15px;
-}
-
-.thread_good input:checked+.goodtext::before {
-    background-image: url("../imges/good.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    content: "";
-    height: 15px;
-    position: relative;
-    width: 15px;
-}
+.goodcheck {}
 
 .thread_report {
     position: absolute;
     left: 100px;
-    top: -1px;
+    top: 4px;
     text-decoration: none;
     color: red;
 }
