@@ -1,4 +1,4 @@
-from flask import Flask, render_template,redirect,url_for,request,session
+from flask import Flask, render_template,redirect,url_for,request,session,jsonify
 import random,string,db,datetime,os,mail,urllib.parse
 from hashids import Hashids
 from admin import admin_bp
@@ -196,8 +196,22 @@ def register_community():
     return redirect(url_for('top',checkcal=0))
 
 
-@app.route('/community/<int:id>/<int:checkcal>')
+@app.route('/community/<int:id>/<int:checkcal>',methods=['GET','POST'])
 def community(id,checkcal):
+    
+    if request.method=='POST':
+        postgood=request.form['post_good']
+        postId=int(request.form['postId'])
+        accId=int(request.form['accId'])
+        if (postgood=="0"):
+            cnt=db.community_post_good_del(postId,accId)
+            print(cnt)
+        elif (postgood=="1"):
+            cnt=db.community_post_good(postId,accId)
+            print(cnt)
+        return jsonify({'msg' : 'success'})
+
+    
     if (checkcal!=1):
         dt=datetime.datetime.now()
         session['month']=dt.month
@@ -227,7 +241,7 @@ def community(id,checkcal):
         good_num=db.getcomThread_goodnum(data[0])
         community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
         cnt+=1
-    return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all)
+    return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all,comId=id,checkcal=checkcal)
 
 @app.route('/community_set')
 def community_set():

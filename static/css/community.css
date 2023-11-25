@@ -176,7 +176,9 @@
     height: 20px;
 }
 
-.goodcheck {}
+.goodcheck {
+    display: none;
+}
 
 .thread_report {
     position: absolute;

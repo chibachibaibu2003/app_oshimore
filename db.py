@@ -622,3 +622,37 @@ def search_join_community(account_id, community_id):
     finally:
         cursor.close()
         connection.close()
+        
+
+"""
+いいね機能(いいね取り消し)
+"""
+def community_post_good(postId,accId):
+    sql="insert into community_good values(default,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,accId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def community_post_good_del(postId,accId):
+    sql="delete from community_good where community_post_id=%s and account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,accId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
