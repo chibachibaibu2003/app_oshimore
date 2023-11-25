@@ -190,20 +190,43 @@ function checkEmpty(){
 }
 
 let goodlabel=document.querySelectorAll('[data-num]')
+let thread_list={{thread_list|tojson}}
+let comId={{comId|tojson}}
+let checkcal={{checkcal|tojson}}
+console.log(thread_list[0][0])
+console.log(thread_list[0][4])
+
 
 goodlabel.forEach((elm,i)=>{
     elm.addEventListener('click',(e)=>{
         if(e.srcElement.checked){
-            console.log(e)
+            let num= e.srcElement.dataset.num -1
+            $.ajax({
+                data :{
+                    post_good:1,
+                    postId:thread_list[num][0],
+                    accId:thread_list[num][4],
+                },
+                type:'POST',
+                url:'/community/'+comId+'/'+checkcal
+            })
             e.srcElement.setAttribute('checked','')
             e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/good.png')}}"
         }else{
-            console.log(e)
+            let num= e.srcElement.dataset.num -1
+            $.ajax({
+                data :{
+                    post_good:0,
+                    postId:thread_list[num][0],
+                    accId:thread_list[num][4],
+                },
+                type:'POST',
+                url:'/community/'+comId+'/'+checkcal
+            })
             e.srcElement.removeAttribute('checked')
             e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/empty_good.png')}}"
         }
     })
 })
-
 
 {% endblock %}
