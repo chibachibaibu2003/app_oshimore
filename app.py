@@ -205,10 +205,8 @@ def community(id,checkcal):
         accId=int(request.form['accId'])
         if (postgood=="0"):
             cnt=db.community_post_good_del(postId,accId)
-            print(cnt)
         elif (postgood=="1"):
             cnt=db.community_post_good(postId,accId)
-            print(cnt)
         return jsonify({'msg' : 'success'})
 
     
