@@ -5,7 +5,7 @@ from admin import admin_bp
 from user import user_bp
 
 app = Flask(__name__)
-app.secret_key=''.join(random.choices(string.ascii_letters,k=256))
+app.secret_key=os.environ['sec_key']
 
 app.register_blueprint(admin_bp)
 app.register_blueprint(user_bp)
