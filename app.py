@@ -423,6 +423,19 @@ def join_community_exe():
     db.search_join_community(session['user_info'][0],session['community_id'])
     return redirect(url_for('top',checkcal=1))
 
+
+@app.route('/community_post',methods=['POST'])
+def community_post():
+    accId=session['user_info'][0]
+    comId = session['comId']
+    post = request.form.get('post')
+    post_day = datetime.datetime.now()
+    
+    count = db.community_post(accId,comId,post,post_day)
+    
+    return redirect(url_for('community',id=comId,checkcal=0))
+
+
 @app.route('/')
 def logout():
     print(session['user_info'])
