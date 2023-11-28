@@ -28,8 +28,10 @@ def login():
     if db.login(mail,password):
         session['user_info'] = db.get_accountInfo_toMail(mail)
         user = session['user_info']
-        print(user[0])
-        return redirect(url_for('top',checkcal=0))
+        if(user[10]==1):
+            return render_template('index.html')
+        else:
+            return redirect(url_for('top',checkcal=0))
     else:
         return back_index(mail)
 
@@ -342,10 +344,15 @@ def account_withdraw2():
     return render_template('user/account_withdraw2.html',accId=session['user_info'][0])
 
 @app.route('/account_withdraw3',methods=['POST'])
-def account_withdraw3():    
-   
+def account_withdraw3():
     accId = request.form.get('accId')
     count = db.account_withdraw(accId)
+
+    if 'user_info' not in session:
+        return redirect(url_for('index'))
+
+
+    session.clear()
     return redirect(url_for('ac_withdraw_result'))
 
 

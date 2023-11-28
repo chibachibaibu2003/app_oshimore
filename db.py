@@ -760,3 +760,4 @@ def community_post(accId,comId,post,post_day):
         connection.close()
     return count
 
+
