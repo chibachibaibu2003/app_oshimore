@@ -19,7 +19,7 @@
     </div>
     <a href="{{url_for('community_edit')}}" class="btn_1 button-color">コミュニティ編集</a>
     <a href="" class="btn_2 button-color">通報があった投稿</a>
-    <a href="" class="btn_4-2 button-color">コミュニティ招待</a>
+    <a href="{{url_for('community_user_search')}}" class="btn_4-2 button-color">コミュニティ招待</a>
     <a href="{{url_for('community_withdrawal_check')}}" class="btn_6 button-color">コミュニティ退会</a>
     <div class="popup_b">
         <a><img  class="backbutton"src="{{url_for('static',filename='/imges/back.png')}}"></a>
@@ -42,6 +42,7 @@
             <input type="submit"class="submit_button">
         </form>
     </div>
+
 {%endblock%}
 
 {%block jscode%}
@@ -71,4 +72,5 @@ blackBg.addEventListener('click', function () {
     popupB.classList.remove('pop');
     ul.innerHTML=''
 })
+
 {%endblock%}

@@ -1,0 +1,28 @@
+{% extends "header.html" %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/user_serach.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <h2>ユーザー検索</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+    <i class="fa-solid fa-arrow-right fontawesome-size" onclick="history.back();"></i>
+    <div class="search-box">
+        <input type="text" class="search-input" placeholder="ユーザー名 もしくは ユーザーIDで検索" name="search_query">
+        <button type="sbumit" class="search-button">検索</button>
+    </div>
+    <div class="results-container"></div>
+</div>
+
+
+
+<script src="/static/js/search.js"></script>
+{% endblock %}
