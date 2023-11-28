@@ -672,3 +672,18 @@ def community_post(accId,comId,post,post_day):
         cursor.close()
         connection.close()
     return count
+
+def get_acc_deleteFlag(accId):
+    sql = 'SELECT del_flag FROM account WHERE account_id = %s'
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (accId,))
+        result = cursor.fetchone()
+    except psycopg2.DatabaseError:
+        result = None
+    finally:
+        cursor.close()
+        connection.close()
+    return result
