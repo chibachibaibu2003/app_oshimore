@@ -1,0 +1,136 @@
+/* user_detail.css */
+
+.title h2{
+  text-align:center;
+  color:red;
+}
+
+.fontawesome-size{
+  font-size: 3.5em;
+  transform: rotate(180deg);
+  -webkit-text-stroke: 4px white;
+  position: absolute;
+  left: 20px;
+  top: 74px;
+}
+
+/* 全体のコンテナ */
+.user-detail {
+  display: flex;
+  justify-content: space-around; 
+  align-items: flex-start; 
+  margin-top: 20px;
+}
+
+/* 左セクションのスタイル */
+.left-section {
+  width: 40%; 
+}
+
+/* アイコンスタイル */
+.icon img {
+  width: 150px; 
+  height: 150px;
+  border-radius: 50%;
+  display: block; 
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+/* アカウント名とユーザーIDのスタイル */
+.account-name h2, .user-id p {
+  text-align: center; 
+}
+
+/* 右セクションのスタイル */
+.right-section {
+  transform: translateX(-20%);
+  width: 40%; 
+  padding-left: 20px;
+  padding-right: 50px;
+}
+
+.profile p{
+  height:125px;
+}
+/* プロフィールスタイル */
+.profile p {
+  background: #FFF; 
+  border-radius: 10px; 
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.oshi-list {
+  border: 2px solid #ddd;
+  border-radius: 20px; 
+  margin: 20px 0; 
+  max-height: 150px; 
+  overflow-y: auto; 
+}
+
+.oshi-list h3 {
+  text-align: center;
+  margin-bottom: 15px; 
+  border-bottom:#ddd 3px solid;
+  padding-bottom: 10px; 
+}
+
+.oshi-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0; 
+}
+
+.oshi-list li:not(:last-child) {
+  border-bottom: 1px solid #ddd; 
+  padding-bottom: 10px; 
+  margin-bottom: 10px; 
+}
+
+.oshi-list li{
+  padding-left: 10px;
+}
+
+/* Webkitブラウザのためのスクロールバーのスタイル */
+.oshi-list::-webkit-scrollbar {
+  width: 10px; /* スクロールバーの幅 */
+}
+
+.oshi-list::-webkit-scrollbar-track {
+  background: #f1f1f1; /* スクロールバーのトラック部分の背景色 */
+}
+
+.oshi-list::-webkit-scrollbar-thumb {
+  background: #888; /* スクロールバーのつまみ部分の背景色 */
+  border-radius: 5px; /* 角を丸くする */
+}
+
+.oshi-list::-webkit-scrollbar-thumb:hover {
+  background: #555; /* スクロールバーのつまみをホバーしたときの色 */
+}
+
+/* 招待フォームスタイル */
+.invite-form {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.invite-form button {
+  background-color: #FFA954;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 200px; 
+}
+
+.invite-form button:hover {
+  background-color: #e5942d;
+}
+
+
+

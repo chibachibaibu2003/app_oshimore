@@ -1,4 +1,3 @@
-
 import os, psycopg2, string, random, hashlib
 
 def get_connection():
@@ -304,7 +303,7 @@ def get_community_id():
         connection.close()
         # idはタプルです
     return id
-
+  
 def get_hidden_flag(com_id):
     sql="SELECT public_private FROM community WHERE community_id=%s"
     try:
@@ -351,35 +350,33 @@ def get_comAuth(accId,comId):
         connection.close()
     return comAuth
 
-"""
-コミュニティ参加
-"""
 def join_community(account_id, community_id):
-    sql = "INSERT INTO register_community (account_id, community_id) VALUES (%s, %s)"
+    connection = get_connection()
+    cursor = connection.cursor()
     try:
-        connection = get_connection()
-        cursor = connection.cursor()
+        sql = "INSERT INTO register_community (account_id, community_id, authority, community_authority, calendar_hidden_flag, favorite_list_flag, fan_point) VALUES (%s, %s, 1, 1, 0, 0, 0)"
         cursor.execute(sql, (account_id, community_id))
         connection.commit()
         return True
-    except psycopg2.DatabaseError:
+    except Exception as e:
+        print(e)
+        connection.rollback()
         return False
     finally:
         cursor.close()
         connection.close()
-"""
-参加拒否
-"""
 
-def reject_invitation(account_id, community_id):
-    sql = "DELETE FROM invitation WHERE account_id = %s AND community_id = %s"
+def delete_invitation(account_id, community_id):
+    connection = get_connection()
+    cursor = connection.cursor()
     try:
-        connection = get_connection()
-        cursor = connection.cursor()
+        sql = "DELETE FROM invitation WHERE account_id = %s AND community_id = %s"
         cursor.execute(sql, (account_id, community_id))
         connection.commit()
         return True
-    except psycopg2.DatabaseError:
+    except Exception as e:
+        print(e)
+        connection.rollback()
         return False
     finally:
         cursor.close()
@@ -441,8 +438,9 @@ def getcommunity_select(comId):
         connection.close()
     
     return community_information
-
-
+"""
+コミュニティ編集
+"""
 def community_update(com_id,com_name,fav_name,com_public,com_explanation):
     sql = 'UPDATE community SET community_id=%s,community_name=%s,favorite_name=%s,community_exp=%s,public_private=%s WHERE community_id=%s;'
     
@@ -462,6 +460,96 @@ def community_update(com_id,com_name,fav_name,com_public,com_explanation):
     
     return count
 
+def get_community_data(community_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        sql = "SELECT * FROM community WHERE community_id = %s"
+        cursor.execute(sql, (community_id,))
+        community_data = cursor.fetchone()
+        return community_data
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+def search_users(query):
+    """
+    ユーザー名またはユーザーIDで部分一致検索を行い、該当するユーザーのリストを返す。
+    """
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        # ユーザー名またはユーザーIDで検索
+        sql = "SELECT account_name, user_id, icon_url FROM account WHERE account_name LIKE %s OR user_id LIKE %s"
+        cursor.execute(sql, (f'%{query}%', f'%{query}%'))
+        users = cursor.fetchall()
+        return [{'account_name': user[0], 'user_id': user[1], 'icon_url': user[2]} for user in users]
+    except Exception as e:
+        print(e)
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+
+def user_detail(user_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        # ユーザー情報の取得
+        user_info_sql = "SELECT account_id, account_name, user_id, icon_url, profile FROM account WHERE user_id = %s"
+        cursor.execute(user_info_sql, (user_id,))
+        user_info = cursor.fetchone()
+
+        # 推しリストの取得
+        oshi_list_sql = """
+        SELECT c.favorite_name
+        FROM community c
+        INNER JOIN register_community rc ON c.community_id = rc.community_id
+        WHERE rc.account_id = %s AND rc.favorite_list_flag = 0
+        """
+        cursor.execute(oshi_list_sql, (user_info[0],))  # user_infoからaccount_idを渡す
+        oshi_list = cursor.fetchall()
+
+        if user_info:
+            # ユーザー情報と推しリストを辞書形式で返す
+            return {
+                'account_id': user_info[0],
+                'account_name': user_info[1],
+                'user_id': user_info[2],
+                'icon_url': user_info[3],
+                'profile': user_info[4],
+                'oshi_list': [oshi_name[0] for oshi_name in oshi_list]  # 推しリストを追加
+            }
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
+"""
+アカウント退会
+"""
+def account_withdraw(accId):
+    sql = 'UPDATE account SET del_flag=%s WHERE account_id=%s;'
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(1,accId))
+        count = cursor.rowcount 
+        connection.commit()
+        
+    except psycopg2.DatabaseError :
+        count = 0
+    
+    finally :
+        cursor.close()
+        connection.close()
+    return count
+  
 def community_search(keyword):
     sql = 'SELECT community_id,community_name,favorite_name,community_exp FROM community WHERE favorite_name LIKE %s AND public_private = 0 OR community_name LIKE %s AND public_private = 0'
     
@@ -583,8 +671,9 @@ def change_community_reader(accId,comId):
     finally:
         cursor.close()
         connection.close()
-    
     return count
+
+        
 
 def search_join_community(account_id, community_id):
     sql = "INSERT INTO register_community VALUES (%s, %s, 0, 0, 0, 0, 0)"
@@ -600,6 +689,7 @@ def search_join_community(account_id, community_id):
         cursor.close()
         connection.close()
         
+
 def report_community(community_id,user_id,category,reason):
     sql = "INSERT INTO  community_report values(default, %s,%s,%s,%s)"
     try:
@@ -613,3 +703,73 @@ def report_community(community_id,user_id,category,reason):
     finally:
         cursor.close()
         connection.close()
+
+def insert_invitation(community_id, account_id):
+    """
+    指定されたコミュニティIDとアカウントIDを使用して、招待データをデータベースに挿入する。
+    """
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        # 招待データの挿入
+        sql = "INSERT INTO invitation (community_id, account_id) VALUES (%s, %s)"
+        cursor.execute(sql, (community_id, account_id))
+        connection.commit()  # 変更をコミット
+        return True  # 挿入成功
+    except Exception as e:
+        print(e)
+        connection.rollback()  # エラーが発生したらロールバック
+        return False  # 挿入失敗
+    finally:
+        cursor.close()
+        connection.close()
+
+
+"""
+いいね機能(いいね取り消し)
+"""
+def community_post_good(postId,accId):
+    sql="insert into community_good values(default,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,accId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def community_post_good_del(postId,accId):
+    sql="delete from community_good where community_post_id=%s and account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,accId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+
+def community_post(accId,comId,post,post_day):
+    sql="INSERT INTO community_post values(default,%s,%s,%s,0,%s,0)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,comId,post,post_day))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count

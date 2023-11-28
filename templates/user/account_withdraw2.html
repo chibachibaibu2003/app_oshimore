@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/ac_withdraw.css">
+    <title>アカウント退会</title>
+</head>
+<body>
+    <div class="title">
+        <img class="title-size" src="/static/imges/icon.png" alt="icon">
+    </div>
+
+    <div class="form">
+        <h1 class="font1">アカウント退会</h1>
+        <p class="font3">このアカウントを退会しますか？</p><br>
+        <p class="font4">一度、退会すると復元することができません。</p>
+        
+        <form action="{{url_for('account_withdraw3')}}" method="post">
+            <input type="hidden" name="accId" value="{{accId}}">
+            <div class="title-button2">
+                <button type="submit" class="submit_bottun3">退会</button>
+                <a class="back_bottun2" href="{{url_for('account_withdraw1')}}">戻る</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
