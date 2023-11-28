@@ -1,0 +1,59 @@
+.h1 {
+    font-size: 40px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.fontawesome-size {
+    font-size: 3.5em;
+    transform: rotate(180deg);
+    -webkit-text-stroke: 4px white;
+    position: absolute;
+    left: 20px;
+    top: 74px;
+    color: black;
+}
+
+.checktext {
+    font-size: 1.6rem;
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    width: 45vw;
+    transform: translateX(-50%) translateY(-30%);
+    background-color: white;
+}
+
+.inputbox {
+    font-size: 1.6rem;
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    width: 45vw;
+    transform: translateX(-50%) translateY(-30%);
+    background-color: white;
+}
+
+.inputtext {
+    width: 44vw;
+    height: 30px;
+    font-size: 1.3rem;
+    border: 1.5px solid black;
+}
+
+.submitbutton {
+    display: inline-block;
+    position: fixed;
+    left: 40%;
+    transform: translateX(-40%);
+    text-decoration: none;
+    width: 50%;
+    padding: 5px;
+    margin-top: 10px;
+    border: 1px solid #707070;
+    border-radius: 10px;
+    color: white;
+    font-size: 1.4rem;
+    background-color: #FFA954;
+    text-align: center;
+}

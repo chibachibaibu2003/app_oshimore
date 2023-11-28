@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static', filename='/css/layout.css')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     {% block css %}
     {% endblock %}
     <title>Oshi More!</title>
@@ -23,7 +24,7 @@
                 <li class="ham_li"><a class="ham_menu" href="">コミュニティ検索</a></li>
                 <li class="ham_li"><a class="ham_menu" href="">プロフィール編集</a></li>
                 <li class="ham_li"><a class="ham_menu" href="">カレンダー表示の設定</a></li>
-                <li class="ham_li"><a class="ham_menu" href="">コミュニティ作成</a></li>
+                <li class="ham_li"><a class="ham_menu" id="ham_regi">コミュニティ作成</a></li>
                 <li><a class="ham_logout" href="">ログアウト</a></li>
             </ul>
         </nav>

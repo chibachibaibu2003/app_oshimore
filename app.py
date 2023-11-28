@@ -1,11 +1,12 @@
 from flask import Flask, render_template,redirect,url_for,request,session,jsonify,flash
-import random,string,db,datetime,os,mail
+import random,string,db,datetime,os,mail,urllib.parse
+
 from hashids import Hashids
 from admin import admin_bp
 from user import user_bp
 
 app = Flask(__name__)
-app.secret_key=''.join(random.choices(string.ascii_letters,k=256))
+app.secret_key=os.environ['sec_key']
 
 app.register_blueprint(admin_bp)
 app.register_blueprint(user_bp)
@@ -26,6 +27,8 @@ def login():
     password = request.form.get('password')
     if db.login(mail,password):
         session['user_info'] = db.get_accountInfo_toMail(mail)
+        user = session['user_info']
+        print(user[0])
         return redirect(url_for('top',checkcal=0))
     else:
         return back_index(mail)
@@ -126,7 +129,6 @@ def certification_mail():
 @app.route('/top/<int:checkcal>')
 def top(checkcal):
     if (checkcal!=1):
-        print('test')
         dt=datetime.datetime.now()
         session['month']=dt.month
         session['year']=dt.year
@@ -138,13 +140,16 @@ def top(checkcal):
     eventList=[]
     
     comIdList=db.getcomId_to_accId(session['user_info'][0])
-    comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
+    comIdList2=db.getcomId_to_accId_joined(session['user_info'][0])
+    comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
-            datas.append(db.getcomInfo_to_comId(comId))
             eventList.append(db.getevent_to_comId(comId,searchDay))
     if(len(comIdList2)!=0):
         for comId in comIdList2:
+            datas.append(db.getcomInfo_to_comId(comId))
+    if(len(comIdList3)!=0):
+        for comId in comIdList3:
             invitations.append(db.getcomInfo_to_comId(comId))
     searchDay=f"{session['year']}-{session['month']}-"
     return render_template('user/menu.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay, msg=msg)
@@ -192,8 +197,20 @@ def register_community():
     return redirect(url_for('top',checkcal=0))
 
 
-@app.route('/community/<int:id>/<int:checkcal>')
+@app.route('/community/<int:id>/<int:checkcal>',methods=['GET','POST'])
 def community(id,checkcal):
+    
+    if request.method=='POST':
+        postgood=request.form['post_good']
+        postId=int(request.form['postId'])
+        accId=int(request.form['accId'])
+        if (postgood=="0"):
+            cnt=db.community_post_good_del(postId,accId)
+        elif (postgood=="1"):
+            cnt=db.community_post_good(postId,accId)
+        return jsonify({'msg' : 'success'})
+
+    
     if (checkcal!=1):
         dt=datetime.datetime.now()
         session['month']=dt.month
@@ -205,8 +222,7 @@ def community(id,checkcal):
     community_thread_list=[]
     community_thread_list_all=[]
     cnt=0
-    
-    comIdList=db.getcomId_to_accId(session['user_info'][0])
+    comIdList=db.getcomId_to_accId_joined(session['user_info'][0])
     comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
     if(len(comIdList)!=0):
         for comId in comIdList:
@@ -224,7 +240,7 @@ def community(id,checkcal):
         good_num=db.getcomThread_goodnum(data[0])
         community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
         cnt+=1
-    return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all)
+    return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all,comId=id,checkcal=checkcal)
 
 @app.route('/community_set')
 def community_set():
@@ -234,16 +250,15 @@ def community_set():
         comAuth=db.get_comAuth(accId,comId)
         print(comAuth)
         if (comAuth[0]==0):
-            return render_template('user/community_set_user.html')
+            return render_template('user/community_set_user.html',comId=comId,checkcal=0)
         elif (comAuth[0]==1):
-            return render_template('user/community_set_master.html')
+            return render_template('user/community_set_master.html',comId=comId,checkcal=0)
         elif (comAuth[0]==2):
-            return render_template('user/community_set_sub.html')
+            return render_template('user/community_set_sub.html',comId=comId,checkcal=0)
         return redirect(url_for('community',id=session['comId'],checkcal=0))
     else:
         return redirect(url_for('index'))
-
-
+      
 """ 
 コミュニティ画面・前の月へ
 """
@@ -308,7 +323,121 @@ def community_edit_result():
 @app.route('/community_edit_end')
 def community_edit_end():
     msg = 'コミュニティ編集しました。'
-    return render_template('user/community_set_master.html',header_msg=msg)
+    com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
+    if (com_auth==1):
+        return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,msg=msg)
+    else:
+        return render_template('user/community_set_sub.html',comId=session['comId'],checkcal=0,msg=msg)
+      
+"""
+アカウント退会
+"""
+@app.route('/account_withdraw')
+def account_withdraw1():
+    return render_template('user/account_withdraw.html')
+
+
+@app.route('/account_withdraw2')
+def account_withdraw2():
+    return render_template('user/account_withdraw2.html',accId=session['user_info'][0])
+
+@app.route('/account_withdraw3',methods=['POST'])
+def account_withdraw3():    
+   
+    accId = request.form.get('accId')
+    count = db.account_withdraw(accId)
+    return redirect(url_for('ac_withdraw_result'))
+
+
+@app.route('/account_withdraw4')
+def ac_withdraw_result():
+    return render_template('user/account_withdraw3.html')
+
+@app.route('/community_delete_check')
+def community_delete_check():
+    comname=db.getcommunity_select(session['comId'])
+    return render_template('user/community_delete_check.html',comname=comname[1])
+
+@app.route('/community_delete',methods=['POST'])
+def community_delete():
+    count=db.community_delete(session['comId'])
+    count2=db.register_community_delete(session['comId'])
+    if (count==1 and count2>0):
+        msg='コミュニティを削除しました!'
+    else:
+        msg='コミュニティを削除できませんでした...'
+    session['msg']=msg
+    return redirect(url_for('top',checkcal=0))
+
+@app.route('/community_withdrawal_check')
+def community_withdrawal_check():
+    return render_template('user/withdrawl_check.html')
+
+@app.route('/community_withdrawal_result')
+def community_withdrawal_result():
+    if 'user_info' in session:
+        com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
+        if (com_auth[0]==1):
+            db.remove_register_community(session['user_info'][0],session['comId'])
+            count=db.count_community_member_num(session['comId'])
+            if (count==0):
+                db.community_delete(session['comId'])
+            else:
+                accId=db.get_nextReader_num(session['comId'])
+                db.change_community_reader(accId[0],session['comId'])
+        else:
+            print(com_auth)
+            db.remove_register_community(session['user_info'][0],session['comId'])
+        return render_template('user/withdrawl_result.html')
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/community_search')
+def community_search():
+    return render_template('user/community_search.html')
+
+@app.route('/community_search_exe', methods=['POST'])
+def community_search_exe():
+    keyword = request.form.get('keyword')
+    result = db.community_search(keyword)
+    return render_template('user/community_search_result.html',result=result,keyword=keyword)
+
+@app.route('/search_join_community/<int:cnt>')
+def search_join_community(cnt):
+    community = db.select_community(cnt)
+    print(community)
+    community={
+        'name':community[0],
+        'oshiname':community[1],
+        'overview':community[2]
+    }
+    session['community_id'] = cnt
+    return render_template('user/search_join_community.html',community=community,cnt=cnt)
+
+@app.route('/join_commuinty_exe')
+def join_community_exe():
+    db.search_join_community(session['user_info'][0],session['community_id'])
+    return redirect(url_for('top',checkcal=1))
+
+
+@app.route('/community_post',methods=['POST'])
+def community_post():
+    accId=session['user_info'][0]
+    comId = session['comId']
+    post = request.form.get('post')
+    post_day = datetime.datetime.now()
+    
+    count = db.community_post(accId,comId,post,post_day)
+    
+    return redirect(url_for('community',id=comId,checkcal=0))
+
+
+@app.route('/')
+def logout():
+    print(session['user_info'])
+    session.pop['user_info',None]
+    return render_template('index.html')
+
 
 
 #コミュニティ招待表示
