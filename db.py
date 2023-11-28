@@ -202,7 +202,6 @@ def address_check_second(mail):
     finally:
         cursor.close()
         connection.close()
-        print(flg)
     return flg
 
 def getcomId_to_accId(id):
@@ -480,7 +479,7 @@ def community_search(keyword):
     return result
 
 def select_community(id):
-    sql = 'SELECT community_name,favorite_name,community_exp FROM community WHERE community_id = %s'
+    sql = 'SELECT community_id,community_name,favorite_name,community_exp FROM community WHERE community_id = %s'
     
     try:
         connection=get_connection()
@@ -593,6 +592,20 @@ def search_join_community(account_id, community_id):
         connection = get_connection()
         cursor = connection.cursor()
         cursor.execute(sql, (account_id, community_id))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError:
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+        
+def report_community(community_id,user_id,category,reason):
+    sql = "INSERT INTO  community_report values(default, %s,%s,%s,%s)"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (community_id,user_id,category,reason,))
         connection.commit()
         return True
     except psycopg2.DatabaseError:
