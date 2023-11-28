@@ -44,6 +44,14 @@
             <input type="submit"class="submit_button">
         </form>
     </div>
+
+    <a href="{{url_for('community_edit')}}" class="btn_1">コミュニティ編集</a>
+    <a href="" class="btn_2">通報があった投稿</a>
+    <a href="" class="btn_3">コミュニティ削除</a>
+    <a href="{{url_for('community_user_search')}}" class="btn_4">コミュニティ招待</a>
+    <a href="" class="btn_5">権限変更</a>
+    <a href="" class="btn_6">コミュニティ退会</a>
+
 {%endblock%}
 
 {%block jscode%}
@@ -74,5 +82,6 @@ blackBg.addEventListener('click', function () {
     popupB.classList.remove('pop');
     ul.innerHTML=''
 })
+
 
 {%endblock%}

@@ -47,7 +47,7 @@
             </tr>
             {%for data in invitations%}
             <tr>
-                <td><a class="block" href="">{{ data[0][1] }}</a></td>
+                <td><a class="block" href="{{ url_for('community_invitation', community_id=data[0][0]) }}">{{ data[0][1] }}</a></td>
             </tr>
             {%endfor%}
         </table>

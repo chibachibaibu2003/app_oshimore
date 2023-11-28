@@ -40,6 +40,10 @@
             <input type="submit"class="submit_button">
         </form>
     </div>
+
+    <a href="{{url_for('community_user_search')}}" class="btn_4-3">コミュニティ招待</a>
+    <a href="" class="btn_6-3">コミュニティ退会</a>
+
 {%endblock%}
 
 {%block jscode%}
@@ -69,4 +73,5 @@ blackBg.addEventListener('click', function () {
     popupB.classList.remove('pop');
     ul.innerHTML=''
 })
+
 {%endblock%}
