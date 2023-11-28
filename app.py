@@ -407,24 +407,66 @@ def community_search():
 def community_search_exe():
     keyword = request.form.get('keyword')
     result = db.community_search(keyword)
-    return render_template('user/community_search_result.html',result=result,keyword=keyword)
+    cnt=0
+    return render_template('user/community_search_result.html',result=result,keyword=keyword,cnt=cnt)
 
 @app.route('/search_join_community/<int:cnt>')
 def search_join_community(cnt):
     community = db.select_community(cnt)
-    print(community)
     community={
-        'name':community[0],
-        'oshiname':community[1],
-        'overview':community[2]
+        'id':community[0],
+        'name':community[1],
+        'oshiname':community[2],
+        'overview':community[3]
     }
     session['community_id'] = cnt
-    return render_template('user/search_join_community.html',community=community,cnt=cnt)
+    return render_template('user/search_join_community.html',community=community)
 
 @app.route('/join_commuinty_exe')
 def join_community_exe():
-    db.search_join_community(session['user_info'][0],session['community_id'])
+    user = session['user_info']
+    db.join_community(user[0],session['community_id'])
     return redirect(url_for('top',checkcal=1))
+
+
+@app.route('/community_report/<int:id>')
+def community_report(id):
+    community = db.select_community(id)
+    community={
+        'id':community[0],
+        'name':community[1],
+        'oshiname':community[2],
+        'overview':community[3]
+    }
+    return render_template('user/community_report.html',community=community)
+
+@app.route('/community_report_exe/<int:id>', methods=['POST'])
+def community_report_exe(id):
+    num = request.form.get('chiba')
+    community = db.select_community(id)
+    flg = False
+    community={
+        'id':community[0],
+        'name':community[1],
+        'oshiname':community[2],
+        'overview':community[3]
+    }
+    if num == "4":
+        flg = True
+    reason = "スパム" if num == "0" else "攻撃またはハラスメント" if num == "1" else "有害な誤情報または暴力の是認" if num == "2" else "個人を特定できる情報を晒している" if num == "3" else "その他"
+    return render_template('user/community_report_exe.html',flg=flg,reason=reason,community=community,num=num)
+
+@app.route('/community_report_success/<int:id><int:num>', methods=['POST'])
+def community_report_success(id,num):
+    community = db.select_community(id)
+    user_id = session['user_info'][0]
+    reason = request.form.get('reason')
+    if reason==None:
+        reason = "None"
+    db.report_community(community[0],user_id,num,reason)
+    msg = "通報完了しました"
+    session['msg']=msg
+    return redirect(url_for('top',checkcal=0))
 
 
 @app.route('/community_post',methods=['POST'])
@@ -437,7 +479,6 @@ def community_post():
     count = db.community_post(accId,comId,post,post_day)
     
     return redirect(url_for('community',id=comId,checkcal=0))
-
 
 @app.route('/')
 def logout():
