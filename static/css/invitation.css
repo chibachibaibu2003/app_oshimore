@@ -1,38 +1,23 @@
-/* ヘッダーのスタイル */
-.header {
-    background-color: #FDFFB8;
-    height: 75px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-.logo {
-    font-size: 24px; /* ロゴのサイズ調整 */
-}
-
-.hamburger-menu span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    margin-bottom: 5px;
-    background-color: #333;
-}
 .center {
     text-align: center;
 }
-.back-btn{
+.fontawesome-size{
+    font-size: 3.5em;
+    transform: rotate(180deg);
+    -webkit-text-stroke: 4px white;
     position: absolute;
-    top:80px;
-    left:20px;
-    cursor: pointer; 
+    left: 20px;
+    top: 74px;
+    cursor: pointer;
 }
 .h1{
     font-size:20px;
     align-items:left;
     margin-bottom:2px;
 }
+.community-name p {
+    font-size: 20px; 
+ }
 .community-info{
     margin-left:150px;
 }
@@ -41,56 +26,67 @@
 }
 
 .underline{
+    text-decoration: none;
+    padding-bottom: 15px;
     border-bottom:1px solid;
     width: 1000px;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
 }
 
+/* ボーダーラインのスタイル調整 */
 .rounded-border {
-    border-bottom: 1px solid black;
-    border-top: 1px solid black;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
+    border: 1px solid black;
     border-radius: 10px;
     padding: 10px;
     user-select: none;
     resize: none;
     width: 1000px;
     height: 150px;
+    margin-bottom: 30px; 
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
-.community-btn{
+/* ボタンコンテナのスタイル */
+.community-btn {
+    transform: translateX(-20px);
+    display: flex;
+    justify-content: center;
+    gap: 100px; 
+    margin-top: 20px; 
+}
+
+/* ボタンのスタイル */
+.invitation-btn,
+.rejection {
+    font-size: 20px;
+    width: 350px; 
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: #FFA954; 
+    color: white; 
+    cursor: pointer;
     text-align: center;
-    width:max-content;
+    line-height: 50px; 
+    display: inline-block; 
+    text-decoration: none; 
 }
 
-.invitation-btn{
-    color: white;
-    font-size:20px;
-    width:  350px;
-    height: 50px;
-    border-radius: 10px;
-    border-color: whitesmoke;
-    margin: right 200px;
-    background-color:#FFA954;
-    box-shadow: none;
-    cursor: pointer; 
+.rejection {
+    background-color: white; 
+    color: #333; 
+    border: 1px solid #ccc;
 }
-.rejection{
-    font-size:20px;
-    width:  350px;
-    height: 50px;
-    border-radius: 10px;
-    border-color:whitesmoke;
-    margin-left : 50px;
-    margin-right:200px;
-    background-color:white;
-    box-shadow: none;
-    cursor: pointer; 
+
+/* ホバー時のスタイル */
+.invitation-btn:hover,
+.rejection:hover {
+    opacity: 0.8; 
 }
-.invitation-btn:active{
-    transform: translateY(4px); /* ボタンが押されたときに文字も4px下に移動 */
-}
-.rejection:active{
-    transform: translateY(4px); /* ボタンが押されたときに文字も4px下に移動 */
+
+/* アクティブ時（クリック時）のスタイル */
+.invitation-btn:active,
+.rejection:active {
+    transform: translateY(4px); 
 }
