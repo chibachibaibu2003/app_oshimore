@@ -558,12 +558,11 @@ def community_post():
     else:
         return redirect(url_for('index'))
 
-@app.route('/')
+@app.route('/logout')
 def logout():
     if 'user_info' in session:
-        print(session['user_info'])
-        session.pop['user_info',None]
-        return render_template('index.html')
+        session.pop('user_info',None)
+        return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
 
