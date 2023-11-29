@@ -382,6 +382,20 @@ def delete_invitation(account_id, community_id):
         cursor.close()
         connection.close()
 
+def getcomname_tocomId(comId):
+    sql="SELECT community_name FROM community where community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        name=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        name='コミュニティスレッド'
+    finally:
+        cursor.close()
+        connection.close()
+    return name
+    
 def getcomtThread_list_tocomId(comId):
     sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s order by community_post.post_number asc"
     try:
