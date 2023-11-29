@@ -9,7 +9,7 @@
 <a href="{{url_for('com_monthnext')}}"><img class="calnext_mini"src="{{url_for('static',filename='/imges/calnext_mini.png')}}"></a>
 
 <div class="community_thread">
-    <a class="community_thread_title">コミュニティスレッド</a>
+    <a class="community_thread_title">{{comname[0]}}</a>
     <div class="community_thread_list">
         {%for data in thread_list%}
             <div class="community_thread_box">
