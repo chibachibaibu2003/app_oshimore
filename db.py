@@ -273,6 +273,21 @@ def getevent_to_comId(id,day):
         connection.close()
     return list
 
+def event_thread_info_search(eventId):
+    sql="SELECT title,url,explanation from event where event_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(eventId,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+
+
 def register_community(data):
     sql="insert into community values(default,%s,%s,%s,%s)"
     try:
@@ -397,7 +412,7 @@ def getcomname_tocomId(comId):
     return name
     
 def getcomtThread_list_tocomId(comId):
-    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s order by community_post.post_number asc"
+    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s and community_post.delete_flag=0 order by community_post.post_number asc"
     try:
         connection=get_connection()
         cursor=connection.cursor()
@@ -438,6 +453,34 @@ def getcomThread_goodnum(compostId):
         connection.close()
     return count
 
+def geteventThread_list_toeventId(eventId):
+    sql="SELECT event_post.event_post_id, event_post.event_id, event_post.post, account.account_id, account.account_name FROM event_post JOIN account ON event_post.account_id =account.account_id WHERE event_post.event_id=%s and event_post.delete_flag=0 order by event_post.event_post_id asc"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(eventId,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+    
+def geteventThread_good(eventId,accId):
+    sql="SELECT count(event_good_id) FROM event_good WHERE event_post_id=%s and account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(eventId,accId))
+        count=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+    
 def getcommunity_select(comId):
     sql = 'SELECT * FROM community WHERE community_id = %s'
     try:
