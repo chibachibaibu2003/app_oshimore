@@ -1,5 +1,5 @@
 from flask import Flask, render_template,redirect,url_for,request,session,jsonify,flash
-import random,string,db,datetime,os,mail,urllib.parse,boto3
+import random,string,db,datetime,os,mail,urllib.parse,boto3,re
 
 from hashids import Hashids
 from admin import admin_bp
@@ -185,6 +185,42 @@ def monthnext():
             session['year']+=1
         
         return redirect(url_for('top',checkcal=1))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/event_thread_check/<int:id>')
+def event_thread_check(id):
+    if 'user_info' in session:
+        session['event_threadId']=id
+        return redirect(url_for('event_thread'))
+    else:
+        return redirect(url_for('index'))
+    
+@app.route('/event_thread')
+def event_thread():
+    if 'user_info' in session:
+        id=session['event_threadId']
+        event_thread_list=[]
+        event_thread_list_all=[]
+        
+        info_list=db.event_thread_info_search(id)
+        event_thread_list=db.geteventThread_list_toeventId(id)
+        
+        for data in event_thread_list:
+            goodcheck=db.geteventThread_good(data[0],data[3])
+            event_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],goodcheck[0]])
+        print(event_thread_list_all)
+        URL=info_list[0][1]
+        pattern='https?://'
+        res = re.match(pattern, URL)
+        if res!=None:
+            return render_template('user/event_thread.html',info=info_list,thread_list=event_thread_list_all)
+        else:
+            data_list=[]
+            for data in info_list[0]:
+                data_list.append(data)
+            data_list[1]='notUrl'
+            return render_template('user/event_thread.html',info=data_list,thread_list=event_thread_list_all)
     else:
         return redirect(url_for('index'))
 
