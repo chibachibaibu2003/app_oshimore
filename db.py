@@ -123,13 +123,12 @@ def select_temporary(mail):
     return use
 
 def insert_user(id,mail,name,password,salt):
-    sql = 'INSERT INTO account VALUES(default, %s, %s, %s, %s, %s,null,null,0,0)'
-    
+    sql = 'INSERT INTO account VALUES(default, %s, %s, %s, %s, %s,null,%s,0,0)'
+    icon_url='user_icon.png'
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        
-        cursor.execute(sql, (id,mail,name,password,salt,))
+        cursor.execute(sql, (id,mail,name,password,salt,icon_url))
         count = cursor.rowcount #更新件数を取得
         connection.commit()
     except psycopg2.DatabaseError:
