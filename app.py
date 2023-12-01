@@ -72,7 +72,7 @@ def send():
     {} 様 Oshi More! からの認証メールです。 
     以下のURLから認証を完了してください。 
 
-    http://127.0.0.1:5000/certification
+    https://oshimore-90d6b34a7fa6.herokuapp.com/certification
     認証コード : {} 
     ''').format(name,code)
         
@@ -209,7 +209,6 @@ def event_thread():
         for data in event_thread_list:
             goodcheck=db.geteventThread_good(data[0],data[3])
             event_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],goodcheck[0]])
-        print(event_thread_list_all)
         URL=info_list[0][1]
         pattern='https?://'
         res = re.match(pattern, URL)
