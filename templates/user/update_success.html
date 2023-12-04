@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/login.css">
+    <title>パスワード再設定</title>
+</head>
+<img class="title" src="../static/imges/icon.png" alt="icon">
+<div class="form">
+    <form name='login_form' action="{{url_for('password_set')}}" method="post" onsubmit="return checkEmpty()">
+        <p class="login">パスワード再設定</p><br>
+        <p class="text">パスワードの再設定が完了しました</p><br>
+        <p class="text"></p><br>
+            <a class='back_bottun2' href="{{url_for('back_index')}}">ログイン画面へ</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
