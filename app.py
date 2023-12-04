@@ -196,9 +196,19 @@ def event_thread_check(id):
     else:
         return redirect(url_for('index'))
     
-@app.route('/event_thread')
+@app.route('/event_thread',methods=['GET','POST'])
 def event_thread():
     if 'user_info' in session:
+        if request.method=='POST':
+            postgood=request.form['post_good']
+            postId=int(request.form['postId'])
+            accId=int(request.form['accId'])
+            if (postgood=="0"):
+                cnt=db.event_post_good_del(postId,accId)
+            elif (postgood=="1"):
+                cnt=db.event_post_good(postId,accId)
+            return jsonify({'msg' : 'success'})
+        
         id=session['event_threadId']
         event_thread_list=[]
         event_thread_list_all=[]
@@ -591,6 +601,20 @@ def community_post():
         count = db.community_post(accId,comId,post,post_day)
         
         return redirect(url_for('community',id=comId,checkcal=0))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/event_thread_post',methods=['POST'])
+def event_thread_post():
+    if 'user_info' in session:
+        accId=session['user_info'][0]
+        eventId = session['event_threadId']
+        post = request.form.get('post')
+        post_day = datetime.datetime.now()
+        
+        db.event_thread_post(accId,eventId,post,post_day)
+        
+        return redirect(url_for('event_thread'))
     else:
         return redirect(url_for('index'))
 
