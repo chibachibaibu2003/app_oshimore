@@ -44,7 +44,7 @@
             </div>
         {%endfor%}
     </div>
-    <form action="{{url_for('community_post')}}" method=post>
+    <form action="{{url_for('event_thread_post')}}" method=post>
         <input type="text"name="post"class="thread_text"autocomplete="off"maxlength="256">
         <input type="image"class="thread_img"src="{{url_for('static',filename='/imges/thread.png')}}">
     </form>
@@ -52,4 +52,39 @@
 {% endblock %}
 
 {%block jscode%}
+let goodlabel=document.querySelectorAll('[data-num]')
+let thread_list={{thread_list|tojson}}
+
+goodlabel.forEach((elm,i)=>{
+    elm.addEventListener('click',(e)=>{
+        if(e.srcElement.checked){
+            let num= e.srcElement.dataset.num -1
+            $.ajax({
+                data :{
+                    post_good:1,
+                    postId:thread_list[num][0],
+                    accId:thread_list[num][3],
+                },
+                type:'POST',
+                url:'/event_thread'
+            })
+            e.srcElement.setAttribute('checked','')
+            e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/good.png')}}"
+        }else{
+            let num= e.srcElement.dataset.num -1
+            $.ajax({
+                data :{
+                    post_good:0,
+                    postId:thread_list[num][0],
+                    accId:thread_list[num][3],
+                },
+                type:'POST',
+                url:'/event_thread'
+            })
+            e.srcElement.removeAttribute('checked')
+            e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/empty_good.png')}}"
+        }
+    })
+})
+
 {%endblock%}

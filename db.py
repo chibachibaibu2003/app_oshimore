@@ -905,12 +905,57 @@ def community_post_good_del(postId,accId):
     return count
 
 
+def event_post_good(postId,accId):
+    sql="insert into event_good values(default,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,accId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def event_post_good_del(postId,accId):
+    sql="delete from event_good where event_post_id=%s and account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,accId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
 def community_post(accId,comId,post,post_day):
     sql="INSERT INTO community_post values(default,%s,%s,%s,0,%s,0)"
     try:
         connection=get_connection()
         cursor=connection.cursor()
         cursor.execute(sql,(accId,comId,post,post_day))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def event_thread_post(accId,eventId,post,post_day):
+    sql="INSERT INTO event_post values(default,%s,%s,%s,0,%s,0)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,eventId,post,post_day))
         count=cursor.rowcount
         connection.commit()
     except psycopg2.DatabaseError:
