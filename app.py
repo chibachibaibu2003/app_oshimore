@@ -102,7 +102,7 @@ def navigateSend():
 def certification():
     return render_template('certification.html')
 
-@app.route('/certification', methods=['POST'])
+@app.route('/certification1', methods=['POST'])
 def certification_mail():
     mail = request.form.get('mail')
     code = request.form.get('code')
@@ -120,10 +120,62 @@ def certification_mail():
         salt = use[4]
         db.insert_user(id,mail,name,password,salt)
         db.delete_certification(mail)
-        return index()
+        return redirect(url_for('index'))
     else:
-        return certification()
+        return redirect(url_for('certification'))
+    
+@app.route('/password_reset')
+def password_reset():
+    return render_template('password_reset.html')
 
+@app.route('/password_set', methods=['POST'])
+def password_set():
+    email = request.form.get('mail')
+    if db.address_check_first(email):
+        error = True
+        return render_template('password_reset.html',error=error)
+    else:
+        code = db.create_code()
+        to = email
+        subject = "「Oshi More!」パスワード再設定メール"
+        message = ('''
+    Oshi More! からのパスワード再設定のメールです。 
+    以下のURLからパスワードを再設定してください。 
+
+    http://127.0.0.1:5000/pass_certification
+    認証コード : {} 
+    ''').format(code)
+        
+        mail.send_mail(to,subject,message)
+        db.pass_reset_register(email,code)
+        return render_template('password_reset_mail.html')
+    
+@app.route('/pass_certification')
+def pass_certification():
+    return render_template('pass_certification.html')
+
+@app.route('/pass_certification_exe', methods=['POST'])
+def pass_certification_mail():
+    mail = request.form.get('mail')
+    code = request.form.get('code')
+    session['email'] = mail
+    if db.pass_certification_exe(mail,code):
+        return render_template('password_update.html')
+    else:
+        return redirect(url_for('pass_certification'))
+    
+@app.route('/kusoga', methods=['POST'])
+def password_update_success():
+    b_password = request.form.get('password')
+    mail = session['email']
+    salt = db.get_salt()
+    print(salt)
+    password = db.get_hash(b_password,salt)
+    print(password)
+    db.update_password(password,salt,mail)
+    db.delete_reset_password(mail)
+    return render_template('user/update_success.html')
+    
 """ 
 マイページ画面・現在日時
 """
@@ -685,6 +737,5 @@ def invite_user(community_id, account_id):
     else:
         return redirect(url_for('index'))
 
-
 if __name__ == "__main__":
-    app.run(debug=True)
+        app.run(debug=True)

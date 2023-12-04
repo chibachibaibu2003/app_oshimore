@@ -80,6 +80,25 @@ def temporary_register(mail,name,password,salt,code):
         connection.close()
         
     return count
+
+def pass_reset_register(mail,code):
+    sql = 'INSERT INTO reset_password VALUES(default, %s, %s)'
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        
+        cursor.execute(sql, (mail,code))
+        connection.commit()
+    
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+        
+    return 
     
 def create_code():
     code = random.randint(1000,9999)
@@ -103,6 +122,77 @@ def certification_mail(mail, code):
         
     return flg
 
+def pass_certification_exe(mail, code):
+    sql = "SELECT reset_id,mail,code from reset_password where mail = %s and code = %s"
+    flg = False
+    
+    try :
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(mail,code))
+        user = cursor.fetchone()
+        
+        if user != None:
+            flg = True
+            
+    except psycopg2.DataError:
+        flg = False
+        
+    return flg
+
+def select_reset_pass(mail):
+    sql = 'SELECT * FROM reset_password WHERE mail =%s'    
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (mail,))
+        use = cursor.fetchone()
+        connection.commit()
+
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+        
+    return use
+
+def update_password(password,salt,mail):
+    sql = 'UPDATE account set pass = %s,salt = %s WHERE mail =%s'
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (password,salt,mail,))
+        connection.commit()
+        
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+    return
+    
+def delete_reset_password(mail):
+    sql = 'DELETE FROM reset_password WHERE mail =%s'
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(mail,))
+        connection.commit()
+        
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+        
+    return
+    
 def select_temporary(mail):
     sql = 'SELECT temporary_id,mail,account_name,pass,salt FROM temporary_account WHERE mail =%s'    
     
