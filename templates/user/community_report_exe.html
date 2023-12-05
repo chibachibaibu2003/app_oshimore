@@ -1,4 +1,4 @@
-{% extends "header.html" %}
+{% extends "header_edit.html" %}
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
 <link rel="stylesheet" href="/static/css/invitation.css">
@@ -19,7 +19,7 @@
             <p class="reason">通報区分：{{ reason }}</p>
             <form action="{{url_for('community_report_success',id=community.id,num=num)}}" method="post">
             {% if flg %}
-                    <textarea class="reason_write" rows="8" name="reason" placeholder="詳しい理由を書きたまえ"></textarea><br>
+                    <textarea class="reason_write" rows="8" name="reason" placeholder="詳しい理由を記述してください。"></textarea><br>
             {% endif %}
             <a class='back_bottun' href="{{url_for('community_report',id=community.id)}}">戻る</a>
             <input class="submit_bottun" type="submit" value="送信">

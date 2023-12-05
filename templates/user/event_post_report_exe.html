@@ -1,0 +1,25 @@
+{% extends "header_edit.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
+<link rel="stylesheet" href="/static/css/invitation.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+{% endblock %}
+
+{% block content %}
+    <div class="center">
+        <h2>投稿通報</h2>
+        <h3>以下の理由で投稿を通報しますか？</h3>
+    </div>
+    <div class="community-info_check">
+            <p class="reason_event_report">通報区分：{{ reason }}</p>
+            <form action="{{url_for('event_report_success',num=num)}}" method="post">
+                {% if flg %}
+                    <textarea class="reason_write_event_report" rows="8" name="reason" placeholder="詳しい理由を記述してください。"></textarea><br>
+                {%else%}
+                    <textarea class="reason_write_event_report" rows="8" name="reason" placeholder="記述不要"readonly></textarea><br>
+                {% endif %}
+                <a class='back_bottun' href="{{url_for('event_thread_report')}}">戻る</a>
+                <input class="submit_bottun_event_report" type="submit" value="送信">
+            </form>
+    </div>       
+{% endblock %}

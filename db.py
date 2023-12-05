@@ -569,6 +569,21 @@ def geteventThread_good(eventId,accId):
         cursor.close()
         connection.close()
     return count
+
+def report_event(postid,userid,category,reason):
+    sql="INSERT INTO event_post_report VALUES(default,%s,%s,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postid,userid,category,reason))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
     
 def getcommunity_select(comId):
     sql = 'SELECT * FROM community WHERE community_id = %s'
