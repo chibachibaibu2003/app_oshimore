@@ -14,7 +14,7 @@
         {% if info[1]=='notUrl' %}
         
         {% else %}
-        <a class="thread_button3"href="">視聴する</a>
+        <a class="thread_button3"href="{{info[1]}}">視聴する</a>
         {% endif %}
     </div>
 
@@ -39,7 +39,7 @@
                             <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}"checked>いいね
                         </label>
                     {% endif %}
-                    <a class="thread_report" href="">通報</a>
+                    <a class="thread_report" href="{{url_for('event_thread_report_check',id=data[0])}}">通報</a>
                 </div>
             </div>
         {%endfor%}

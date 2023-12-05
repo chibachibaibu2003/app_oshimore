@@ -275,7 +275,10 @@ def event_thread():
         pattern='https?://'
         res = re.match(pattern, URL)
         if res!=None:
-            return render_template('user/event_thread.html',info=info_list,thread_list=event_thread_list_all)
+            data_list=[]
+            for data in info_list[0]:
+                data_list.append(data)
+            return render_template('user/event_thread.html',info=data_list,thread_list=event_thread_list_all)
         else:
             data_list=[]
             for data in info_list[0]:
@@ -285,6 +288,47 @@ def event_thread():
     else:
         return redirect(url_for('index'))
 
+@app.route('/event_thread_report_check/<int:id>')
+def event_thread_report_check(id):
+    if 'user_info' in session:
+        session['event_post_id']=id
+        return redirect(url_for('event_thread_report'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/event_thread_report')
+def event_thread_report():
+    if 'user_info' in session:
+        return render_template('user/event_post_report.html')
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/event_thread_report_exe',methods=['POST'])
+def event_thread_report_exe():
+    if 'user_info' in session:
+        num = request.form.get('chiba')
+        flg = False
+        if num == "4":
+            flg = True
+        reason = "スパム" if num == "0" else "攻撃またはハラスメント" if num == "1" else "有害な誤情報または暴力の是認" if num == "2" else "個人を特定できる情報を晒している" if num == "3" else "その他"
+        return render_template('user/event_post_report_exe.html',flg=flg,reason=reason,num=num)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/event_report_success/<int:num>', methods=['POST'])
+def event_report_success(num):
+    if 'user_info' in session:
+        postid=session['event_post_id']
+        user_id = session['user_info'][0]
+        reason = request.form.get('reason')
+        if reason==None:
+            reason = "None"
+        db.report_event(postid,user_id,num,reason)
+        msg = "通報完了しました"
+        session['msg']=msg
+        return redirect(url_for('top',checkcal=0))
+    else:
+        return redirect(url_for('index'))
     
 @app.route('/register_community',methods=['POST'])
 def register_community():
@@ -458,7 +502,7 @@ def community_edit_end():
     if 'user_info' in session:
         msg = 'コミュニティ編集しました。'
         com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
-        if (com_auth==1):
+        if (com_auth[0]==1):
             return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,msg=msg)
         else:
             return render_template('user/community_set_sub.html',comId=session['comId'],checkcal=0,msg=msg)
