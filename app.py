@@ -458,7 +458,7 @@ def community_edit_end():
     if 'user_info' in session:
         msg = 'コミュニティ編集しました。'
         com_auth=db.get_comAuth(session['user_info'][0],session['comId'])
-        if (com_auth==1):
+        if (com_auth[0]==1):
             return render_template('user/community_set_master.html',comId=session['comId'],checkcal=0,msg=msg)
         else:
             return render_template('user/community_set_sub.html',comId=session['comId'],checkcal=0,msg=msg)
