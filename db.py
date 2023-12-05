@@ -458,7 +458,7 @@ def join_community(account_id, community_id):
     connection = get_connection()
     cursor = connection.cursor()
     try:
-        sql = "INSERT INTO register_community (account_id, community_id, authority, community_authority, calendar_hidden_flag, favorite_list_flag, fan_point) VALUES (%s, %s, 1, 1, 0, 0, 0)"
+        sql = "INSERT INTO register_community (account_id, community_id, authority, community_authority, calendar_hidden_flag, favorite_list_flag, fan_point) VALUES (%s, %s, 1, 0, 0, 0, 0)"
         cursor.execute(sql, (account_id, community_id))
         connection.commit()
         return True

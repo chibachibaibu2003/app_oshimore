@@ -96,6 +96,9 @@
     float: right;
 }
 
+.community-info1{
+    margin-left:150px
+
 .underline {
     text-decoration: underline;
 }
@@ -156,6 +159,7 @@
 
 .buttun_block {
     margin-top: 30px;
+    margin-right: 150px;
 }
 
 form {
@@ -214,9 +218,11 @@ form {
 }
 
 .report_buttun {
+    display: flex;
+	text-align: center;
     margin-top: auto;
     margin-right: auto;
-    margin-left: auto;
+    margin-left: 50px;
     margin-bottom: 15px;
     height: 30px;
     width: 80%;
@@ -241,7 +247,7 @@ input:checked+label {
     border-radius: 10px;
     margin-top: auto;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: 150px;
     margin-bottom: 15px;
 }
 
@@ -251,6 +257,7 @@ input:checked+label {
 
 .report_form {
     margin: 0 auto;
+}
 
     /* ホバー時のスタイル */
     .invitation-btn:hover,
