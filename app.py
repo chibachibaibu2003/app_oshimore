@@ -31,6 +31,8 @@ def login():
         if(user[10]==1):
             return render_template('index.html')
         else:
+            if(user[8]==1):
+                return render_template('index.html')
             return redirect(url_for('top',checkcal=0))
     else:
         return back_index(mail)
