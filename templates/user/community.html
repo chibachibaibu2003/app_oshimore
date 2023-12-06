@@ -2,11 +2,11 @@
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static', filename='/css/community.css')}}">
 {% endblock %}
-
 {% block content %}
 <a href="{{url_for('com_monthback')}}"><img class="calback_mini"src="{{url_for('static',filename='/imges/calback_mini.png')}}"></a>
 <div id="calendar"></div>
 <a href="{{url_for('com_monthnext')}}"><img class="calnext_mini"src="{{url_for('static',filename='/imges/calnext_mini.png')}}"></a>
+
 
 <div class="community_thread">
     <a class="community_thread_title">{{comname[0]}}</a>
@@ -38,7 +38,9 @@
     </form>
 </div>
 
-<a class="register_event_button"href="">イベント追加</a>
+
+<div style="pointer-events: none"></div>
+<a class="register_event_button"href="{{url_for('event_register')}}">イベント追加</a>
 <a class="fanpoint_rank_button"href="">ファンポイントランキング</a>
 <a class="com_edit_button"href="{{url_for('community_set')}}">コミュニティ設定</a>
 

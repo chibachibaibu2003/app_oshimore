@@ -965,6 +965,7 @@ def community_post(accId,comId,post,post_day):
         connection.close()
     return count
 
+
 def event_thread_post(accId,eventId,post,post_day):
     sql="INSERT INTO event_post values(default,%s,%s,%s,0,%s,0)"
     try:
@@ -979,3 +980,21 @@ def event_thread_post(accId,eventId,post,post_day):
         cursor.close()
         connection.close()
     return count
+
+  
+def event_register(title,start_day,end_day,start_time,end_time,url,explanation,account_id,community_id):
+    sql="INSERT INTO event VALUES(default,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(title,start_day,end_day,start_time,end_time,url,explanation,account_id,community_id))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+
+    return count
+
