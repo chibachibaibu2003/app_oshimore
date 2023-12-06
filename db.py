@@ -981,6 +981,29 @@ def event_thread_post(accId,eventId,post,post_day):
         connection.close()
     return count
 
+
+def insert_community_post_report(post_id, reporter_id, report_category, report_reason):
+    sql = """
+    INSERT INTO community_post_report (community_post_id, reporter_id, post_report_category, post_report_reason)
+    VALUES (%s, %s, %s, %s)
+    """
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        
+        if report_category != 'その他':
+            report_reason = ""
+        
+        cursor.execute(sql, (post_id, reporter_id, report_category, report_reason))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError as e:
+        print(e)
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
   
 def event_register(title,start_day,end_day,start_time,end_time,url,explanation,account_id,community_id):
     sql="INSERT INTO event VALUES(default,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
@@ -997,4 +1020,5 @@ def event_register(title,start_day,end_day,start_time,end_time,url,explanation,a
         connection.close()
 
     return count
+
 

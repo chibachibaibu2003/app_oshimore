@@ -1,0 +1,166 @@
+html, body {
+    max-height: 100vh; /* ビューポートの高さを超えない */
+    overflow: hidden; /* スクロールバーを隠す */
+}
+
+.fontawesome-size{
+    font-size: 3.5em;
+    transform: rotate(180deg);
+    -webkit-text-stroke: 4px white;
+    position: absolute;
+    left: 20px;
+    top: 74px;
+}
+
+body {
+    font-family: 'Meiryo', sans-serif;
+}
+
+h2{
+    text-align:center;
+}
+/* 通報理由のコンテナスタイル */
+.report-reason-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 子要素を中央に寄せる */
+    justify-content: center; /* 縦方向の中心に */
+    width: 100%; /* コンテナの幅を指定 */
+    padding-top:20px;
+    gap:20px;
+}
+
+/* 各通報理由ボタンのスタイリング */
+button.report-reason {
+    width: 500px; /* ボタンの幅を指定 */
+    height:50px;
+    padding: 15px 20px; /* 上下左右のパディング */
+    background-color: white; /* 背景色 */
+    color: black; /* テキスト色 */
+    border: 1px solid black; /* ボーダー設定 */
+    border-radius: 5px; /* 角を丸く */
+    cursor: pointer; /* カーソルをポインターに */
+    font-size: 20px; /* フォントサイズ */
+    text-align: center; /* テキストを中央寄せ */
+    margin-bottom: 10px; /* ボタン間のマージン */
+    text-decoration: none; /* 下線を消す */
+}
+
+/* 通報理由ボタンのホバースタイル */
+.report-reason-button:hover {
+    background-color: gray; /* ホバー時の背景色 */
+}
+
+/* 戻るボタンスタイル */
+.back-button {
+    width: 300px; /* 幅を通報ボタンと同じに */
+    background-color: white; /* 背景色 */
+    color: black; /* テキスト色 */
+    border: 1px solid black; /* ボーダー設定 */
+    border-radius: 5px; /* 角を丸く */
+    cursor: pointer; /* カーソルをポインターに */
+    font-size: 20px; /* フォントサイズ */
+    text-align: center; /* テキストを中央寄せ */
+    margin-bottom: 10px; /* ボタン間のマージン */
+    text-decoration: none; /* 下線を消す */
+    display: inline-block; /* インラインブロック要素として表示 */
+}
+
+/* 戻るボタンのホバースタイル */
+.back-button:hover {
+    background-color: #f0f0f0; /* ホバー時の背景色 */
+}
+
+/* 確認画面のスタイル */
+.report-confirm {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* 通報ボタンのスタイル */
+.report-button {
+    background-color: red; /* 背景色を赤に */
+    color: white; /* テキスト色を白に */
+    width: 200px; /* 幅を200pxに */
+    height: 50px; /* 高さを50pxに */
+    border: none; /* 枠線をなしに */
+    border-radius: 5px; /* 角を丸める */
+    margin: 10px; /* 余白を設定 */
+    cursor: pointer; /* カーソルを指に */
+    transition: background-color 0.3s; /* 背景色の変化にアニメーションを設定 */
+    font-size:20px;
+}
+
+.report-button:hover {
+    background-color: darkred; /* ホバー時の背景色を暗い赤に */
+}
+
+
+/* 戻るボタンのスタイル変更 */
+.back-button {
+    background-color: white; /* 背景色を白に */
+    color: black; /* テキスト色を黒に */
+    width: 200px; /* 幅を200pxに */
+    height: 50px; /* 高さを50pxに */
+    border: 1px solid black; /* 黒の枠線を設定 */
+    border-radius: 5px; /* 角を丸める */
+    display: inline-block; /* インラインブロックで表示 */
+    margin: 10px; /* 余白を設定 */
+    text-align: center; /* テキストを中央寄せに */
+    line-height: 50px; /* 行の高さをボタンの高さに合わせる */
+    transition: background-color 0.3s; /* 背景色の変化にアニメーションを設定 */
+}
+
+.back-button:hover {
+    background-color: #f0f0f0; /* ホバー時の背景色を薄い灰色に */
+}
+
+/* ボタンを横並びにするためのスタイル */
+.buttons-container {
+    display: flex;
+    justify-content: center; /* 中央寄せ */
+    gap: 40px; /* ボタン間の間隔 */
+    flex-direction: row; 
+
+}
+.report_category{
+    font-size:200px;
+}
+.report-confirm {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 中央寄せ */
+    height: 100vh; /* 画面の高さ全体を使用 */
+}
+
+.report-confirm p {
+    font-size: 2rem; 
+}
+
+.txt{
+    font-size:25px;
+    text-align:center;
+}
+.reason-form textarea::placeholder {
+    font-size: 15px;
+}
+.reason-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 中央寄せ */
+    height: 100vh; /* 画面の高さ全体を使用 */
+}
+/* テキストエリアのスタイル */
+.reason-form textarea {
+    width: 100%; 
+    height: 120px; /* 高さを100pxに */
+    margin-bottom: 20px; /* 下に余白を設定 */
+    border: 1px solid #ccc; /* 枠線を灰色に */
+    border-radius: 5px; /* 角を丸める */
+    resize: none;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* テキストエリアの下に余白を追加 */
+    font-size:15px;
+    align-items:center;
+}
