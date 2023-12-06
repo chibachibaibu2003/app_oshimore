@@ -1,0 +1,124 @@
+body {
+    margin: 0px;
+    font-family: 'Meiryo';
+}
+
+p{
+    font-size: 40px;
+}
+
+.inputbox{
+    width: 800px;
+    height: 30px;
+    border: 1px solid gray;
+    border-radius: 1.5rem;
+    padding:12px;
+    font-size: 20px;
+}
+
+.inputTimeDate{
+    width: 350px;
+    height: 30px;
+    border:1px solid gray;
+    border-radius:1.5rem ;
+    padding: 12px;
+    font-size:20px;
+}
+
+.TimeDate_position{
+    float:left;
+    margin-right: 5rem;
+}
+
+.required{
+    color:red;
+    font-size: 35px;
+    margin-left: 10px;
+}
+
+.inputRadio{
+    position:relative;
+    top:6px;
+    left:-14px;
+    width:40px;
+    height:40px;
+}
+
+.inline{
+    display: inline-block;
+    width: 120px;
+    height:50px;
+}
+
+.inline2{
+    display: inline-block;
+    width: 160px;
+    height:90px;
+}
+
+.inputBoxArea{
+    width: 800px;
+    height:110px;
+    border:1px solid gray;
+    border-radius: 1.5rem;
+    padding:15px;
+    font-size: 20px;
+    resize: none;
+
+}
+
+.inputMargin{
+    margin-top:-30px;
+}
+
+
+.inputMargin2{
+    margin-top:-70px;
+}
+
+.formPosition{
+    position: absolute;
+    left: 230px;
+}
+
+
+.h1 {
+    font-size: 40px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.fontawesome-size{
+    font-size: 3.5em;
+    transform: rotate(180deg);
+    -webkit-text-stroke: 4px white;
+    position: absolute;
+    left: 20px;
+    top: 74px;
+    color: black;
+}
+
+.btn{
+    margin-top:50px;
+
+    position:relative;
+    left:  38%;
+
+    display: block;
+	vertical-align: middle;
+	text-decoration: none;
+	width: 180px;
+    height: 45px;
+	padding: 0;
+	font-weight: lighter;
+	border-radius: 0.4rem;
+    border: 1px gray solid;
+	background: #FFA954;
+	color: #ffffff;
+    font-size: 27px;
+    text-align: center;
+}
+
+.btn:hover {
+    background: #e89d52;
+}

@@ -458,7 +458,7 @@ def join_community(account_id, community_id):
     connection = get_connection()
     cursor = connection.cursor()
     try:
-        sql = "INSERT INTO register_community (account_id, community_id, authority, community_authority, calendar_hidden_flag, favorite_list_flag, fan_point) VALUES (%s, %s, 1, 1, 0, 0, 0)"
+        sql = "INSERT INTO register_community (account_id, community_id, authority, community_authority, calendar_hidden_flag, favorite_list_flag, fan_point) VALUES (%s, %s, 1, 0, 0, 0, 0)"
         cursor.execute(sql, (account_id, community_id))
         connection.commit()
         return True
@@ -563,6 +563,21 @@ def geteventThread_good(eventId,accId):
         cursor=connection.cursor()
         cursor.execute(sql,(eventId,accId))
         count=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def report_event(postid,userid,category,reason):
+    sql="INSERT INTO event_post_report VALUES(default,%s,%s,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postid,userid,category,reason))
+        count=cursor.rowcount
+        connection.commit()
     except psycopg2.DatabaseError :
         count=0
     finally:
@@ -950,6 +965,7 @@ def community_post(accId,comId,post,post_day):
         connection.close()
     return count
 
+
 def event_thread_post(accId,eventId,post,post_day):
     sql="INSERT INTO event_post values(default,%s,%s,%s,0,%s,0)"
     try:
@@ -964,6 +980,7 @@ def event_thread_post(accId,eventId,post,post_day):
         cursor.close()
         connection.close()
     return count
+
 
 def insert_community_post_report(post_id, reporter_id, report_category, report_reason):
     sql = """
@@ -986,3 +1003,22 @@ def insert_community_post_report(post_id, reporter_id, report_category, report_r
     finally:
         cursor.close()
         connection.close()
+
+  
+def event_register(title,start_day,end_day,start_time,end_time,url,explanation,account_id,community_id):
+    sql="INSERT INTO event VALUES(default,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(title,start_day,end_day,start_time,end_time,url,explanation,account_id,community_id))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+
+    return count
+
+

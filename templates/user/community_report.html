@@ -1,4 +1,4 @@
-{% extends "header.html" %}
+{% extends "header_edit.html" %}
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
 <link rel="stylesheet" href="/static/css/invitation.css">
@@ -10,7 +10,7 @@
     <div class="center">
         <h2>コミュニティ通報</h2>
     </div>
-        <div class="community-info">
+        <div class="community-info1">
             <div class="community-name">
                 <h1>コミュニティ名</h1>
                 <p class="underline community_name">　{{ community.name }}</p>
