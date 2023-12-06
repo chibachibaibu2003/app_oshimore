@@ -1,0 +1,90 @@
+{% extends "header_edit.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/event_thread.css')}}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+{% endblock %}
+
+{% block content %}
+<a  href="{{url_for('top',checkcal=0)}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
+<div class="thread_box">
+    <div class="thread_header">
+        <a class="thread_title">{{info[0]}}</a>
+        <a class="thread_button1"href="">編集</a>
+        <a class="thread_button2"href="">削除</a>
+        {% if info[1]=='notUrl' %}
+        
+        {% else %}
+        <a class="thread_button3"href="{{info[1]}}">視聴する</a>
+        {% endif %}
+    </div>
+
+    <div class="thread_explanation">
+        <a>{{info[2]}}</a>
+    </div>
+    
+    <div class="event_thread_list">
+        {%for data in thread_list%}
+            <div class="event_thread">
+                <a class="thread_box_username">>>{{data[4]}}</a><br>
+                <a class="thread_box_text">{{data[2]}}</a>
+                <div class="thread_box_edit">
+                    {%if data[5]==0%}
+                        <label for="goodcheck{{loop.index}}">
+                            <img src="{{url_for('static',filename='/imges/empty_good.png')}}" id="test1">
+                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}">いいね
+                        </label>
+                    {% else %}
+                        <label for="goodcheck{{loop.index}}">
+                            <img src="{{url_for('static',filename='/imges/good.png')}}" id="test1">
+                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}"checked>いいね
+                        </label>
+                    {% endif %}
+                    <a class="thread_report" href="{{url_for('event_thread_report_check',id=data[0])}}">通報</a>
+                </div>
+            </div>
+        {%endfor%}
+    </div>
+    <form action="{{url_for('event_thread_post')}}" method=post>
+        <input type="text"name="post"class="thread_text"autocomplete="off"maxlength="256">
+        <input type="image"class="thread_img"src="{{url_for('static',filename='/imges/thread.png')}}">
+    </form>
+</div>
+{% endblock %}
+
+{%block jscode%}
+let goodlabel=document.querySelectorAll('[data-num]')
+let thread_list={{thread_list|tojson}}
+
+goodlabel.forEach((elm,i)=>{
+    elm.addEventListener('click',(e)=>{
+        if(e.srcElement.checked){
+            let num= e.srcElement.dataset.num -1
+            $.ajax({
+                data :{
+                    post_good:1,
+                    postId:thread_list[num][0],
+                    accId:thread_list[num][3],
+                },
+                type:'POST',
+                url:'/event_thread'
+            })
+            e.srcElement.setAttribute('checked','')
+            e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/good.png')}}"
+        }else{
+            let num= e.srcElement.dataset.num -1
+            $.ajax({
+                data :{
+                    post_good:0,
+                    postId:thread_list[num][0],
+                    accId:thread_list[num][3],
+                },
+                type:'POST',
+                url:'/event_thread'
+            })
+            e.srcElement.removeAttribute('checked')
+            e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/empty_good.png')}}"
+        }
+    })
+})
+
+{%endblock%}

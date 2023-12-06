@@ -1,0 +1,33 @@
+{% extends "header_edit.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
+<link rel="stylesheet" href="/static/css/invitation.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+
+{% endblock %}
+
+{% block content %}
+    <div class="center">
+        <h2>コミュニティ通報</h2>
+    </div>
+        <div class="community-info">
+            <div class="community-name">
+                <h1>コミュニティ名</h1>
+                <p class="underline community_name">　{{ community.name }}</p>
+            </div>
+            <div class="report_form">
+            <p class="reason">通報区分：{{ reason }}</p>
+            <form action="{{url_for('community_report_success',id=community.id,num=num)}}" method="post">
+            {% if flg %}
+                    <textarea class="reason_write" rows="8" name="reason" placeholder="詳しい理由を記述してください。"></textarea><br>
+            {% endif %}
+            <div class="buttun_block">
+            <a class='back_bottun' href="{{url_for('community_report',id=community.id)}}">戻る</a>
+            <input class="submit_bottun" type="submit" value="送信">
+        </div>
+        </form>
+        </div>
+        </div>       
+{% endblock %}
+
+

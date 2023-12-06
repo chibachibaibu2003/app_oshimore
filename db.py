@@ -80,6 +80,25 @@ def temporary_register(mail,name,password,salt,code):
         connection.close()
         
     return count
+
+def pass_reset_register(mail,code):
+    sql = 'INSERT INTO reset_password VALUES(default, %s, %s)'
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        
+        cursor.execute(sql, (mail,code))
+        connection.commit()
+    
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+        
+    return 
     
 def create_code():
     code = random.randint(1000,9999)
@@ -103,6 +122,77 @@ def certification_mail(mail, code):
         
     return flg
 
+def pass_certification_exe(mail, code):
+    sql = "SELECT reset_id,mail,code from reset_password where mail = %s and code = %s"
+    flg = False
+    
+    try :
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(mail,code))
+        user = cursor.fetchone()
+        
+        if user != None:
+            flg = True
+            
+    except psycopg2.DataError:
+        flg = False
+        
+    return flg
+
+def select_reset_pass(mail):
+    sql = 'SELECT * FROM reset_password WHERE mail =%s'    
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (mail,))
+        use = cursor.fetchone()
+        connection.commit()
+
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+        
+    return use
+
+def update_password(password,salt,mail):
+    sql = 'UPDATE account set pass = %s,salt = %s WHERE mail =%s'
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (password,salt,mail,))
+        connection.commit()
+        
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+    return
+    
+def delete_reset_password(mail):
+    sql = 'DELETE FROM reset_password WHERE mail =%s'
+    
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql,(mail,))
+        connection.commit()
+        
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+        
+    return
+    
 def select_temporary(mail):
     sql = 'SELECT temporary_id,mail,account_name,pass,salt FROM temporary_account WHERE mail =%s'    
     
@@ -123,13 +213,12 @@ def select_temporary(mail):
     return use
 
 def insert_user(id,mail,name,password,salt):
-    sql = 'INSERT INTO account VALUES(default, %s, %s, %s, %s, %s,null,null,0,0)'
-    
+    sql = 'INSERT INTO account VALUES(default, %s, %s, %s, %s, %s,null,%s,0,0)'
+    icon_url='user_icon.png'
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        
-        cursor.execute(sql, (id,mail,name,password,salt,))
+        cursor.execute(sql, (id,mail,name,password,salt,icon_url))
         count = cursor.rowcount #更新件数を取得
         connection.commit()
     except psycopg2.DatabaseError:
@@ -201,7 +290,6 @@ def address_check_second(mail):
     finally:
         cursor.close()
         connection.close()
-        print(flg)
     return flg
 
 def getcomId_to_accId(id):
@@ -273,6 +361,21 @@ def getevent_to_comId(id,day):
         cursor.close()
         connection.close()
     return list
+
+def event_thread_info_search(eventId):
+    sql="SELECT title,url,explanation from event where event_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(eventId,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+
 
 def register_community(data):
     sql="insert into community values(default,%s,%s,%s,%s)"
@@ -355,7 +458,7 @@ def join_community(account_id, community_id):
     connection = get_connection()
     cursor = connection.cursor()
     try:
-        sql = "INSERT INTO register_community (account_id, community_id, authority, community_authority, calendar_hidden_flag, favorite_list_flag, fan_point) VALUES (%s, %s, 1, 1, 0, 0, 0)"
+        sql = "INSERT INTO register_community (account_id, community_id, authority, community_authority, calendar_hidden_flag, favorite_list_flag, fan_point) VALUES (%s, %s, 1, 0, 0, 0, 0)"
         cursor.execute(sql, (account_id, community_id))
         connection.commit()
         return True
@@ -383,8 +486,22 @@ def delete_invitation(account_id, community_id):
         cursor.close()
         connection.close()
 
+def getcomname_tocomId(comId):
+    sql="SELECT community_name FROM community where community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        name=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        name='コミュニティスレッド'
+    finally:
+        cursor.close()
+        connection.close()
+    return name
+    
 def getcomtThread_list_tocomId(comId):
-    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s order by community_post.post_number asc"
+    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s and community_post.delete_flag=0 order by community_post.post_number asc"
     try:
         connection=get_connection()
         cursor=connection.cursor()
@@ -425,6 +542,49 @@ def getcomThread_goodnum(compostId):
         connection.close()
     return count
 
+def geteventThread_list_toeventId(eventId):
+    sql="SELECT event_post.event_post_id, event_post.event_id, event_post.post, account.account_id, account.account_name FROM event_post JOIN account ON event_post.account_id =account.account_id WHERE event_post.event_id=%s and event_post.delete_flag=0 order by event_post.event_post_id asc"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(eventId,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+    
+def geteventThread_good(eventId,accId):
+    sql="SELECT count(event_good_id) FROM event_good WHERE event_post_id=%s and account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(eventId,accId))
+        count=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def report_event(postid,userid,category,reason):
+    sql="INSERT INTO event_post_report VALUES(default,%s,%s,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postid,userid,category,reason))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+    
 def getcommunity_select(comId):
     sql = 'SELECT * FROM community WHERE community_id = %s'
     try:
@@ -568,7 +728,7 @@ def community_search(keyword):
     return result
 
 def select_community(id):
-    sql = 'SELECT community_name,favorite_name,community_exp FROM community WHERE community_id = %s'
+    sql = 'SELECT community_id,community_name,favorite_name,community_exp FROM community WHERE community_id = %s'
     
     try:
         connection=get_connection()
@@ -690,6 +850,21 @@ def search_join_community(account_id, community_id):
         cursor.close()
         connection.close()
         
+
+def report_community(community_id,user_id,category,reason):
+    sql = "INSERT INTO  community_report values(default, %s,%s,%s,%s)"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (community_id,user_id,category,reason,))
+        connection.commit()
+        return True
+    except psycopg2.DatabaseError:
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
 def insert_invitation(community_id, account_id):
     """
     指定されたコミュニティIDとアカウントIDを使用して、招待データをデータベースに挿入する。
@@ -745,6 +920,36 @@ def community_post_good_del(postId,accId):
     return count
 
 
+def event_post_good(postId,accId):
+    sql="insert into event_good values(default,%s,%s)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,accId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def event_post_good_del(postId,accId):
+    sql="delete from event_good where event_post_id=%s and account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,accId))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
 def community_post(accId,comId,post,post_day):
     sql="INSERT INTO community_post values(default,%s,%s,%s,0,%s,0)"
     try:
@@ -761,6 +966,22 @@ def community_post(accId,comId,post,post_day):
     return count
 
 
+def event_thread_post(accId,eventId,post,post_day):
+    sql="INSERT INTO event_post values(default,%s,%s,%s,0,%s,0)"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,eventId,post,post_day))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+  
 def event_register(title,start_day,end_day,start_time,end_time,url,explanation,account_id,community_id):
     sql="INSERT INTO event VALUES(default,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     try:
@@ -774,6 +995,6 @@ def event_register(title,start_day,end_day,start_time,end_time,url,explanation,a
     finally:
         cursor.close()
         connection.close()
-    return count
 
+    return count
 

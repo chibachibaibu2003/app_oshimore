@@ -1,0 +1,178 @@
+.fontawesome-size {
+    font-size: 3.5em;
+    transform: rotate(180deg);
+    -webkit-text-stroke: 4px white;
+    position: absolute;
+    left: 20px;
+    top: 74px;
+    color: black;
+}
+
+.thread_box {
+    position: fixed;
+    top: 86%;
+    left: 50%;
+    height: 90vh;
+    width: 80vw;
+    transform: translateX(-50%) translateY(-86%);
+    background-color: rgb(222, 222, 222);
+    border: 2px solid gray;
+}
+
+.thread_header {
+    position: relative;
+    height: 10vh;
+    width: 100%;
+}
+
+.thread_button1 {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    height: 20px;
+    width: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1rem;
+    background-color: #FFA954;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.thread_button2 {
+    position: absolute;
+    top: 10px;
+    left: 63%;
+    height: 20px;
+    width: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1rem;
+    background-color: red;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.thread_button3 {
+    position: absolute;
+    top: 10px;
+    left: 75%;
+    height: 20px;
+    width: 150px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    font-size: 1rem;
+    background-color: white;
+    border: 2px solid gray;
+    border-radius: 20px;
+    color: gray;
+    text-align: center;
+    text-decoration: none;
+}
+
+.thread_button3::before {
+    content: url(https://oshimore.s3.ap-northeast-1.amazonaws.com/img/thread.png);
+    color: white;
+    position: absolute;
+    top: -58px;
+    left: -45px;
+    transform: scale(0.15);
+}
+
+.thread_title {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 40%;
+    font-size: 1.5rem;
+}
+
+.thread_explanation {
+    position: relative;
+    width: 99%;
+    height: 13vh;
+    font-size: 1.2rem;
+    padding-left: 10px;
+    overflow-wrap: break-word;
+    overflow-y: scroll;
+    background-color: whitesmoke;
+}
+
+.event_thread_list {
+    position: relative;
+    width: 100%;
+    height: 65%;
+    overflow-y: scroll;
+    background-color: antiquewhite;
+}
+
+.event_thread {
+    width: 95%;
+    border: 1px solid black;
+    border-radius: 30px;
+    margin-top: 15px;
+    margin-left: 15px;
+    background-color: whitesmoke;
+}
+
+.thread_img {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+}
+
+.thread_box_username {
+    margin-left: 10px;
+}
+
+.thread_box_text {
+    display: block;
+    overflow-wrap: break-word;
+    margin: 5px 0px 10px 10px;
+}
+
+.thread_box_edit {
+    position: relative;
+    margin-left: 30vw;
+}
+
+#test1 {
+    margin-left: 20vw;
+    width: 20px;
+    height: 20px;
+}
+
+.goodcheck {
+    display: none;
+}
+
+.thread_report {
+    position: absolute;
+    left: 30vw;
+    top: 4px;
+    text-decoration: none;
+    color: red;
+}
+
+.thread_text {
+    position: absolute;
+    margin-left: 10px;
+    bottom: 1vh;
+    width: 93%;
+    height: 30px;
+    font-size: 1rem;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.thread_img {
+    position: absolute;
+    bottom: 1.5vh;
+    left: 95%;
+    width: 25px;
+}

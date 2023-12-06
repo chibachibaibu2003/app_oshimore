@@ -1,0 +1,49 @@
+{% extends "header_edit.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
+<link rel="stylesheet" href="/static/css/invitation.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+
+{% endblock %}
+
+{% block content %}
+    <div class="center">
+        <h2>コミュニティ通報</h2>
+    </div>
+        <div class="community-info1">
+            <div class="community-name">
+                <h1>コミュニティ名</h1>
+                <p class="underline community_name">　{{ community.name }}</p>
+            </div>
+                <div>
+                    <form action="{{url_for('community_report_exe',id=community.id)}}" method="post">
+                        <div class="report_buttun">
+                            <input type="radio" name="chiba" id="chiba" value=0 checked>
+                            <label for="chiba">スパム</label>
+                        </div>
+                        <div class="report_buttun">
+                            <input type="radio" name="chiba" id="chiba1" value=1>
+                            <label for="chiba1">攻撃またはハラスメント</label>
+                        </div>
+                        <div class="report_buttun">
+                            <input type="radio" name="chiba" id="chiba2" value=2>
+                            <label for="chiba2">有害な誤情報または暴力の是認</label>
+                        </div>
+                        <div class="report_buttun">
+                            <input type="radio" name="chiba" id="chiba3" value=3>
+                            <label for="chiba3">個人を特定できる情報を晒している<label>
+                        </div>
+                        <div class="report_buttun">
+                            <input type="radio" name="chiba" id="chiba4" value=4>
+                            <label for="chiba4">その他<label>
+                        </div>
+                        <div class="buttun_block">
+                            <a class='back_bottun' href="{{url_for('search_join_community',cnt=community.id)}}">戻る</a>
+                            <input class="submit_bottun" type="submit" value="つぎへ"><br>
+                        </div>
+                </form>
+            </div>
+        </div>       
+{% endblock %}
+
+

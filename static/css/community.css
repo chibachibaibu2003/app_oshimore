@@ -63,9 +63,9 @@
     font-size: 11px;
     white-space: nowrap;
     overflow: hidden;
+    visibility: hidden;
     text-overflow: ellipsis;
     text-decoration: none;
-    color: white;
 }
 
 .eventlink {
@@ -139,13 +139,14 @@
 .thread_box_username {
     position: absolute;
     height: 25px;
+    left: 10px;
     top: 10px;
 }
 
 .thread_box_text {
     display: block;
     overflow-wrap: break-word;
-    margin: 0px 0px 10px 10px;
+    margin: 5px 0px 10px 10px;
 }
 
 .thread_text {

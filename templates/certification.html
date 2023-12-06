@@ -10,7 +10,7 @@
 <body>
     <img class="title" src="../static/imges/icon.png" alt="icon">
     <div class="form">
-            <form action="" method="post">
+            <form action="{{url_for('certification_mail')}}" method="post">
                 <p class="login">認証</p><br>
                     <input class="text_line2" type="mail" name="mail" placeholder="Email"><br>
                     <input class="text_line2" type="text" name="code" placeholder="認証コード"><br>

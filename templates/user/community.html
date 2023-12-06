@@ -9,12 +9,11 @@
 
 
 <div class="community_thread">
-    <a class="community_thread_title">コミュニティスレッド</a>
+    <a class="community_thread_title">{{comname[0]}}</a>
     <div class="community_thread_list">
         {%for data in thread_list%}
             <div class="community_thread_box">
-                <img class="thread_box_img"src="{{url_for('static',filename='/imges/user_icon.png')}}">
-                <a class="thread_box_username">{{data[5]}}</a><br>
+                <a class="thread_box_username">>>{{data[5]}}</a><br>
                 <a class="thread_box_text">{{data[2]}}</a>
                 <div class="thread_box_edit">
                     {%if data[7]==0%}

@@ -1,4 +1,4 @@
-{% extends "header.html" %}
+{% extends "header_edit.html" %}
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
 <link rel="stylesheet" href="/static/css/invitation.css">
@@ -9,18 +9,21 @@
 {% block content %}
     <div class="center">
         <h2>コミュニティ参加</h2>
+        <div class="report-btn">
+            <a class="report-btn2" href="{{url_for('community_report',id=community.id)}}">コミュニティ通報</a>
+        </div>
     </div>
         <div class="community-info">
             <div class="community-name">
-                <h1><コミュニティ名></h1>
+                <h1>コミュニティ名</h1>
                 <p class="underline">{{ community.name }}</p>
                 <h1>推しの名前</h1>
                 <p class="underline">{{community.oshiname}}</p>
                 <h1>概要</h1>
-                <p class="rounded-border" >{{ community.overview }}</p>
+                <p class="rounded-border" >　{{ community.overview }}</p>
             </div>
             <div class="community-btn">
-                <a href="" class="rejection">もどる</a>
+                <a href="{{url_for('community_search')}}" class="rejection">もどる</a>
                 <a href="{{url_for('join_community_exe')}}" class="invitation-btn">参加する</a>
             </div>
         </div>       

@@ -55,6 +55,7 @@ let dayCount = 1 // 日にちのカウント
 let calendarHtml = '' // HTMLを組み立てる変数
 let monthevent=[] //dayeventの1ヶ月分のイベント情報を日ごとに保存しておくリスト
 calendarHtml += '<h1 class="caltitle">' + year + '/' + month + '</h1>'
+calendarHtml += '<a class="register_button"href="">'+'イベント追加'+'</a>'
 calendarHtml += '<table class="cal">'
 //カレンダーのイベントをflaskから配列で日付ごとに入れたのを受け取る
 // 曜日の行を作成
@@ -78,7 +79,7 @@ for (let w = 0; w < 5; w++) {
             let searchDay={{searchDay|tojson}}+dayCount
             let eventList={{eventList|tojson}}
             let dayevent=[] //各日付のイベント情報を保存しておくリスト
-
+            
             for (let i = 0; i <{{num1}}; i++ ){
                 for (let k = 0; k < eventList[i].length; k++){
                     if (eventList[i][k][2]==searchDay){
@@ -122,7 +123,11 @@ event.forEach(function(events){
         blackBg.classList.toggle('popblackBg');
         for (let i=0;i<monthevent[checkday].length;i++){
             let li=document.createElement('li');
-            ul.appendChild(li).innerHTML='<a class="popupevent"href="">'+monthevent[checkday][i][1]+'</a>'
+            console.log(monthevent[checkday][i][0])
+            let text='<a class="popupevent"href="">'+monthevent[checkday][i][1] +'</a>'
+            let hreftext='/event_thread_check/'+monthevent[checkday][i][0]
+            ul.appendChild(li).innerHTML=text
+            li.children[0].href=hreftext
         }
         popup.classList.toggle('pop');
     })
@@ -160,5 +165,4 @@ function checkEmpty(){
         return false;
     }
 }
-
 {%endblock%}
