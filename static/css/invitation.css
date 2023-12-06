@@ -96,8 +96,9 @@
     float: right;
 }
 
-.community-info1{
-    margin-left:150px
+.community-info1 {
+    margin-left: 150px
+}
 
 .underline {
     text-decoration: underline;
@@ -219,7 +220,7 @@ form {
 
 .report_buttun {
     display: flex;
-	text-align: center;
+    text-align: center;
     margin-top: auto;
     margin-right: auto;
     margin-left: 50px;
@@ -259,15 +260,14 @@ input:checked+label {
     margin: 0 auto;
 }
 
-    /* ホバー時のスタイル */
-    .invitation-btn:hover,
-    .rejection:hover {
-        opacity: 0.8;
-    }
+/* ホバー時のスタイル */
+.invitation-btn:hover,
+.rejection:hover {
+    opacity: 0.8;
+}
 
-    /* アクティブ時（クリック時）のスタイル */
-    .invitation-btn:active,
-    .rejection:active {
-        transform: translateY(4px);
-    }
+/* アクティブ時（クリック時）のスタイル */
+.invitation-btn:active,
+.rejection:active {
+    transform: translateY(4px);
 }
