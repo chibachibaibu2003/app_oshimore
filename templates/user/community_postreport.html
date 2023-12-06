@@ -1,0 +1,36 @@
+{% extends "header_edit.html" %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/postreport.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+{% endblock %}
+{% block content%}
+<h2>通報理由の選択</h2>
+
+<i class="fa-solid fa-arrow-right fontawesome-size" onclick="history.back();"></i>
+
+<!-- それぞれの通報理由フォーム -->
+<div class="report-reason-container">
+    <form action="{{ url_for('report', post_id=post_id) }}" method="post">
+        <input type="hidden" name="report_category" value="水増しまたはスパム">
+        <button type="submit" class="report-reason">水増しまたはスパム</button>
+    </form>
+    <form action="{{ url_for('report', post_id=post_id) }}" method="post">
+        <input type="hidden" name="report_category" value="悪意ある誹謗中傷またはハラスメントの誤認">
+        <button type="submit" class="report-reason">悪意ある誹謗中傷またはハラスメントの誤認</button>
+    </form>
+    <form action="{{ url_for('report', post_id=post_id) }}" method="post">
+        <input type="hidden" name="report_category" value="有害な誤情報または暴力の確認">
+        <button type="submit" class="report-reason">有害な誤情報または暴力の確認</button>
+    </form>
+    <form action="{{ url_for('report', post_id=post_id) }}" method="post">
+        <input type="hidden" name="report_category" value="個人を特定できる情報をさらしている">
+        <button type="submit" class="report-reason">個人を特定できる情報をさらしている</button>
+    </form>
+    <form action="{{ url_for('report', post_id=post_id) }}" method="post">
+        <input type="hidden" name="report_category" value="その他">
+        <button type="submit" class="report-reason">その他</button>
+    </form>
+</div>
+
+</body>
+{% endblock%}

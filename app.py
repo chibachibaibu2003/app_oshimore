@@ -1,5 +1,5 @@
 from flask import Flask, render_template,redirect,url_for,request,session,jsonify,flash
-import random,string,db,datetime,os,mail,urllib.parse,boto3,re
+import random,string,db,datetime,os,mail,urllib.parse,re
 
 from hashids import Hashids
 from admin import admin_bp
@@ -736,6 +736,39 @@ def invite_user(community_id, account_id):
         return redirect(url_for('community_user_search'))
     else:
         return redirect(url_for('index'))
+
+@app.route('/report/<int:post_id>', methods=['GET', 'POST'])
+def report(post_id):
+    if request.method == 'POST':
+        report_category = request.form.get('report_category')
+        # 確認画面に遷移
+        return render_template('user/confirm_report.html', post_id=post_id, report_category=report_category)
+
+    # GETリクエストの場合、通報理由選択画面を表示
+    return render_template('user/community_postreport.html', post_id=post_id)
+
+@app.route('/confirm_report/<int:post_id>', methods=['POST'])
+def confirm_report(post_id):
+    user_info = session.get('user_info')
+    if not user_info:
+        flash('ログインが必要です。', 'error')
+        return redirect(url_for('login_page'))  # ログインページへリダイレクト
+
+    report_category = request.form.get('report_category')
+    report_detail = request.form.get('report_detail', None)
+    reporter_id = user_info[0]
+
+    success = db.insert_community_post_report(post_id, reporter_id, report_category, report_detail)
+    if success:
+        flash('通報が完了しました。', 'success')
+    else:
+        flash('通報に失敗しました。', 'error')
+    
+    comId = session.get('comId')  # セッションからcomIdを取得
+    if comId is None:
+        return redirect(url_for('index'))  # comIdがない場合は別のページへリダイレクト
+
+    return redirect(url_for('community',id=comId,checkcal=0))
 
 if __name__ == "__main__":
         app.run(debug=True)
