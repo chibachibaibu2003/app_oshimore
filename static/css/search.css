@@ -9,6 +9,10 @@ body {
     text-align: center;
 }
 
+i{
+  color: black;
+}
+
 .fontawesome-size{
     font-size: 3.5em;
     transform: rotate(180deg);

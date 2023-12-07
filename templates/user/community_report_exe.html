@@ -22,7 +22,7 @@
                     <textarea class="reason_write" rows="8" name="reason" placeholder="詳しい理由を記述してください。"></textarea><br>
             {% endif %}
             <div class="buttun_block">
-            <a class='back_bottun' href="{{url_for('community_report',id=community.id)}}">戻る</a>
+            <a class='back_bottun' href="{{url_for('community_report_set',id=community.id)}}">戻る</a>
             <input class="submit_bottun" type="submit" value="送信">
         </div>
         </form>
