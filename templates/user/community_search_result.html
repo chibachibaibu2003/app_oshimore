@@ -8,7 +8,7 @@
 {%block content%}
     <div>
         <h1 class="h1">コミュニティ検索</h1>
-        <i class="fa-solid fa-arrow-right fontawesome-size"></i>
+        <a  href="{{url_for('top',checkcal=1)}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
     </div>
 
     <div class="word">
@@ -16,7 +16,7 @@
         <p>参加したいコミュニティを検索</p>
     </div>
 
-    <form action="{{url_for('community_search_exe')}}" method="post">
+    <form name='search_form' action="{{url_for('community_search_exe')}}" method="post" onsubmit="return checkSearch()">
         <div>
             <input type="search" placeholder=" 推しの名前で検索" name='keyword' class="search_var" value="{{keyword}}">
         </div>
@@ -27,10 +27,28 @@
     <div class="search_result_box">
         <ul>
             {%for community in result%}
-            <a class="community_join" href="{{url_for('search_join_community',cnt=community[0])}}"><li class="search_result"><p class="community">{{community[1]}}</p><p class="oshi">{{community[2]}}</p><br></li></a>
+            <a class="community_join" href="{{url_for('search_join_community_set',cnt=community[0])}}"><li class="search_result"><p class="community">{{community[1]}}</p><p class="oshi">{{community[2]}}</p><br></li></a>
             {% endfor %} 
+            {% if cnt==0 %}
+            <script>
+                setTimeout(()=>{
+                    alert('コミュニティが見つかりませんでした')
+                },10)
+                
+            </script>
+            {% endif %}
         </ul>    
     </div>
     
-    
+    <script>
+        function checkSearch(){
+            let text=document.search_form.keyword.value;
+            if(text.length === 0) {
+                alert('必須項目に入力してください。');
+                return false;
+            }else{
+                return true
+            }
+        }
+    </script>
 {%endblock%}

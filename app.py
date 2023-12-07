@@ -629,22 +629,27 @@ def community_search_exe():
     if 'user_info' in session:
         keyword = request.form.get('keyword')
         result = db.community_search(keyword)
-        cnt=0
+        cnt=len(result)
         return render_template('user/community_search_result.html',result=result,keyword=keyword,cnt=cnt)
     else:
         return redirect(url_for('index'))
+    
+@app.route('/search_join_community_set/<int:cnt>')
+def search_join_community_set(cnt):
+    session['cnt'] = cnt
+    return redirect(url_for('search_join_community'))
 
-@app.route('/search_join_community/<int:cnt>')
-def search_join_community(cnt):
+@app.route('/search_join_community')
+def search_join_community():
     if 'user_info' in session:
-        community = db.select_community(cnt)
+        community = db.select_community(session['cnt'])
         community={
             'id':community[0],
             'name':community[1],
             'oshiname':community[2],
             'overview':community[3]
         }
-        session['community_id'] = cnt
+        session['community_id'] = session['cnt']
         return render_template('user/search_join_community.html',community=community)
     else:
         return redirect(url_for('index'))
@@ -658,10 +663,15 @@ def join_community_exe():
     else:
         return redirect(url_for('index'))
 
-@app.route('/community_report/<int:id>')
-def community_report(id):
+@app.route('/community_report_set/<int:id>')
+def community_report_set(id):
+    session['id'] = id
+    return redirect(url_for('community_report'))
+
+@app.route('/community_report')
+def community_report():
     if 'user_info' in session:
-        community = db.select_community(id)
+        community = db.select_community(session['id'])
         community={
             'id':community[0],
             'name':community[1],
@@ -672,10 +682,19 @@ def community_report(id):
     else:
         return redirect(url_for('index'))
 
-@app.route('/community_report_exe/<int:id>', methods=['POST'])
-def community_report_exe(id):
+
+@app.route('/community_report_exe_set/<int:id>', methods=['POST'])
+def community_report_exe_set(id):
+    session['report_id'] = id
+    num = request.form.get('chiba')
+    session['num'] = num
+    return redirect(url_for('community_report_exe'))
+
+@app.route('/community_report_exe')
+def community_report_exe():
     if 'user_info' in session:
-        num = request.form.get('chiba')
+        id = session['report_id']
+        num = session['num']
         community = db.select_community(id)
         flg = False
         community={
