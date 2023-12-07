@@ -408,7 +408,7 @@ def community_page():
                     invitations.append(db.getcomInfo_to_comId(comId))
         
         comname=db.getcomname_tocomId(session['comId'])
-        eventList.append(db.getevent_to_comId(session['comId'],searchDay))
+        eventList.append(db.getevent_to_comId(session['user_info'][0],session['comId'],searchDay))
         searchDay=f"{session['year']}-{session['month']}-"
         community_thread_list=db.getcomtThread_list_tocomId(session['comId'])
         
