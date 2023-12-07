@@ -55,7 +55,7 @@ let dayCount = 1 // 日にちのカウント
 let calendarHtml = '' // HTMLを組み立てる変数
 let monthevent=[] //dayeventの1ヶ月分のイベント情報を日ごとに保存しておくリスト
 calendarHtml += '<h1 class="caltitle">' + year + '/' + month + '</h1>'
-calendarHtml += '<a class="register_button"href="">'+'イベント追加'+'</a>'
+calendarHtml += '<a class="register_button" href="{{ url_for('use_event_register') }}">'+'イベント追加'+'</a>'
 calendarHtml += '<table class="cal">'
 //カレンダーのイベントをflaskから配列で日付ごとに入れたのを受け取る
 // 曜日の行を作成
