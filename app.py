@@ -185,7 +185,15 @@ def password_update_success():
 @app.route('/top/<int:checkcal>')
 def top(checkcal):
     if 'user_info' in session:
-        if (checkcal!=1):
+        session['checkcal']=checkcal
+        return redirect(url_for('mypage'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/mypage')
+def mypage():
+    if 'user_info' in session:
+        if (session['checkcal']!=1):
             dt=datetime.datetime.now()
             session['month']=dt.month
             session['year']=dt.year
@@ -367,9 +375,17 @@ def community(id,checkcal):
             elif (postgood=="1"):
                 cnt=db.community_post_good(postId,accId)
             return jsonify({'msg' : 'success'})
-
         
-        if (checkcal!=1):
+        session['checkcal']=checkcal
+        session['comId']=id
+        return redirect(url_for('community_page'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/community_page')
+def community_page():
+    if 'user_info' in session:
+        if (session['checkcal']!=1):
             dt=datetime.datetime.now()
             session['month']=dt.month
             session['year']=dt.year
@@ -388,18 +404,18 @@ def community(id,checkcal):
         if(len(comIdList2)!=0):
                 for comId in comIdList2:
                     invitations.append(db.getcomInfo_to_comId(comId))
-        session['comId']=id
-        comname=db.getcomname_tocomId(id)
-        eventList.append(db.getevent_to_comId(id,searchDay))
+        
+        comname=db.getcomname_tocomId(session['comId'])
+        eventList.append(db.getevent_to_comId(session['comId'],searchDay))
         searchDay=f"{session['year']}-{session['month']}-"
-        community_thread_list=db.getcomtThread_list_tocomId(id)
+        community_thread_list=db.getcomtThread_list_tocomId(session['comId'])
         
         for data in community_thread_list:
             goodcheck=db.getcomThread_good(data[0],data[4])
             good_num=db.getcomThread_goodnum(data[0])
             community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
             cnt+=1
-        return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all,comId=id,checkcal=checkcal,comname=comname)
+        return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all,comId=session['comId'],checkcal=session['checkcal'],comname=comname)
     else:
         return redirect(url_for('index'))
 
