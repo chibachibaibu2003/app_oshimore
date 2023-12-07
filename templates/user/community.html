@@ -152,7 +152,11 @@ event.forEach(function(events){
         blackBg.classList.toggle('popblackBg');
         for (let i=0;i<monthevent[checkday].length;i++){
             let li=document.createElement('li');
-            ul.appendChild(li).innerHTML='<a class="popupevent"href="">'+monthevent[checkday][i][1]+'</a>'
+            console.log(monthevent[checkday][i][0])
+            let text='<a class="popupevent"href="">'+monthevent[checkday][i][1] +'</a>'
+            let hreftext='/event_thread_check/'+monthevent[checkday][i][0]
+            ul.appendChild(li).innerHTML=text
+            li.children[0].href=hreftext
         }
         popup.classList.toggle('pop');
     })
