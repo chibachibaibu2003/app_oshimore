@@ -203,13 +203,15 @@ def mypage():
         datas=[]
         invitations=[]
         eventList=[]
-        
+
+        accId = session['user_info'][0]
         comIdList=db.getcomId_to_accId(session['user_info'][0])
+        comIdList.append(0)
         comIdList2=db.getcomId_to_accId_joined(session['user_info'][0])
         comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
         if(len(comIdList)!=0):
             for comId in comIdList:
-                eventList.append(db.getevent_to_comId(comId,searchDay))
+                eventList.append(db.getevent_to_comId(accId,comId,searchDay))
         if(len(comIdList2)!=0):
             for comId in comIdList2:
                 datas.append(db.getcomInfo_to_comId(comId))
