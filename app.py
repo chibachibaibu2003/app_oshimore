@@ -787,7 +787,7 @@ def invite_user(community_id, account_id):
  
 @app.route('/event_register')
 def event_register():
-    return render_template('user/event_register.html',comId=session.get('comId'),checkcal=0)
+    return render_template('user/event_register.html',comId=session['comId'],checkcal=0)
 
 @app.route('/event_register_exe',methods=['POST'])
 def event_register_exe():
@@ -817,6 +817,46 @@ def event_register_exe():
 def event_register_result():
     msg = 'イベントを追加しました。'
     return render_template('user/event_register.html',comId=session['comId'],checkcal=0,msg=msg)
+
+
+@app.route('/user_event')
+def use_event_register():
+    return render_template('user/user_event_register.html')
+
+
+@app.route('/user_event_exe' ,methods=['POST'])
+def user_event_exe():
+    account_id = session['user_info'][0]
+    community_id = 0
+    title = request.form.get('title')
+    start_day = request.form.get('start_day')
+    end_day = request.form.get('end_day')
+    start_time = request.form.get('start_time')
+    end_time = request.form.get('end_time')
+    url = request.form.get('url')
+    explanation = request.form.get('explanation')
+
+    count = db.event_register(title, start_day, end_day, start_time, end_time, url, explanation, account_id,
+                              community_id)
+
+    if count == 0:
+        msg = 'イベント追加に失敗しました'
+        return render_template('user/user_event_register.html', comId=community_id, checkcal=0, msg=msg)
+
+    return redirect(url_for('user_event_result'))
+
+
+@app.route('/user_event_success')
+def user_event_result():
+    msg = 'イベントを追加しました。'
+    return render_template('user/user_event_register.html', comId=session['comId'], checkcal=0, msg=msg);
+
+
+
+
+
+
+
 
 
 
