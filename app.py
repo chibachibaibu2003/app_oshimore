@@ -206,7 +206,7 @@ def mypage():
 
         accId = session['user_info'][0]
         comIdList=db.getcomId_to_accId(session['user_info'][0])
-        comIdList.append(0)
+        comIdList.append((0,))
         comIdList2=db.getcomId_to_accId_joined(session['user_info'][0])
         comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
         if(len(comIdList)!=0):
@@ -218,6 +218,7 @@ def mypage():
         if(len(comIdList3)!=0):
             for comId in comIdList3:
                 invitations.append(db.getcomInfo_to_comId(comId))
+        print(comIdList)
         searchDay=f"{session['year']}-{session['month']}-"
         return render_template('user/menu.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay, msg=msg)
     else:
@@ -411,13 +412,12 @@ def community_page():
         eventList.append(db.getevent_to_comId(session['user_info'][0],session['comId'],searchDay))
         searchDay=f"{session['year']}-{session['month']}-"
         community_thread_list=db.getcomtThread_list_tocomId(session['comId'])
-        
         for data in community_thread_list:
             goodcheck=db.getcomThread_good(data[0],data[4])
             good_num=db.getcomThread_goodnum(data[0])
             community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
             cnt+=1
-        return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all,comId=session['comId'],checkcal=session['checkcal'],comname=comname)
+        return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, searchDay=searchDay,thread_list=community_thread_list_all,comId=session['comId'],checkcal=session['checkcal'],comname=comname)
     else:
         return redirect(url_for('index'))
 
