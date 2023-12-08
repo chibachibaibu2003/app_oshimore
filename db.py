@@ -1021,4 +1021,70 @@ def event_register(title,start_day,end_day,start_time,end_time,url,explanation,a
 
     return count
 
+def get_user_profile(account_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT account_id, user_id, account_name, profile, icon_url FROM account WHERE account_id = %s", (account_id,))
+        user_info = cursor.fetchone()
+        return user_info
+    except Exception as e:
+        print("Error fetching user profile:", e)
+        return None
+    finally:
+        cursor.close()
+        connection.close()
 
+def update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        # ユーザー情報の更新
+        cursor.execute("UPDATE account SET user_id = %s, account_name = %s, profile = %s, icon_url = %s WHERE account_id = %s",
+                       (new_user_id, account_name, profile, icon_url, account_id))
+
+        # 推しリスト設定の更新
+        for oshi_id, is_public in oshi_list_settings.items():
+            cursor.execute("UPDATE register_community SET favorite_list_flag = %s WHERE account_id = %s AND community_id = %s",
+                    (is_public, account_id, oshi_id))
+
+        connection.commit()
+    except Exception as e:
+        print("Error updating user profile:", e)
+        connection.rollback()
+    finally:
+        cursor.close()
+        connection.close()
+
+def get_oshi_list(account_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT c.community_id, c.favorite_name, rc.favorite_list_flag
+            FROM community c
+            JOIN register_community rc ON c.community_id = rc.community_id
+            WHERE rc.account_id = %s""", (account_id,))
+        oshi_list = cursor.fetchall()
+        return [{'community_id': oshi[0], 'favorite_name': oshi[1], 'is_public': oshi[2] == 0} for oshi in oshi_list]
+    except Exception as e:
+        print(e)
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+
+
+def check_user_id_exists(user_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT COUNT(*) FROM account WHERE user_id = %s", (user_id,))
+        count = cursor.fetchone()[0]
+        return count > 0
+    except Exception as e:
+        print(e)
+        return False
+    finally:
+        cursor.close()
+        connection.close()

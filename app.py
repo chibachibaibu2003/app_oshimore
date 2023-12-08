@@ -1,5 +1,5 @@
 from flask import Flask, render_template,redirect,url_for,request,session,jsonify,flash
-import random,string,db,datetime,os,mail,urllib.parse,re
+import random,string,db,datetime,os,mail,urllib.parse,re,boto3
 
 from hashids import Hashids
 from admin import admin_bp
@@ -930,6 +930,66 @@ def confirm_report(post_id):
         return redirect(url_for('index'))  # comIdがない場合は別のページへリダイレクト
 
     return redirect(url_for('community',id=comId,checkcal=0))
+
+@app.route('/editprofile', methods=['GET', 'POST'])
+def editprofile():
+    user_info = session.get('user_info')
+    if not user_info:
+        flash('セッション情報が不足しています。もう一度ログインしてください。')
+        return redirect(url_for('login'))
+    account_id = user_info[0]
+
+    if request.method == 'POST':
+        account_name = request.form['account_name']
+        new_user_id = request.form['user_id']
+        profile = request.form['profile']
+        file = request.files['file']
+        bucket = 'oshimore'
+
+        # 推しリストの公開/非公開設定
+        all_oshi_ids = [oshi['community_id'] for oshi in db.get_oshi_list(account_id)]
+        oshi_list_settings = {str(oshi_id): 1 for oshi_id in all_oshi_ids}  # デフォルトは非公開（1）
+        for key in request.form:
+            if key.startswith('oshi_'):
+                oshi_id = key.split('_')[1]
+                oshi_list_settings[oshi_id] = 0  # チェックされていれば公開（0）
+
+        # AWS S3への画像アップロード
+        if file and file.filename != '':
+            filename = f'user{account_id}_icon.png'
+            s3 = boto3.client('s3',
+                              aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                              aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                              region_name=os.environ.get('AWS_DEFAULT_REGION'))
+            s3.upload_fileobj(file, 'oshimore', f'img/{filename}')
+            icon_url = filename
+        else:
+            icon_url = user_info[4]  # 以前のアイコンURLを維持
+
+        # データベースの更新
+        db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
+        updated_user_info = db.get_user_profile(account_id)
+        print("Updated user info:", updated_user_info)
+        if updated_user_info:
+            session['user_info'] = updated_user_info
+        else:
+            flash('ユーザー情報の更新に失敗しました。')
+
+        flash('プロフィールが更新されました。')
+        return redirect(url_for('editprofile'))
+
+    user_info = db.get_user_profile(account_id)
+    user_data = {
+        'user_id': user_info[1],
+        'account_name': user_info[2],
+        'profile': user_info[3],
+        'icon_url': user_info[4]
+    }
+
+    oshi_list = db.get_oshi_list(account_id)
+    return render_template('user/editprofile.html', user=user_data, oshis=oshi_list)
+
+
 
 if __name__ == "__main__":
         app.run(debug=True)
