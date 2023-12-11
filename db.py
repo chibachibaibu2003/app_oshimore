@@ -879,7 +879,25 @@ def search_join_community(account_id, community_id):
         cursor.close()
         connection.close()
         
+def community_join_check(account_id,community_id):
+    sql = "SELECT * FROM register_community WHERE account_id = %s and community_id = %s"
+    flg = False
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(account_id,community_id,))
+        count=cursor.fetchone()
 
+    except psycopg2.DatabaseError :
+        flg = False
+    finally:
+        cursor.close()
+        connection.close()
+        if count !=None:
+            flg = True
+    return flg
+#参加している場合True
+        
 def report_community(community_id,user_id,category,reason):
     sql = "INSERT INTO  community_report values(default, %s,%s,%s,%s)"
     try:
@@ -1054,9 +1072,10 @@ def get_user_profile(account_id):
     connection = get_connection()
     cursor = connection.cursor()
     try:
-        cursor.execute("SELECT account_id, user_id, account_name, profile, icon_url FROM account WHERE account_id = %s", (account_id,))
+        cursor.execute("SELECT * FROM account WHERE account_id = %s", (account_id,))
         user_info = cursor.fetchone()
         return user_info
+        print("情報取得時のセッション情報:", user_info)
     except Exception as e:
         print("Error fetching user profile:", e)
         return None
@@ -1065,6 +1084,7 @@ def get_user_profile(account_id):
         connection.close()
 
 def update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings):
+    print("これまでのセッション情報:", account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
     connection = get_connection()
     cursor = connection.cursor()
     try:
@@ -1078,9 +1098,11 @@ def update_user_profile(account_id, new_user_id, account_name, profile, icon_url
                     (is_public, account_id, oshi_id))
 
         connection.commit()
+        return True
     except Exception as e:
         print("Error updating user profile:", e)
         connection.rollback()
+        return False
     finally:
         cursor.close()
         connection.close()

@@ -656,8 +656,14 @@ def search_join_community():
             'oshiname':community[2],
             'overview':community[3]
         }
+        text = "参加する"
+        cls = 'invitation-btn'
+        flg = db.community_join_check(session['user_info'][0],session['cnt'])
+        if flg:
+            text = "参加済み"
+            cls = 'gain'
         session['community_id'] = session['cnt']
-        return render_template('user/search_join_community.html',community=community)
+        return render_template('user/search_join_community.html',community=community,text=text,cls=cls)
     else:
         return redirect(url_for('index'))
 
@@ -929,25 +935,26 @@ def confirm_report(post_id):
 @app.route('/editprofile', methods=['GET', 'POST'])
 def editprofile():
     user_info = session.get('user_info')
+    print("Session user_info:", user_info)
     if not user_info:
         flash('セッション情報が不足しています。もう一度ログインしてください。')
         return redirect(url_for('login'))
     account_id = user_info[0]
 
+    # POSTリクエストの処理
     if request.method == 'POST':
         account_name = request.form['account_name']
         new_user_id = request.form['user_id']
         profile = request.form['profile']
         file = request.files['file']
-        bucket = 'oshimore'
 
         # 推しリストの公開/非公開設定
         all_oshi_ids = [oshi['community_id'] for oshi in db.get_oshi_list(account_id)]
-        oshi_list_settings = {str(oshi_id): 1 for oshi_id in all_oshi_ids}  # デフォルトは非公開（1）
+        oshi_list_settings = {str(oshi_id): 0 for oshi_id in all_oshi_ids}
         for key in request.form:
             if key.startswith('oshi_'):
                 oshi_id = key.split('_')[1]
-                oshi_list_settings[oshi_id] = 0  # チェックされていれば公開（0）
+                oshi_list_settings[oshi_id] = 1
 
         # AWS S3への画像アップロード
         if file and file.filename != '':
@@ -959,31 +966,36 @@ def editprofile():
             s3.upload_fileobj(file, 'oshimore', f'img/{filename}')
             icon_url = filename
         else:
-            icon_url = user_info[4]  # 以前のアイコンURLを維持
+            # 画像がアップロードされていない場合、以前のアイコンURLを使用
+            icon_url = user_info[7]
 
         # データベースの更新
-        db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
-        updated_user_info = db.get_user_profile(account_id)
-        print("Updated user info:", updated_user_info)
-        if updated_user_info:
-            session['user_info'] = updated_user_info
-        else:
-            flash('ユーザー情報の更新に失敗しました。')
+        update_result = db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
+        if update_result:  # update_resultがTrueの場合
+            updated_user_info = db.get_user_profile(account_id)
+            if updated_user_info:
+                session['user_info'] = updated_user_info
+                msg = 'プロフィールが更新されました。'
+            else:
+                msg = 'プロフィールの更新に失敗しました。'
+        else:  # update_resultがFalseの場合
+            msg = 'プロフィールの更新に失敗しました。'
 
-        flash('プロフィールが更新されました。')
+        session['msg'] = msg
         return redirect(url_for('editprofile'))
 
-    user_info = db.get_user_profile(account_id)
-    user_data = {
-        'user_id': user_info[1],
-        'account_name': user_info[2],
-        'profile': user_info[3],
-        'icon_url': user_info[4]
-    }
+    else:
+        user_info = db.get_user_profile(account_id)
+        user_data = {
+            'user_id': user_info[1],
+            'account_name': user_info[3],
+            'profile': user_info[6],
+            'icon_url': user_info[7]
+        }
 
     oshi_list = db.get_oshi_list(account_id)
-    return render_template('user/editprofile.html', user=user_data, oshis=oshi_list)
-
+    msg = session.pop('msg', None)  
+    return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
 
 
 if __name__ == "__main__":
