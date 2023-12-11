@@ -28,10 +28,10 @@ def login():
     if db.login(mail,password):
         session['user_info'] = db.get_accountInfo_toMail(mail)
         user = session['user_info']
-        if(user[10]==1):
+        if(user[9]==1 or user[10]==1 ):
             return render_template('index.html')
         elif(user[8]==1):
-            return render_template('admin/menu.html')
+            return redirect('/admin_menu')
         else:
             return redirect(url_for('top',checkcal=0))
     else:
@@ -187,6 +187,13 @@ def top(checkcal):
     if 'user_info' in session:
         session['checkcal']=checkcal
         return redirect(url_for('mypage'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/admin_menu')
+def admin_menu():
+    if 'user_info' in session:
+        return render_template('admin/menu.html')
     else:
         return redirect(url_for('index'))
 
@@ -819,9 +826,7 @@ def invite_user(community_id, account_id):
         return redirect(url_for('community_user_search'))
     else:
         return redirect(url_for('index'))
-      
- 
- 
+
 @app.route('/event_register')
 def event_register():
     return render_template('user/event_register.html',comId=session['comId'],checkcal=0)
@@ -888,16 +893,6 @@ def user_event_result():
     msg = 'イベントを追加しました。'
     return render_template('user/user_event_register.html', comId=session['comId'], checkcal=0, msg=msg);
 
-
-
-
-
-
-
-
-
-
-
 @app.route('/report/<int:post_id>', methods=['GET', 'POST'])
 def report(post_id):
     if request.method == 'POST':
@@ -958,9 +953,9 @@ def editprofile():
         if file and file.filename != '':
             filename = f'user{account_id}_icon.png'
             s3 = boto3.client('s3',
-                              aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-                              aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
-                              region_name=os.environ.get('AWS_DEFAULT_REGION'))
+                            aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                            region_name=os.environ.get('AWS_DEFAULT_REGION'))
             s3.upload_fileobj(file, 'oshimore', f'img/{filename}')
             icon_url = filename
         else:

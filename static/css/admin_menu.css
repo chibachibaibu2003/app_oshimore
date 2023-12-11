@@ -28,3 +28,19 @@
     text-align: center;
     margin: 10px auto;
 }
+
+.user_menu_button_box {
+    display: flex;
+    flex-flow: column;
+    margin-top: 15vh;
+}
+
+.fontawesome-size {
+    font-size: 3.5em;
+    transform: rotate(180deg);
+    -webkit-text-stroke: 4px white;
+    position: absolute;
+    left: 20px;
+    top: 74px;
+    color: black;
+}

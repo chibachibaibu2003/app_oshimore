@@ -1,0 +1,18 @@
+{% extends "header_edit.html"%}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/admin_user_list.css')}}">
+{% endblock %}
+{% block content%}
+<div class="menu_title_box">
+    <a class="menu_title">ユーザー管理</a>
+    <a  href="{{url_for('admin.user_menu')}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
+</div>
+<a class="expl">通報されたアカウントがある場合、リストで表示されます。</a>
+{% for info in user_list %}
+    <div class="search_user_list">
+        <a class="search_user_name">{{info[0]}}</a>
+        <a class="search_user_id">@{{info[1]}}</a>
+        <a href="{{url_for('admin.user_detail',id=info[2])}}" class="page_link"></a>
+    </div>
+{% endfor %}
+{% endblock %}

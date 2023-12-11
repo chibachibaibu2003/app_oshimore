@@ -160,7 +160,6 @@
 
 .buttun_block {
     margin-top: 30px;
-    margin-right: 150px;
 }
 
 form {
@@ -181,11 +180,72 @@ form {
     font-size: 1.5rem;
     margin-top: auto;
     margin-left: auto;
-    margin-right: 120px;
+    margin-right: 100px;
     margin-bottom: 5px;
     text-decoration: none;
     float: right;
 }
+
+.submit_bottun_community_report {
+    font-family: "メイリオ";
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #FFA954;
+    border: 1px solid #000000;
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: 180px;
+    margin-bottom: 5px;
+    text-decoration: none;
+    float: right;
+}
+
+.submit_community_report_exe {
+    font-family: "メイリオ";
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #FFA954;
+    border: 1px solid #000000;
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: 30vw;
+    margin-bottom: 5px;
+    text-decoration: none;
+    float: right;
+}
+
+.submit_bottun_event_report {
+    font-family: "メイリオ";
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #FFA954;
+    border: 1px solid #000000;
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: 2vw;
+    margin-bottom: 5px;
+    text-decoration: none;
+    float: right;
+}
+
 
 .back_bottun {
     font-family: "メイリオ";
@@ -202,7 +262,49 @@ form {
     text-decoration: none;
     font-size: 1.5rem;
     margin-top: auto;
-    margin-left: 120px;
+    margin-left: 50px;
+    margin-right: auto;
+    margin-bottom: auto;
+    float: left;
+}
+
+.back_bottun_community_report_exe {
+    font-family: "メイリオ";
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    line-height: 50px;
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    color: #000000;
+    text-decoration: none;
+    font-size: 1.5rem;
+    margin-top: auto;
+    margin-left: 15vw;
+    margin-right: auto;
+    margin-bottom: auto;
+    float: left;
+}
+
+.back_bottun_event_report {
+    font-family: "メイリオ";
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    line-height: 50px;
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    color: #000000;
+    text-decoration: none;
+    font-size: 1.5rem;
+    margin-top: auto;
+    margin-left: 9vw;
     margin-right: auto;
     margin-bottom: auto;
     float: left;
