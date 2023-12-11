@@ -1069,9 +1069,11 @@ def update_user_profile(account_id, new_user_id, account_name, profile, icon_url
                     (is_public, account_id, oshi_id))
 
         connection.commit()
+        return True
     except Exception as e:
         print("Error updating user profile:", e)
         connection.rollback()
+        return False
     finally:
         cursor.close()
         connection.close()
