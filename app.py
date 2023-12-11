@@ -898,9 +898,9 @@ def editprofile():
         if updated_user_info:
             session['user_info'] = updated_user_info
         else:
-            flash('ユーザー情報の更新に失敗しました。')
+            msg = 'プロフィールの更新に失敗しました。'
 
-        flash('プロフィールが更新されました。')
+        msg = 'プロフィールが更新されました。'
         return redirect(url_for('editprofile'))
 
     user_info = db.get_user_profile(account_id)
