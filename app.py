@@ -28,6 +28,7 @@ def login():
     if db.login(mail,password):
         session['user_info'] = db.get_accountInfo_toMail(mail)
         user = session['user_info']
+        print("Logged in user_info:", user)
         if(user[10]==1):
             return render_template('index.html')
         elif(user[8]==1):
@@ -934,25 +935,25 @@ def confirm_report(post_id):
 @app.route('/editprofile', methods=['GET', 'POST'])
 def editprofile():
     user_info = session.get('user_info')
+    print("Session user_info:", user_info)
     if not user_info:
         flash('セッション情報が不足しています。もう一度ログインしてください。')
         return redirect(url_for('login'))
-    account_id = user_info[0]
+    account_id = user_info[0]  # タプルのインデックスを使用
 
     if request.method == 'POST':
         account_name = request.form['account_name']
         new_user_id = request.form['user_id']
         profile = request.form['profile']
         file = request.files['file']
-        bucket = 'oshimore'
 
         # 推しリストの公開/非公開設定
         all_oshi_ids = [oshi['community_id'] for oshi in db.get_oshi_list(account_id)]
-        oshi_list_settings = {str(oshi_id): 1 for oshi_id in all_oshi_ids}  # デフォルトは非公開（1）
+        oshi_list_settings = {str(oshi_id): 0 for oshi_id in all_oshi_ids}
         for key in request.form:
             if key.startswith('oshi_'):
                 oshi_id = key.split('_')[1]
-                oshi_list_settings[oshi_id] = 0  # チェックされていれば公開（0）
+                oshi_list_settings[oshi_id] = 1
 
         # AWS S3への画像アップロード
         if file and file.filename != '':
@@ -964,12 +965,13 @@ def editprofile():
             s3.upload_fileobj(file, 'oshimore', f'img/{filename}')
             icon_url = filename
         else:
-            icon_url = user_info[4]  # 以前のアイコンURLを維持
+            # 画像がアップロードされていない場合、以前のアイコンURLを使用
+            icon_url = user_info[7]
+            print("ここの処理までのuser_info:", user_info)
 
         # データベースの更新
         db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
         updated_user_info = db.get_user_profile(account_id)
-        print("Updated user info:", updated_user_info)
         if updated_user_info:
             session['user_info'] = updated_user_info
         else:
@@ -979,16 +981,16 @@ def editprofile():
         return redirect(url_for('editprofile'))
 
     user_info = db.get_user_profile(account_id)
+    print("Retrieved user_info:", user_info)
     user_data = {
         'user_id': user_info[1],
-        'account_name': user_info[2],
-        'profile': user_info[3],
-        'icon_url': user_info[4]
+        'account_name': user_info[3],
+        'profile': user_info[6],
+        'icon_url': user_info[7]
     }
 
     oshi_list = db.get_oshi_list(account_id)
     return render_template('user/editprofile.html', user=user_data, oshis=oshi_list)
-
 
 
 if __name__ == "__main__":

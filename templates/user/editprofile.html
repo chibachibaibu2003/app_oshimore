@@ -51,8 +51,7 @@
                             <td>{{ oshi.favorite_name }}</td>
                             <td>
                                 <label class="switch">
-                                    <!-- 公開/非公開の状態を逆にする -->
-                                    <input type="checkbox" name="oshi_{{ oshi.community_id }}" {% if oshi.is_public %}checked{% endif %}>
+                                    <input type="checkbox" name="oshi_{{ oshi.community_id }}" {% if not oshi.is_public %}checked{% endif %}>
                                     <span class="slider round"></span>
                                 </label>
                             </td>

@@ -1025,9 +1025,10 @@ def get_user_profile(account_id):
     connection = get_connection()
     cursor = connection.cursor()
     try:
-        cursor.execute("SELECT account_id, user_id, account_name, profile, icon_url FROM account WHERE account_id = %s", (account_id,))
+        cursor.execute("SELECT * FROM account WHERE account_id = %s", (account_id,))
         user_info = cursor.fetchone()
         return user_info
+        print("情報取得時のセッション情報:", user_info)
     except Exception as e:
         print("Error fetching user profile:", e)
         return None
@@ -1036,6 +1037,7 @@ def get_user_profile(account_id):
         connection.close()
 
 def update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings):
+    print("これまでのセッション情報:", account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
     connection = get_connection()
     cursor = connection.cursor()
     try:
