@@ -850,7 +850,25 @@ def search_join_community(account_id, community_id):
         cursor.close()
         connection.close()
         
+def community_join_check(account_id,community_id):
+    sql = "SELECT * FROM register_community WHERE account_id = %s and community_id = %s"
+    flg = False
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(account_id,community_id,))
+        count=cursor.fetchone()
 
+    except psycopg2.DatabaseError :
+        flg = False
+    finally:
+        cursor.close()
+        connection.close()
+        if count !=None:
+            flg = True
+    return flg
+#参加している場合True
+        
 def report_community(community_id,user_id,category,reason):
     sql = "INSERT INTO  community_report values(default, %s,%s,%s,%s)"
     try:

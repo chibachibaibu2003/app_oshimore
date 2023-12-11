@@ -650,8 +650,14 @@ def search_join_community():
             'oshiname':community[2],
             'overview':community[3]
         }
+        text = "参加する"
+        cls = 'invitation-btn'
+        flg = db.community_join_check(session['user_info'][0],session['cnt'])
+        if flg:
+            text = "参加済み"
+            cls = 'gain'
         session['community_id'] = session['cnt']
-        return render_template('user/search_join_community.html',community=community)
+        return render_template('user/search_join_community.html',community=community,text=text,cls=cls)
     else:
         return redirect(url_for('index'))
 
