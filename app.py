@@ -862,8 +862,9 @@ def editprofile():
     if not user_info:
         flash('セッション情報が不足しています。もう一度ログインしてください。')
         return redirect(url_for('login'))
-    account_id = user_info[0]  # タプルのインデックスを使用
+    account_id = user_info[0]
 
+    # POSTリクエストの処理
     if request.method == 'POST':
         account_name = request.form['account_name']
         new_user_id = request.form['user_id']
@@ -890,30 +891,34 @@ def editprofile():
         else:
             # 画像がアップロードされていない場合、以前のアイコンURLを使用
             icon_url = user_info[7]
-            print("ここの処理までのuser_info:", user_info)
 
         # データベースの更新
-        db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
-        updated_user_info = db.get_user_profile(account_id)
-        if updated_user_info:
-            session['user_info'] = updated_user_info
-        else:
+        update_result = db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
+        if update_result:  # update_resultがTrueの場合
+            updated_user_info = db.get_user_profile(account_id)
+            if updated_user_info:
+                session['user_info'] = updated_user_info
+                msg = 'プロフィールが更新されました。'
+            else:
+                msg = 'プロフィールの更新に失敗しました。'
+        else:  # update_resultがFalseの場合
             msg = 'プロフィールの更新に失敗しました。'
 
-        msg = 'プロフィールが更新されました。'
+        session['msg'] = msg
         return redirect(url_for('editprofile'))
 
-    user_info = db.get_user_profile(account_id)
-    print("Retrieved user_info:", user_info)
-    user_data = {
-        'user_id': user_info[1],
-        'account_name': user_info[3],
-        'profile': user_info[6],
-        'icon_url': user_info[7]
-    }
+    else:
+        user_info = db.get_user_profile(account_id)
+        user_data = {
+            'user_id': user_info[1],
+            'account_name': user_info[3],
+            'profile': user_info[6],
+            'icon_url': user_info[7]
+        }
 
     oshi_list = db.get_oshi_list(account_id)
-    return render_template('user/editprofile.html', user=user_data, oshis=oshi_list)
+    msg = session.pop('msg', None)  
+    return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
 
 
 if __name__ == "__main__":

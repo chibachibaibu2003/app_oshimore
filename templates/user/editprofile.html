@@ -31,7 +31,7 @@
                 <input type="file" id="filename" name="file" accept=".png">
                 <div class="form-group-left">
                     <label for="user_id">ユーザーID</label>
-                    <input type="text" id="user_id" name="user_id" value="{{ user.user_id }}">
+                    <input type="text" name="user_id" id="user_id" oninput="enforceHalfWidthAlphaNumeric(this)" required maxlength="16" placeholder="ユーザーID" value="{{ user.user_id }}">
                 </div>
             </div>
         </div>
@@ -40,12 +40,12 @@
         <div class="right-section">
             <div class="form-group horizontal">
                 <label for="account_name">ユーザー名</label>
-                <input type="text" id="account_name" name="account_name" value="{{ user.account_name }}">
+                <input type="text" name="account_name" id="account_name" required maxlength="16" placeholder="ユーザー名" value="{{ user.account_name }}">
             </div>
             
             <div class="form-group">
                 <label for="profile">プロフィール文</label>
-                <textarea id="profile" name="profile">{{ user.profile }}</textarea>
+                <textarea name="profile" id="profile" maxlength="256" placeholder="プロフィール">{{ user.profile }}</textarea>
             </div>
             <div class="oshi-list-container">
                 <table class="oshi-table">
@@ -75,6 +75,12 @@
         </div>
     </div>
 </form>
+
+<script>
+    function enforceHalfWidthAlphaNumeric(el) {
+        el.value = el.value.replace(/[^A-Za-z0-9]/g, '');
+    }
+</script>
 
 <div class="popup_b">
     <a><img  class="backbutton"src="{{url_for('static',filename='/imges/back.png')}}"></a>
