@@ -30,9 +30,9 @@ def login():
         user = session['user_info']
         if(user[10]==1):
             return render_template('index.html')
+        elif(user[8]==1):
+            return render_template('admin/menu.html')
         else:
-            if(user[8]==1):
-                return render_template('index.html')
             return redirect(url_for('top',checkcal=0))
     else:
         return back_index(mail)
@@ -144,7 +144,7 @@ def password_set():
     Oshi More! からのパスワード再設定のメールです。 
     以下のURLからパスワードを再設定してください。 
 
-    http://127.0.0.1:5000/pass_certification
+    http://oshimore-90d6b34a7fa6.herokuapp.com/pass_certification
     認証コード : {} 
     ''').format(code)
         
