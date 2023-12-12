@@ -88,6 +88,13 @@ p{
     text-align: center;
 }
 
+.h12 {
+    margin-top:27px;
+    font-size: 40px;
+    font-weight: normal;
+    text-align: center;
+}
+
 .fontawesome-size{
     font-size: 3.5em;
     transform: rotate(180deg);
@@ -121,4 +128,33 @@ p{
 
 .btn:hover {
     background: #e89d52;
+}
+
+.table_delete {
+    margin-top:20px;
+    margin-left:26%;
+    width:50%
+}
+
+.h4_font{
+    color: red;
+    text-align: center;
+}
+
+
+.submit_button {
+	font-family: "メイリオ";
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	width: 200px;
+	height: 50px;
+	border-radius: 10px;
+	background-color: #FFA954;
+	border: 1px solid #000000;
+	color: #ffffff;
+	font-size: 1.5rem;
+	text-decoration: none;
+    margin-top: 2%;
+    margin-left: 8%;
 }

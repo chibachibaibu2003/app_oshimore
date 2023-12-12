@@ -348,12 +348,12 @@ def getcomInfo_to_comId(id):
         connection.close()
     return list
 
-def getevent_to_comId(accId,id,day):
-    sql="SELECT  event_id,title,to_char(start_day,'YYYY-FMMM-FMDD')as fmday,to_char(start_day,'YYYY-MM-DD') as start_day,to_char(end_day,'YYYY-MM-DD') as end_day,to_char(start_time,'HH:MM:SS') as start_time,to_char(end_time,'HH:MM:SS') as end_time,url,explanation,account_id,community_id FROM event WHERE community_id=%s and account_id=%s and date_trunc('month',start_day)=%s ::date order by start_day asc"
+def getevent_to_comId(id,day):
+    sql="SELECT event_id,title,to_char(start_day,'YYYY-FMMM-FMDD')as fmday,to_char(start_day,'YYYY-MM-DD') as start_day,to_char(end_day,'YYYY-MM-DD') as end_day,to_char(start_time,'HH:MM:SS') as start_time,to_char(end_time,'HH:MM:SS') as end_time,url,explanation,account_id,community_id FROM event  WHERE community_id=%s  and date_trunc('month',start_day)=%s ::date  order by start_day asc"
     try:
         connection=get_connection()
         cursor=connection.cursor()
-        cursor.execute(sql,(id,accId,day))
+        cursor.execute(sql,(id,day))
         list=cursor.fetchall()
     except psycopg2.DatabaseError:
         list=[]
@@ -361,6 +361,22 @@ def getevent_to_comId(accId,id,day):
         cursor.close()
         connection.close()
     return list
+
+def getevent_to_accId(accId,id,day):
+    sql="SELECT event_id,title,to_char(start_day,'YYYY-FMMM-FMDD')as fmday,to_char(start_day,'YYYY-MM-DD') as start_day,to_char(end_day,'YYYY-MM-DD') as end_day,to_char(start_time,'HH:MM:SS') as start_time,to_char(end_time,'HH:MM:SS') as end_time,url,explanation,account_id,community_id FROM event  WHERE account_id=%s and community_id=%s  and date_trunc('month',start_day)=%s ::date  order by start_day asc"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,id,day))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+
+
 
 def event_thread_info_search(eventId):
     sql="SELECT title,url,explanation from event where event_id=%s"
@@ -1021,4 +1037,112 @@ def event_register(title,start_day,end_day,start_time,end_time,url,explanation,a
 
     return count
 
+def event_info_search(eventId):
+    sql="SELECT event_id,title,start_day,end_day,start_time,end_time,url,explanation,account_id from event where event_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (eventId,))
+        event_info = cursor.fetchone()
+    finally:
+        cursor.close()
+        connection.close()
+    return event_info
 
+
+def event_update(event_id,title,start_day,end_day,start_time,end_time,url,explanation):
+    sql = 'UPDATE event SET title=%s,start_day=%s,end_day=%s,start_time=%s,end_time=%s,url=%s,explanation=%s WHERE event_id=%s;'
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (title,start_day,end_day,start_time,end_time,url,explanation,event_id))
+        count = cursor.rowcount
+        connection.commit()
+
+    except psycopg2.DatabaseError:
+        count = 0
+
+    finally:
+        cursor.close()
+        connection.close()
+
+    return count
+
+def event_delete(event_id):
+    sql = "DELETE FROM event WHERE event_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (event_id,))
+        count = cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count = 0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def select_event_post_by_id(event_id):
+    sql = "SELECT event_post_id FROM event_post WHERE event_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (event_id,))
+        event_post_id = cursor.fetchone()
+    except psycopg2.DatabaseError:
+        event_post_id = []
+    finally:
+        cursor.close()
+        connection.close()
+
+    return event_post_id
+
+def event_post_delete(event_id):
+    sql = 'UPDATE event_post SET delete_flag=1 WHERE event_id=%s;'
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (event_id,))
+        count = cursor.rowcount
+        connection.commit()
+
+    except psycopg2.DatabaseError:
+        count = 0
+
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def event_post_report_delete(event_post_id):
+    sql = "DELETE FROM event_post_report WHERE event_post_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (event_post_id,))
+        count = cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count = 0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def event_good_delete(event_post_id):
+    sql = "DELETE FROM event_good WHERE event_post_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (event_post_id,))
+        count = cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count = 0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
