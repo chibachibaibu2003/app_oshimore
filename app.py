@@ -205,6 +205,7 @@ def mypage():
             session['month']=dt.month
             session['year']=dt.year
         searchDay=datetime.date(session['year'],session['month'],1)
+
         msg=session['msg']
         session['msg']=''
         datas=[]
@@ -218,7 +219,10 @@ def mypage():
         comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
         if(len(comIdList)!=0):
             for comId in comIdList:
-                eventList.append(db.getevent_to_comId(accId,comId,searchDay))
+                if (comId != 0):
+                    eventList.append(db.getevent_to_comId(comId,searchDay))
+                else:
+                    eventList.append(db.getevent_to_accId(accId,comId,searchDay))
         if(len(comIdList2)!=0):
             for comId in comIdList2:
                 datas.append(db.getcomInfo_to_comId(comId))
@@ -416,7 +420,7 @@ def community_page():
                     invitations.append(db.getcomInfo_to_comId(comId))
         
         comname=db.getcomname_tocomId(session['comId'])
-        eventList.append(db.getevent_to_comId(session['user_info'][0],session['comId'],searchDay))
+        eventList.append(db.getevent_to_comId(session['comId'],searchDay))
         searchDay=f"{session['year']}-{session['month']}-"
         community_thread_list=db.getcomtThread_list_tocomId(session['comId'])
         for data in community_thread_list:
@@ -501,7 +505,7 @@ def community_edit():
         comId = session['comId']
         community_detail = db.getcommunity_select(comId)
         public = community_detail[4]
-        print(public)
+
         return render_template('user/community_edit.html',community_detail=community_detail,public=public)
     else:
         return redirect(url_for('index'))
@@ -899,6 +903,71 @@ def user_event_result():
     msg = 'イベントを追加しました。'
     return render_template('user/user_event_register.html', comId=session['comId'], checkcal=0, msg=msg);
 
+
+@app.route('/event_edit')
+def event_edit():
+    event_id = session['event_threadId']
+    event_info = db.event_info_search(event_id)
+
+
+    if session['user_info'][0]!=event_info[8]:
+        msg = '作成者ではないため編集出来ません'
+        return redirect(url_for('event_thread_check',id=event_info[0],msg=msg))
+    else:
+        return render_template('user/event_edit.html',event_info=event_info)
+
+@app.route('/event_edit_result',methods=['POST'])
+def event_edit_result():
+    event_id = request.form.get('event_id')
+    title = request.form.get('title')
+    start_day = request.form.get('start_day')
+    end_day = request.form.get('end_day')
+    start_time = request.form.get('start_time')
+    end_time = request.form.get('end_time')
+    url = request.form.get('url')
+    explanation = request.form.get('explanation')
+
+    count = db.event_update(event_id,title,start_day,end_day,start_time,end_time,url,explanation)
+    if(count==1):
+        return redirect(url_for('event_edit_success'))
+    else:
+        msg = 'イベント編集に失敗しました。'
+        return redirect(url_for('event_edit',msg=msg))
+
+@app.route('/event_edit_success')
+def event_edit_success():
+    return redirect(url_for('event_thread_check',id=session['event_threadId']))
+
+
+
+@app.route('/event_delete')
+def event_delete():
+    event_id = session['event_threadId']
+    event_info = db.event_info_search(event_id)
+
+    if session['user_info'][0] != event_info[8]:
+        msg = '作成者ではないため削除出来ません'
+        session['message']=msg
+        return redirect(url_for('event_thread_check', id=event_info[0]))
+    else:
+        return render_template('user/event_delete.html', event_info=event_info)
+
+@app.route('/event_delete_result')
+def event_delete_result():
+    event_id = session['event_threadId']
+    event_post_info = db.select_event_post_by_id(event_id)
+    count1 = db.event_post_delete(event_id)
+    count2 = db.event_post_report_delete(event_post_info)
+    count3 = db.event_good_delete(event_post_info)
+    count4 = db.event_delete(event_id)
+
+    if(count4==1):
+        msg = 'イベントを一件を削除しました'
+        session['message'] = msg
+        return redirect(url_for('top',id=session['user_info'][0],checkcal=0,msg=msg))
+    else:
+        return redirect(url_for('event_thread_check', id=session['event_threadId']))
+      
 @app.route('/report/<int:post_id>', methods=['GET', 'POST'])
 def report(post_id):
     if request.method == 'POST':
