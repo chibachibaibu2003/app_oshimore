@@ -1,5 +1,5 @@
 from flask import Flask, render_template,redirect,url_for,request,session,jsonify,flash
-import random,string,db,datetime,os,mail,urllib.parse,re
+import random,string,db,datetime,os,mail,urllib.parse,re,boto3
 
 from hashids import Hashids
 from admin import admin_bp
@@ -28,11 +28,11 @@ def login():
     if db.login(mail,password):
         session['user_info'] = db.get_accountInfo_toMail(mail)
         user = session['user_info']
-        if(user[10]==1):
+        if(user[9]==1 or user[10]==1 ):
             return render_template('index.html')
+        elif(user[8]==1):
+            return redirect('/admin_menu')
         else:
-            if(user[8]==1):
-                return render_template('index.html')
             return redirect(url_for('top',checkcal=0))
     else:
         return back_index(mail)
@@ -144,7 +144,7 @@ def password_set():
     Oshi More! からのパスワード再設定のメールです。 
     以下のURLからパスワードを再設定してください。 
 
-    http://127.0.0.1:5000/pass_certification
+    http://oshimore-90d6b34a7fa6.herokuapp.com/pass_certification
     認証コード : {} 
     ''').format(code)
         
@@ -166,7 +166,7 @@ def pass_certification_mail():
     else:
         return redirect(url_for('pass_certification'))
     
-@app.route('/kusoga', methods=['POST'])
+@app.route('/pass_certification_success', methods=['POST'])
 def password_update_success():
     b_password = request.form.get('password')
     mail = session['email']
@@ -190,6 +190,13 @@ def top(checkcal):
     else:
         return redirect(url_for('index'))
 
+@app.route('/admin_menu')
+def admin_menu():
+    if 'user_info' in session:
+        return render_template('admin/menu.html')
+    else:
+        return redirect(url_for('index'))
+
 @app.route('/mypage')
 def mypage():
     if 'user_info' in session:
@@ -207,7 +214,7 @@ def mypage():
 
         accId = session['user_info'][0]
         comIdList=db.getcomId_to_accId(session['user_info'][0])
-        comIdList.append(0)
+        comIdList.append((0,))
         comIdList2=db.getcomId_to_accId_joined(session['user_info'][0])
         comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
         if(len(comIdList)!=0):
@@ -222,6 +229,7 @@ def mypage():
         if(len(comIdList3)!=0):
             for comId in comIdList3:
                 invitations.append(db.getcomInfo_to_comId(comId))
+        print(comIdList)
         searchDay=f"{session['year']}-{session['month']}-"
         return render_template('user/menu.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay, msg=msg)
     else:
@@ -415,13 +423,12 @@ def community_page():
         eventList.append(db.getevent_to_comId(session['comId'],searchDay))
         searchDay=f"{session['year']}-{session['month']}-"
         community_thread_list=db.getcomtThread_list_tocomId(session['comId'])
-        
         for data in community_thread_list:
             goodcheck=db.getcomThread_good(data[0],data[4])
             good_num=db.getcomThread_goodnum(data[0])
             community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
             cnt+=1
-        return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=1, searchDay=searchDay,thread_list=community_thread_list_all,comId=session['comId'],checkcal=session['checkcal'],comname=comname)
+        return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, searchDay=searchDay,thread_list=community_thread_list_all,comId=session['comId'],checkcal=session['checkcal'],comname=comname)
     else:
         return redirect(url_for('index'))
 
@@ -633,23 +640,34 @@ def community_search_exe():
     if 'user_info' in session:
         keyword = request.form.get('keyword')
         result = db.community_search(keyword)
-        cnt=0
+        cnt=len(result)
         return render_template('user/community_search_result.html',result=result,keyword=keyword,cnt=cnt)
     else:
         return redirect(url_for('index'))
+    
+@app.route('/search_join_community_set/<int:cnt>')
+def search_join_community_set(cnt):
+    session['cnt'] = cnt
+    return redirect(url_for('search_join_community'))
 
-@app.route('/search_join_community/<int:cnt>')
-def search_join_community(cnt):
+@app.route('/search_join_community')
+def search_join_community():
     if 'user_info' in session:
-        community = db.select_community(cnt)
+        community = db.select_community(session['cnt'])
         community={
             'id':community[0],
             'name':community[1],
             'oshiname':community[2],
             'overview':community[3]
         }
-        session['community_id'] = cnt
-        return render_template('user/search_join_community.html',community=community)
+        text = "参加する"
+        cls = 'invitation-btn'
+        flg = db.community_join_check(session['user_info'][0],session['cnt'])
+        if flg:
+            text = "参加済み"
+            cls = 'gain'
+        session['community_id'] = session['cnt']
+        return render_template('user/search_join_community.html',community=community,text=text,cls=cls)
     else:
         return redirect(url_for('index'))
 
@@ -662,10 +680,15 @@ def join_community_exe():
     else:
         return redirect(url_for('index'))
 
-@app.route('/community_report/<int:id>')
-def community_report(id):
+@app.route('/community_report_set/<int:id>')
+def community_report_set(id):
+    session['id'] = id
+    return redirect(url_for('community_report'))
+
+@app.route('/community_report')
+def community_report():
     if 'user_info' in session:
-        community = db.select_community(id)
+        community = db.select_community(session['id'])
         community={
             'id':community[0],
             'name':community[1],
@@ -676,10 +699,19 @@ def community_report(id):
     else:
         return redirect(url_for('index'))
 
-@app.route('/community_report_exe/<int:id>', methods=['POST'])
-def community_report_exe(id):
+
+@app.route('/community_report_exe_set/<int:id>', methods=['POST'])
+def community_report_exe_set(id):
+    session['report_id'] = id
+    num = request.form.get('chiba')
+    session['num'] = num
+    return redirect(url_for('community_report_exe'))
+
+@app.route('/community_report_exe')
+def community_report_exe():
     if 'user_info' in session:
-        num = request.form.get('chiba')
+        id = session['report_id']
+        num = session['num']
         community = db.select_community(id)
         flg = False
         community={
@@ -804,9 +836,7 @@ def invite_user(community_id, account_id):
         return redirect(url_for('community_user_search'))
     else:
         return redirect(url_for('index'))
-      
- 
- 
+
 @app.route('/event_register')
 def event_register():
     return render_template('user/event_register.html',comId=session['comId'],checkcal=0)
@@ -873,6 +903,7 @@ def user_event_result():
     msg = 'イベントを追加しました。'
     return render_template('user/user_event_register.html', comId=session['comId'], checkcal=0, msg=msg);
 
+
 @app.route('/event_edit')
 def event_edit():
     event_id = session['event_threadId']
@@ -936,8 +967,7 @@ def event_delete_result():
         return redirect(url_for('top',id=session['user_info'][0],checkcal=0,msg=msg))
     else:
         return redirect(url_for('event_thread_check', id=session['event_threadId']))
-
-
+      
 @app.route('/report/<int:post_id>', methods=['GET', 'POST'])
 def report(post_id):
     if request.method == 'POST':
@@ -970,6 +1000,72 @@ def confirm_report(post_id):
         return redirect(url_for('index'))  # comIdがない場合は別のページへリダイレクト
 
     return redirect(url_for('community',id=comId,checkcal=0))
+
+@app.route('/editprofile', methods=['GET', 'POST'])
+def editprofile():
+    user_info = session.get('user_info')
+    print("Session user_info:", user_info)
+    if not user_info:
+        flash('セッション情報が不足しています。もう一度ログインしてください。')
+        return redirect(url_for('login'))
+    account_id = user_info[0]
+
+    # POSTリクエストの処理
+    if request.method == 'POST':
+        account_name = request.form['account_name']
+        new_user_id = request.form['user_id']
+        profile = request.form['profile']
+        file = request.files['file']
+
+        # 推しリストの公開/非公開設定
+        all_oshi_ids = [oshi['community_id'] for oshi in db.get_oshi_list(account_id)]
+        oshi_list_settings = {str(oshi_id): 0 for oshi_id in all_oshi_ids}
+        for key in request.form:
+            if key.startswith('oshi_'):
+                oshi_id = key.split('_')[1]
+                oshi_list_settings[oshi_id] = 1
+
+        # AWS S3への画像アップロード
+        if file and file.filename != '':
+            filename = f'user{account_id}_icon.png'
+            s3 = boto3.client('s3',
+                            aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                            region_name=os.environ.get('AWS_DEFAULT_REGION'))
+            s3.upload_fileobj(file, 'oshimore', f'img/{filename}')
+            icon_url = filename
+        else:
+            # 画像がアップロードされていない場合、以前のアイコンURLを使用
+            icon_url = user_info[7]
+
+        # データベースの更新
+        update_result = db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
+        if update_result:  # update_resultがTrueの場合
+            updated_user_info = db.get_user_profile(account_id)
+            if updated_user_info:
+                session['user_info'] = updated_user_info
+                msg = 'プロフィールが更新されました。'
+            else:
+                msg = 'プロフィールの更新に失敗しました。'
+        else:  # update_resultがFalseの場合
+            msg = 'プロフィールの更新に失敗しました。'
+
+        session['msg'] = msg
+        return redirect(url_for('editprofile'))
+
+    else:
+        user_info = db.get_user_profile(account_id)
+        user_data = {
+            'user_id': user_info[1],
+            'account_name': user_info[3],
+            'profile': user_info[6],
+            'icon_url': user_info[7]
+        }
+
+    oshi_list = db.get_oshi_list(account_id)
+    msg = session.pop('msg', None)  
+    return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
+
 
 if __name__ == "__main__":
         app.run(debug=True)

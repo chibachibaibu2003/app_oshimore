@@ -1,3 +1,192 @@
-body{
-    background-color: #FDFFB8;
+/* 基本スタイル */
+.title h2 {
+  text-align: center;
+  color: #333;
+}
+
+.fontawesome-size {
+  font-size: 3.5em;
+  transform: rotate(180deg);
+  -webkit-text-stroke: 4px white;
+  position: absolute;
+  left: 20px;
+  top: 74px;
+  color: black; 
+  text-decoration: none; 
+}
+
+/* コンテナスタイル */
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+/* 左セクションのスタイル */
+.left-section {
+  width: 40%;
+  padding: 20px;
+}
+
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+#filename {
+  margin-bottom: 20px;
+}
+
+.icon-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  background-size: cover;
+  background-position: center;
+}
+
+#user_id {
+  font-size: 20px;
+  display: block;
+  width: 100%;
+  height: 30px;
+  margin-top: 15px;
+}
+
+/* 右セクションのスタイル */
+.right-section {
+  width: 60%;
+  padding: 20px;
+  justify-content: space-between;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  min-width: 140px;
+  margin-right: 20px;
+  text-align: left;
+  font-size: 20px;
+}
+
+#account_name, #profile {
+  width: 100%;
+  height: 30px;
+  font-size: 20px;
+}
+
+#profile {
+  font-size: 20px;
+  height: 150px;
+  resize: none;
+}
+
+/* 推しリストのスタイル */
+.oshi-list-container {
+  overflow-y: auto;
+  height: 300px;
+  margin-bottom: 20px;
+}
+
+.oshi-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+}
+
+.oshi-table th, .oshi-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  border-radius: 10px;
+}
+
+.oshi-table th {
+  background-color: #fff;
+  color: black;
+}
+
+.oshi-table td {
+  background-color: #f9f9f9;
+}
+
+/* 列の幅調整 */
+.oshi-table th:first-child, .oshi-table td:first-child {
+  width: 70%; /* 名前列の幅 */
+}
+
+.oshi-table th:last-child, .oshi-table td:last-child {
+  width: 15%; /* 公開/非公開列の幅 */
+}
+
+/* ボタンスタイル */
+.delete-button, .save-button {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 250px;
+  height: 50px;
+}
+
+.delete-button {
+  background-color: #ff0000;
+  color: white;
+  position: absolute;
+  left: 50px;
+  bottom: 0;
+  top: 700px;
+  text-align: center; /* テキストを中央に */
+  display: inline-block; /* ボタンのような表示 */
+  text-decoration: none; /* リンクの下線を無効にする */
+  height:20px;
+  width:190px;
+}
+
+.save-button {
+  background-color: #FFA500;
+  color: white;
+  align-self: center;
+}
+
+/* トグルスイッチスタイル */
+.switch input {
+  appearance: none;
+  width: 60px;
+  height: 30px;
+  background-color: #2196F3; /* デフォルトで青色 */
+  border-radius: 15px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.switch input:before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 26px;
+  height: 26px;
+  background-color: white;
+  border-radius: 50%;
+  transition: left 0.2s;
+}
+
+.switch input:checked {
+  background-color: #ccc; /* チェックがついているときはグレー */
+}
+
+.switch input:checked:before {
+  left: 32px;
 }

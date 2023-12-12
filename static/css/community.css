@@ -181,6 +181,12 @@
     display: none;
 }
 
+.report_button {
+    text-decoration: none;
+    color: red;
+    margin-left: 10px;
+}
+
 .thread_report {
     position: absolute;
     left: 100px;

@@ -57,6 +57,20 @@ def get_accountInfo_toMail(mail):
         # listはタプルです
     return list
 
+def get_accountInfo_toaccId(accId):
+    sql="SELECT*FROM account WHERE account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,))
+        list=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        list=()
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+
 def get_account_id(id):
     b_id = bytes(id,'utf-8')
     account_id = hashlib.pdk    
@@ -660,7 +674,7 @@ def search_users(query):
     cursor = connection.cursor()
     try:
         # ユーザー名またはユーザーIDで検索
-        sql = "SELECT account_name, user_id, icon_url FROM account WHERE account_name LIKE %s OR user_id LIKE %s"
+        sql = "SELECT account_name, user_id, icon_url FROM account WHERE account_name LIKE %s OR user_id LIKE %s "
         cursor.execute(sql, (f'%{query}%', f'%{query}%'))
         users = cursor.fetchall()
         return [{'account_name': user[0], 'user_id': user[1], 'icon_url': user[2]} for user in users]
@@ -670,7 +684,22 @@ def search_users(query):
     finally:
         cursor.close()
         connection.close()
-
+        
+def report_user_search(query,accId):
+    sql="SELECT account_name, user_id, icon_url,account_id FROM account WHERE (account_name LIKE %s OR user_id LIKE %s) and ban_flag!=1 and del_flag!=1 and account_id!=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        keyword='%'+query+'%'
+        cursor.execute(sql,(keyword,keyword,accId))
+        community_information = cursor.fetchall()
+    except psycopg2.DatabaseError:
+        community_information=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return community_information
+    
 def user_detail(user_id):
     connection = get_connection()
     cursor = connection.cursor()
@@ -689,7 +718,6 @@ def user_detail(user_id):
         """
         cursor.execute(oshi_list_sql, (user_info[0],))  # user_infoからaccount_idを渡す
         oshi_list = cursor.fetchall()
-
         if user_info:
             # ユーザー情報と推しリストを辞書形式で返す
             return {
@@ -866,7 +894,25 @@ def search_join_community(account_id, community_id):
         cursor.close()
         connection.close()
         
+def community_join_check(account_id,community_id):
+    sql = "SELECT * FROM register_community WHERE account_id = %s and community_id = %s"
+    flg = False
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(account_id,community_id,))
+        count=cursor.fetchone()
 
+    except psycopg2.DatabaseError :
+        flg = False
+    finally:
+        cursor.close()
+        connection.close()
+        if count !=None:
+            flg = True
+    return flg
+#参加している場合True
+        
 def report_community(community_id,user_id,category,reason):
     sql = "INSERT INTO  community_report values(default, %s,%s,%s,%s)"
     try:
@@ -1062,12 +1108,67 @@ def event_update(event_id,title,start_day,end_day,start_time,end_time,url,explan
 
     except psycopg2.DatabaseError:
         count = 0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
 
+def get_user_profile(account_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT * FROM account WHERE account_id = %s", (account_id,))
+        user_info = cursor.fetchone()
+        return user_info
+        print("情報取得時のセッション情報:", user_info)
+    except Exception as e:
+        print("Error fetching user profile:", e)
+        return None
     finally:
         cursor.close()
         connection.close()
 
-    return count
+def update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings):
+    print("これまでのセッション情報:", account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        # ユーザー情報の更新
+        cursor.execute("UPDATE account SET user_id = %s, account_name = %s, profile = %s, icon_url = %s WHERE account_id = %s",
+                       (new_user_id, account_name, profile, icon_url, account_id))
+
+        # 推しリスト設定の更新
+        for oshi_id, is_public in oshi_list_settings.items():
+            cursor.execute("UPDATE register_community SET favorite_list_flag = %s WHERE account_id = %s AND community_id = %s",
+                    (is_public, account_id, oshi_id))
+
+        connection.commit()
+        return True
+    except Exception as e:
+        print("Error updating user profile:", e)
+        connection.rollback()
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
+def get_oshi_list(account_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("""
+            SELECT c.community_id, c.favorite_name, rc.favorite_list_flag
+            FROM community c
+            JOIN register_community rc ON c.community_id = rc.community_id
+            WHERE rc.account_id = %s""", (account_id,))
+        oshi_list = cursor.fetchall()
+        return [{'community_id': oshi[0], 'favorite_name': oshi[1], 'is_public': oshi[2] == 0} for oshi in oshi_list]
+    except Exception as e:
+        print(e)
+        return []
+    finally:
+        cursor.close()
+        connection.close()
 
 def event_delete(event_id):
     sql = "DELETE FROM event WHERE event_id=%s"
@@ -1142,6 +1243,121 @@ def event_good_delete(event_post_id):
         connection.commit()
     except psycopg2.DatabaseError:
         count = 0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+  
+def check_user_id_exists(user_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT COUNT(*) FROM account WHERE user_id = %s", (user_id,))
+        count = cursor.fetchone()[0]
+        return count > 0
+    except Exception as e:
+        print(e)
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+        
+def event_postList_toaccId(accId):
+    sql="select*from event_post where account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,))
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def event_reportList_toPostId(postId):
+    sql="select event_post_report.reporter_id, event_post_report.post_report_reason, event_post_report.post_report_category, event_post.post, event_post.post_day from event_post join event_post_report on event_post_report.event_post_id =event_post.event_post_id where event_post.event_post_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,))
+        result=cursor.fetchone()
+        cnt=cursor.rowcount
+        if (cnt==0):
+            result=0
+    except psycopg2.DatabaseError :
+        result = 0
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def ban_user_toaccId(accId):
+    sql="update account set ban_flag=1 where account_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        
+        cursor.execute(sql, (accId,))
+        count = cursor.rowcount #更新件数を取得
+        connection.commit()
+    
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+        
+    return count
+
+def ban_userList_search():
+    sql="select distinct on (account.account_id) account.account_name , account.user_id , event_post_report.event_post_id from account join event_post on account.account_id=event_post.account_id join event_post_report on event_post.event_post_id =event_post_report.event_post_id where account.ban_flag!=1 and account.del_flag!=1"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,())
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def del_event_toaccId(accId):
+    sql="delete from event_post where account_id=%s "
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        
+        cursor.execute(sql, (accId,))
+        count = cursor.rowcount #更新件数を取得
+        connection.commit()
+    
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+        
+    return count
+
+def del_comThread_toaccId(accId):
+    sql="delete from community_post where account_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        
+        cursor.execute(sql, (accId,))
+        count = cursor.rowcount #更新件数を取得
+        connection.commit()
+    
+    except psycopg2.DatabaseError:
+        count = 0
+    
     finally:
         cursor.close()
         connection.close()

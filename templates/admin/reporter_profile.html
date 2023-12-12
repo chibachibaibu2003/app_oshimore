@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="title">
-    <h2>このユーザーを招待しますか？</h2>
+    <h2>ユーザー管理</h2>
     <i class="fa-solid fa-arrow-right fontawesome-size" onclick="history.back();"></i>
 </div>
 <div class="user-detail">
@@ -23,7 +23,11 @@
     </div>
     <div class="right-section">
         <div class="profile">
-            <p>{{ user.profile }}</p>
+            <p>
+                {%if user.profile!=None%}
+                {{ user.profile }}
+                {%endif%}
+            </p>
         </div>
         <div class="oshi-list">
             <h3>推しリスト</h3>
@@ -35,10 +39,4 @@
         </div>
     </div>
 </div>
-    <!-- 招待フォーム -->
-    <div class="invite-form">
-        <form action="{{ url_for('invite_user', community_id=community_id, account_id=user.account_id) }}" method="post">
-            <button type="submit">招待する</button>
-        </form>
-    </div>
 {% endblock %}

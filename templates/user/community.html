@@ -28,7 +28,7 @@
                         </label>
                     {% endif %}
                     {% if data[4] != session['user_info'][0] %}
-                        <a href="{{ url_for('report', post_id=data[0]) }}">通報</a>
+                        <a class="report_button" href="{{ url_for('report', post_id=data[0]) }}">通報</a>
                     {% endif %}
                 </div>
             </div>
@@ -111,12 +111,10 @@ for (let w = 0; w < 5; w++) {
             let eventList={{eventList|tojson}}
             let dayevent=[] //各日付のイベント情報を保存しておくリスト
 
-            for (let i = 0; i <{{num1}}; i++ ){
-                for (let k = 0; k < eventList[i].length; k++){
-                    if (eventList[i][k][2]==searchDay){
-                        countnum++
-                        dayevent.push(eventList[i][k])
-                    }
+            for (let k = 0; k < eventList[0].length; k++){
+                if (eventList[0][k][2]==searchDay){
+                    countnum++
+                    dayevent.push(eventList[0][k])
                 }
             }
             
@@ -152,7 +150,11 @@ event.forEach(function(events){
         blackBg.classList.toggle('popblackBg');
         for (let i=0;i<monthevent[checkday].length;i++){
             let li=document.createElement('li');
-            ul.appendChild(li).innerHTML='<a class="popupevent"href="">'+monthevent[checkday][i][1]+'</a>'
+            console.log(monthevent[checkday][i][0])
+            let text='<a class="popupevent"href="">'+monthevent[checkday][i][1] +'</a>'
+            let hreftext='/event_thread_check/'+monthevent[checkday][i][0]
+            ul.appendChild(li).innerHTML=text
+            li.children[0].href=hreftext
         }
         popup.classList.toggle('pop');
     })

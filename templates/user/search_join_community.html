@@ -10,7 +10,7 @@
     <div class="center">
         <h2>コミュニティ参加</h2>
         <div class="report-btn">
-            <a class="report-btn2" href="{{url_for('community_report',id=community.id)}}">コミュニティ通報</a>
+            <a class="report-btn2" href="{{url_for('community_report_set',id=community.id)}}">コミュニティ通報</a>
         </div>
     </div>
         <div class="community-info">
@@ -24,7 +24,7 @@
             </div>
             <div class="community-btn">
                 <a href="{{url_for('community_search')}}" class="rejection">もどる</a>
-                <a href="{{url_for('join_community_exe')}}" class="invitation-btn">参加する</a>
+                <a href="{{url_for('join_community_exe')}}" class='{{cls}}'>{{text}}</a>
             </div>
         </div>       
 

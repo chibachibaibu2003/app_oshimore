@@ -1,0 +1,18 @@
+{% extends "header_edit.html"%}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/admin_menu.css')}}">
+{% endblock %}
+{% block content %}
+{% if msg!=null %}
+<a class="header_msg">{{msg}}</a>
+{% endif %}
+<div class="menu_title_box">
+    <a class="menu_title">Oshi More!</a><br>
+    <a class="menu_title">システム管理者</a>
+</div>
+<div class="menu_button_box">
+    <a class="menu_button"href="">コミュニティ管理</a>
+    <a class="menu_button"href="{{url_for('admin.user_menu')}}">ユーザー管理</a>
+    <a class="menu_button"href="{{url_for('logout')}}">ログアウト</a>
+</div>
+{% endblock %}
