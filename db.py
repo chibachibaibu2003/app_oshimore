@@ -702,7 +702,6 @@ def user_detail(user_id):
         """
         cursor.execute(oshi_list_sql, (user_info[0],))  # user_infoからaccount_idを渡す
         oshi_list = cursor.fetchall()
-
         if user_info:
             # ユーザー情報と推しリストを辞書形式で返す
             return {

@@ -28,7 +28,7 @@
                         </label>
                     {% endif %}
                     {% if data[4] != session['user_info'][0] %}
-                        <a href="{{ url_for('report', post_id=data[0]) }}">通報</a>
+                        <a class="report_button" href="{{ url_for('report', post_id=data[0]) }}">通報</a>
                     {% endif %}
                 </div>
             </div>
