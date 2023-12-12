@@ -91,11 +91,19 @@ def report_detail():
         event_post_list=session['event_post_list']
         cnt=session['report_num']
         account_info=db.get_accountInfo_toaccId(session['reporter_id'])
-        print(account_info)
+        session['account_info']=account_info
         return render_template('admin/user_detail.html',info=account_info,cnt=cnt,post_list=event_post_list)
     else:
         return redirect(url_for('index'))
-    
+
+@admin_bp.route('/reporter_profile')
+def reporter_profile():
+    if 'user_info' in session:
+        user_info = db.user_detail(session['account_info'][1])
+        return render_template('admin/reporter_profile.html',user=user_info)
+    else:
+        return redirect(url_for('index'))
+
 @admin_bp.route('/user_ban_check')
 def user_ban_check():
     if 'user_info' in session:

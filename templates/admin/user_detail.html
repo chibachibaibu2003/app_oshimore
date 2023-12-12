@@ -12,6 +12,7 @@
     <a class="reporter_name">{{info[3]}}</a>
     <a class="reporter_id">@{{info[1]}}</a>
     <a class="report_num">通報回数：{{cnt}}</a>
+    <a class="profile_link"href="{{url_for('admin.reporter_profile')}}"></a> 
 </div>
 <div class="report_post_box">
     {%for post in post_list%}

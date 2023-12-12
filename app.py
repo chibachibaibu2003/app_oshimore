@@ -166,7 +166,7 @@ def pass_certification_mail():
     else:
         return redirect(url_for('pass_certification'))
     
-@app.route('/kusoga', methods=['POST'])
+@app.route('/pass_certification_success', methods=['POST'])
 def password_update_success():
     b_password = request.form.get('password')
     mail = session['email']
