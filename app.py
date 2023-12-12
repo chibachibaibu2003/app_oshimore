@@ -563,12 +563,6 @@ def account_withdraw3():
     if 'user_info' in session:
         accId = request.form.get('accId')
         count = db.account_withdraw(accId)
-
-        if 'user_info' not in session:
-            return redirect(url_for('index'))
-
-
-        session.clear()
         return redirect(url_for('ac_withdraw_result'))
     else:
         return redirect(url_for('index'))
@@ -576,6 +570,7 @@ def account_withdraw3():
 @app.route('/account_withdraw4')
 def ac_withdraw_result():
     if 'user_info' in session:
+        session.clear()
         return render_template('user/account_withdraw3.html')
     else:
         return redirect('index')
@@ -1061,11 +1056,10 @@ def editprofile():
             'profile': user_info[6],
             'icon_url': user_info[7]
         }
-
-    oshi_list = db.get_oshi_list(account_id)
-    msg = session.pop('msg', None)  
+    msg=session['msg']
+    session['msg']=''
+    oshi_list = db.get_oshi_list(account_id)  
     return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
-
 
 if __name__ == "__main__":
         app.run(debug=True)
