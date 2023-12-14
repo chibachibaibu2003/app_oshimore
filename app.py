@@ -856,7 +856,6 @@ def event_register_exe():
         msg='イベント追加に失敗しました'
         return render_template('user/event_register.html',comId=community_id,checkcal=0,msg=msg)
 
-
     return redirect(url_for('event_register_result'))
 
 
@@ -1060,6 +1059,54 @@ def editprofile():
     session['msg']=''
     oshi_list = db.get_oshi_list(account_id)  
     return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
+
+@app.route('/report_post_list')
+def report_post_list():
+    if 'user_info' in session:
+        report_list=db.community_post_reportList(session['comId'])
+        print(report_list)
+        msg=session['msg']
+        session['msg']=''
+        return render_template('user/community_post_reportList.html',report_list=report_list,msg=msg)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_check/<int:postId>')
+def report_post_check(postId):
+    if 'user_info' in session:
+        session['report_post_id']=postId
+        return redirect(url_for('report_post_select'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_select')
+def report_post_select():
+    if 'user_info' in session:
+        postId=session['report_post_id']
+        return render_template('user/community_post_report_check.html',id=postId)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_delete/<int:postId>')
+def report_post_delete(postId):
+    if 'user_info' in session:
+        print(postId)
+        session['msg']='投稿を削除しました'
+        db.del_community_post(session['report_post_id'])
+        db.del_community_post_reportList(session['report_post_id'])
+        return redirect(url_for('report_post_list'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_protect/<int:postId>')
+def report_post_protect(postId):
+    if 'user_info' in session:
+        print(postId)
+        session['msg']='投稿を保護しました'
+        db.del_community_post_reportList(session['report_post_id'])
+        return redirect(url_for('report_post_list'))
+    else:
+        return redirect(url_for('index'))
 
 if __name__ == "__main__":
         app.run(debug=True)

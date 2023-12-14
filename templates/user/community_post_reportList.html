@@ -1,0 +1,21 @@
+{% extends "header_edit.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/admin_user_list.css')}}">
+{% endblock %}
+{% block content %}
+{% if msg!=null %}
+<a class="header_msg">{{msg}}</a>
+{% endif %}
+<div class="menu_title_box">
+    <a class="detail_menu_title">通報があった投稿</a>
+    <a  href="{{url_for('community_set')}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
+</div>
+<a class="expl">通報された投稿がある場合、リストで表示されます。</a>
+{% for info in report_list %}
+    <div class="search_user_list">
+        <a class="com_post_report_reason">通報内容：「{{info[2]}}」</a><br>
+        <a class="com_post">投稿内容<br>{{info[4]}}</a>
+        <a href="{{url_for('report_post_check',postId=info[1])}}" class="page_link"></a>
+    </div>
+{% endfor %}
+{% endblock %}
