@@ -1,13 +1,23 @@
-body{
-    font-family: 'Meiryo';
-    background-color: #FDFFB8;
+body {
+	font-family: 'Meiryo';
+	background-color: #FDFFB8;
 }
 
-.title{
-    display: flex;
+.fontawesome-size {
+	font-size: 3.5em;
+	transform: rotate(180deg);
+	-webkit-text-stroke: 4px white;
+	position: absolute;
+	left: 24vw;
+	top: 23vh;
+	color: black;
+}
+
+.title {
+	display: flex;
 	justify-content: center;
 	text-align: center;
-    margin-top: 15px;
+	margin-top: 15px;
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 5px;
@@ -15,104 +25,104 @@ body{
 	height: 120px;
 }
 
-.title-size{
+.title-size {
 	height: 100%;
 	width: 100%;
 }
 
-.form{
-	display:flex;
+.form {
+	display: flex;
 	flex-flow: column;
 	justify-content: center;
 	text-align: center;
-    margin-top: auto;
+	margin-top: auto;
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 2px;
-    background: white;
-    width: 680px;
-    height: 400px;
-    border-radius: 20px;
-    box-shadow: 10px 10px 10px 0 grey;
+	background: white;
+	width: 680px;
+	height: 400px;
+	border-radius: 20px;
+	box-shadow: 10px 10px 10px 0 grey;
 }
 
 
 
 
-.font1{
-	display:flex;
+.font1 {
+	display: flex;
 	justify-content: center;
-    font-size: 40px;
-    font-weight: lighter;
+	font-size: 40px;
+	font-weight: lighter;
 	margin-top: -55px;
 }
 
-.font2{
+.font2 {
 	display: flex;
 	justify-content: center;
 	font-size: 30px;
 }
 
-.font3{
-	display:flex;
+.font3 {
+	display: flex;
 	justify-content: center;
-    font-size: 30px;
-    margin-top: 3px;
+	font-size: 30px;
+	margin-top: 3px;
 }
 
-.font4{
-	display:flex;
+.font4 {
+	display: flex;
 	justify-content: center;
-    font-size: 30px;
-    margin-top: -60px;
+	font-size: 30px;
+	margin-top: -60px;
 }
 
-.font5{
+.font5 {
 	display: flex;
 	justify-content: center;
 	font-size: 30px;
 	margin-top: 50px;
 }
 
-.title-button{
-    margin-top: 50px;
+.title-button {
+	margin-top: 50px;
 }
 
-.title-button2{
-    margin-top: 80px;
+.title-button2 {
+	margin-top: 80px;
 }
 
-.submit_bottun{
+.submit_bottun {
 	font-family: "メイリオ";
 	display: flex;
 	justify-content: center;
 	text-align: center;
-    line-height: 50px;
+	line-height: 50px;
 	width: 200px;
 	height: 50px;
-    border-radius: 10px;
+	border-radius: 10px;
 	background-color: #FFA954;
-	border:1px solid #000000;
+	border: 1px solid #000000;
 	color: #ffffff;
 	font-size: 1.5rem;
 	margin-top: -15px;
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: auto;
-    text-decoration: none;
+	text-decoration: none;
 }
 
-.submit_bottun2{
+.submit_bottun2 {
 	font-family: "メイリオ";
 	display: flex;
 	justify-content: center;
 	text-align: center;
-    line-height: 50px;
+	line-height: 50px;
 	width: 200px;
 	height: 50px;
-    border-radius: 10px;
+	border-radius: 10px;
 	background-color: #FFA954;
-	border:1px solid #000000;
+	border: 1px solid #000000;
 	color: #ffffff;
 	font-size: 1.5rem;
 	margin-top: -15px;
@@ -120,20 +130,20 @@ body{
 	margin-right: 110px;
 	margin-bottom: auto;
 	float: right;
-    text-decoration: none;
+	text-decoration: none;
 }
 
-.submit_bottun3{
+.submit_bottun3 {
 	font-family: "メイリオ";
 	display: flex;
 	justify-content: center;
 	text-align: center;
-    line-height: 50px;
+	line-height: 50px;
 	width: 200px;
 	height: 50px;
-    border-radius: 10px;
+	border-radius: 10px;
 	background-color: #FFA954;
-	border:1px solid #000000;
+	border: 1px solid #000000;
 	color: #ffffff;
 	font-size: 1.5rem;
 	margin-top: -15px;
@@ -141,22 +151,22 @@ body{
 	margin-right: auto;
 	margin-bottom: auto;
 	float: left;
-    text-decoration: none;
+	text-decoration: none;
 }
 
 
 
-.back_bottun{
+.back_bottun {
 	font-family: "メイリオ";
 	display: flex;
 	justify-content: center;
 	text-align: center;
-	line-height:50px;
+	line-height: 50px;
 	width: 200px;
 	height: 50px;
-    border-radius: 10px;
+	border-radius: 10px;
 	background-color: #ffffff;
-	border:1px solid #000000;
+	border: 1px solid #000000;
 	color: #000000;
 	text-decoration: none;
 	font-size: 1.5rem;
@@ -167,17 +177,17 @@ body{
 	float: left;
 }
 
-.back_bottun2{
+.back_bottun2 {
 	font-family: "メイリオ";
 	display: flex;
 	justify-content: center;
 	text-align: center;
-	line-height:50px;
+	line-height: 50px;
 	width: 200px;
 	height: 50px;
-    border-radius: 10px;
+	border-radius: 10px;
 	background-color: #ffffff;
-	border:1px solid #000000;
+	border: 1px solid #000000;
 	color: #000000;
 	text-decoration: none;
 	font-size: 1.5rem;
