@@ -1393,5 +1393,55 @@ def calendar_hidden(comId,account_id,calendar_hidden_flag):
     finally:
         cursor.close()
         connection.close()
+    return count
 
+
+def community_post_reportList(comId):
+    sql="select community_post.account_id,community_post.community_post_id,community_post_report.post_report_category,community_post_report.post_report_reason,community_post.post from community join community_post on community.community_id =community_post.community_id join community_post_report on community_post.community_post_id=community_post_report.community_post_id where community_post.delete_flag=0 and community.community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def del_community_post(postId):
+    sql="delete from community_post where community_post_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        
+        cursor.execute(sql, (postId,))
+        count = cursor.rowcount 
+        connection.commit()
+    
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
+def del_community_post_reportList(postId):
+    sql="delete from community_post_report where community_post_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        
+        cursor.execute(sql, (postId,))
+        count = cursor.rowcount 
+        connection.commit()
+    
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
     return count

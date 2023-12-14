@@ -562,12 +562,6 @@ def account_withdraw3():
     if 'user_info' in session:
         accId = request.form.get('accId')
         count = db.account_withdraw(accId)
-
-        if 'user_info' not in session:
-            return redirect(url_for('index'))
-
-
-        session.clear()
         return redirect(url_for('ac_withdraw_result'))
     else:
         return redirect(url_for('index'))
@@ -575,6 +569,7 @@ def account_withdraw3():
 @app.route('/account_withdraw4')
 def ac_withdraw_result():
     if 'user_info' in session:
+        session.clear()
         return render_template('user/account_withdraw3.html')
     else:
         return redirect('index')
@@ -860,7 +855,6 @@ def event_register_exe():
         msg='イベント追加に失敗しました'
         return render_template('user/event_register.html',comId=community_id,checkcal=0,msg=msg)
 
-
     return redirect(url_for('event_register_result'))
 
 
@@ -1060,11 +1054,58 @@ def editprofile():
             'profile': user_info[6],
             'icon_url': user_info[7]
         }
-
-    oshi_list = db.get_oshi_list(account_id)
-    msg = session.pop('msg', None)  
+    msg=session['msg']
+    session['msg']=''
+    oshi_list = db.get_oshi_list(account_id)  
     return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
 
+@app.route('/report_post_list')
+def report_post_list():
+    if 'user_info' in session:
+        report_list=db.community_post_reportList(session['comId'])
+        print(report_list)
+        msg=session['msg']
+        session['msg']=''
+        return render_template('user/community_post_reportList.html',report_list=report_list,msg=msg)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_check/<int:postId>')
+def report_post_check(postId):
+    if 'user_info' in session:
+        session['report_post_id']=postId
+        return redirect(url_for('report_post_select'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_select')
+def report_post_select():
+    if 'user_info' in session:
+        postId=session['report_post_id']
+        return render_template('user/community_post_report_check.html',id=postId)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_delete/<int:postId>')
+def report_post_delete(postId):
+    if 'user_info' in session:
+        print(postId)
+        session['msg']='投稿を削除しました'
+        db.del_community_post(session['report_post_id'])
+        db.del_community_post_reportList(session['report_post_id'])
+        return redirect(url_for('report_post_list'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_protect/<int:postId>')
+def report_post_protect(postId):
+    if 'user_info' in session:
+        print(postId)
+        session['msg']='投稿を保護しました'
+        db.del_community_post_reportList(session['report_post_id'])
+        return redirect(url_for('report_post_list'))
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/calender_set',methods=['GET','POST'])
 def calender_set():

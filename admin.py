@@ -12,7 +12,7 @@ def index():
 
 @admin_bp.route('/admin_menu')
 def admin_menu():
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         msg=session['msg']
         session['msg']=''
         return render_template('admin/menu.html',msg=msg)
@@ -21,14 +21,14 @@ def admin_menu():
 
 @admin_bp.route('/user_menu')
 def user_menu():
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         return render_template('admin/user_menu.html')
     else:
         return redirect(url_for('index'))
     
 @admin_bp.route('/report_user_list')
 def report_user_list():
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         user_list=db.ban_userList_search()
         print(user_list)
         return render_template('admin/user_list.html',user_list=user_list)
@@ -37,7 +37,7 @@ def report_user_list():
 
 @admin_bp.route('/report_user_search',methods=['GET','POST'])
 def report_user_search():
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         if request.method == 'POST':
             search_query = request.json['search_query']  # Ajax リクエストからデータを取得
             search_results = db.report_user_search(search_query,session['user_info'][0])
@@ -48,7 +48,7 @@ def report_user_search():
     
 @admin_bp.route('/user_detail/<int:id>')
 def user_detail(id):
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         report_post_list=[]
         events=db.event_postList_toaccId(id)
         cnt=0
@@ -87,7 +87,7 @@ def user_detail(id):
 
 @admin_bp.route('/report_detail')
 def report_detail():
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         event_post_list=session['event_post_list']
         cnt=session['report_num']
         account_info=db.get_accountInfo_toaccId(session['reporter_id'])
@@ -98,7 +98,7 @@ def report_detail():
 
 @admin_bp.route('/reporter_profile')
 def reporter_profile():
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         user_info = db.user_detail(session['account_info'][1])
         return render_template('admin/reporter_profile.html',user=user_info)
     else:
@@ -106,14 +106,14 @@ def reporter_profile():
 
 @admin_bp.route('/user_ban_check')
 def user_ban_check():
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         return render_template('admin/user_ban_check.html')
     else:
         return redirect(url_for('index'))
 
 @admin_bp.route('/user_ban')
 def user_ban():
-    if 'user_info' in session:
+    if 'user_info' in session and session['user_info'][8]==1:
         msg="BANしました！"
         session['msg']=msg
         db.ban_user_toaccId(session['reporter_id'])
