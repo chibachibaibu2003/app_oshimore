@@ -1,0 +1,71 @@
+.menu_title_box {
+    margin-top: 50px;
+}
+
+.menu_title {
+    display: flex;
+    text-align: center;
+    font-size: 2rem;
+    justify-content: center;
+}
+
+.detail_menu_title {
+    display: flex;
+    text-align: center;
+    font-size: 2rem;
+    width: 50vw;
+    margin-left: 300px;
+    justify-content: center;
+}
+
+.fontawesome-size {
+    font-size: 3.5em;
+    transform: rotate(180deg);
+    -webkit-text-stroke: 4px white;
+    position: absolute;
+    left: 20px;
+    top: 74px;
+    color: black;
+}
+
+.expl {
+    display: inline-block;
+    margin-left: 25vw;
+    margin-top: 10px;
+    font-size: 1.6rem;
+}
+
+.search_user_list {
+    display: flex;
+    position: relative;
+    font-size: 1.3rem;
+    border: 1.5px solid black;
+    margin-top: 25px;
+    margin-left: 25vw;
+    width: 53vw;
+}
+
+.search_user_name {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.page_link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.com_post_report_reason {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 1px solid black;
+}
+
+.com_post {
+    margin-top: 30px;
+}

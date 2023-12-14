@@ -1,0 +1,42 @@
+{% extends "header_edit.html" %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/user_detail.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+{% endblock %}
+
+{% block content %}
+<div class="title">
+    <h2>ユーザー管理</h2>
+    <i class="fa-solid fa-arrow-right fontawesome-size" onclick="history.back();"></i>
+</div>
+<div class="user-detail">
+    <div class="left-section">
+        <div class="icon">
+            <img src="https://oshimore.s3.ap-northeast-1.amazonaws.com/img/{{ user.icon_url }}" alt="User Icon" class="icon-image">
+        </div>
+        <div class="account-name">
+            <h2>{{ user.account_name }}</h2>
+        </div>
+        <div class="user-id">
+            <p>{{ user.user_id }}</p>
+        </div>
+    </div>
+    <div class="right-section">
+        <div class="profile">
+            <p>
+                {%if user.profile!=None%}
+                {{ user.profile }}
+                {%endif%}
+            </p>
+        </div>
+        <div class="oshi-list">
+            <h3>推しリスト</h3>
+            <ul>
+                {% for oshi_name in user.oshi_list %}
+                    <li>{{ oshi_name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

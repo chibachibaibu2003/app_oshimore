@@ -9,8 +9,8 @@
 <div class="thread_box">
     <div class="thread_header">
         <a class="thread_title">{{info[0]}}</a>
-        <a class="thread_button1"href="">編集</a>
-        <a class="thread_button2"href="">削除</a>
+        <a class="thread_button1" href="{{ url_for('event_edit') }}">編集</a>
+        <a class="thread_button2"href="{{ url_for('event_delete') }}">削除</a>
         {% if info[1]=='notUrl' %}
         
         {% else %}

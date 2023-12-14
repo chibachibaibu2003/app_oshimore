@@ -28,10 +28,10 @@ def login():
     if db.login(mail,password):
         session['user_info'] = db.get_accountInfo_toMail(mail)
         user = session['user_info']
-        if(user[10]==1):
+        if(user[9]==1 or user[10]==1 ):
             return render_template('index.html')
         elif(user[8]==1):
-            return render_template('admin/menu.html')
+            return redirect('/admin_menu')
         else:
             return redirect(url_for('top',checkcal=0))
     else:
@@ -166,7 +166,7 @@ def pass_certification_mail():
     else:
         return redirect(url_for('pass_certification'))
     
-@app.route('/kusoga', methods=['POST'])
+@app.route('/pass_certification_success', methods=['POST'])
 def password_update_success():
     b_password = request.form.get('password')
     mail = session['email']
@@ -190,6 +190,13 @@ def top(checkcal):
     else:
         return redirect(url_for('index'))
 
+@app.route('/admin_menu')
+def admin_menu():
+    if 'user_info' in session:
+        return render_template('admin/menu.html')
+    else:
+        return redirect(url_for('index'))
+
 @app.route('/mypage')
 def mypage():
     if 'user_info' in session:
@@ -198,6 +205,7 @@ def mypage():
             session['month']=dt.month
             session['year']=dt.year
         searchDay=datetime.date(session['year'],session['month'],1)
+
         msg=session['msg']
         session['msg']=''
         datas=[]
@@ -211,7 +219,10 @@ def mypage():
         comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
         if(len(comIdList)!=0):
             for comId in comIdList:
-                eventList.append(db.getevent_to_comId(accId,comId,searchDay))
+                if (comId != 0):
+                    eventList.append(db.getevent_to_comId(comId,searchDay))
+                else:
+                    eventList.append(db.getevent_to_accId(accId,comId,searchDay))
         if(len(comIdList2)!=0):
             for comId in comIdList2:
                 datas.append(db.getcomInfo_to_comId(comId))
@@ -409,7 +420,7 @@ def community_page():
                     invitations.append(db.getcomInfo_to_comId(comId))
         
         comname=db.getcomname_tocomId(session['comId'])
-        eventList.append(db.getevent_to_comId(session['user_info'][0],session['comId'],searchDay))
+        eventList.append(db.getevent_to_comId(session['comId'],searchDay))
         searchDay=f"{session['year']}-{session['month']}-"
         community_thread_list=db.getcomtThread_list_tocomId(session['comId'])
         for data in community_thread_list:
@@ -494,7 +505,7 @@ def community_edit():
         comId = session['comId']
         community_detail = db.getcommunity_select(comId)
         public = community_detail[4]
-        print(public)
+
         return render_template('user/community_edit.html',community_detail=community_detail,public=public)
     else:
         return redirect(url_for('index'))
@@ -552,12 +563,6 @@ def account_withdraw3():
     if 'user_info' in session:
         accId = request.form.get('accId')
         count = db.account_withdraw(accId)
-
-        if 'user_info' not in session:
-            return redirect(url_for('index'))
-
-
-        session.clear()
         return redirect(url_for('ac_withdraw_result'))
     else:
         return redirect(url_for('index'))
@@ -565,6 +570,7 @@ def account_withdraw3():
 @app.route('/account_withdraw4')
 def ac_withdraw_result():
     if 'user_info' in session:
+        session.clear()
         return render_template('user/account_withdraw3.html')
     else:
         return redirect('index')
@@ -825,9 +831,7 @@ def invite_user(community_id, account_id):
         return redirect(url_for('community_user_search'))
     else:
         return redirect(url_for('index'))
-      
- 
- 
+
 @app.route('/event_register')
 def event_register():
     return render_template('user/event_register.html',comId=session['comId'],checkcal=0)
@@ -851,7 +855,6 @@ def event_register_exe():
     if count==0:
         msg='イベント追加に失敗しました'
         return render_template('user/event_register.html',comId=community_id,checkcal=0,msg=msg)
-
 
     return redirect(url_for('event_register_result'))
 
@@ -895,15 +898,70 @@ def user_event_result():
     return render_template('user/user_event_register.html', comId=session['comId'], checkcal=0, msg=msg);
 
 
+@app.route('/event_edit')
+def event_edit():
+    event_id = session['event_threadId']
+    event_info = db.event_info_search(event_id)
+
+
+    if session['user_info'][0]!=event_info[8]:
+        msg = '作成者ではないため編集出来ません'
+        return redirect(url_for('event_thread_check',id=event_info[0],msg=msg))
+    else:
+        return render_template('user/event_edit.html',event_info=event_info)
+
+@app.route('/event_edit_result',methods=['POST'])
+def event_edit_result():
+    event_id = request.form.get('event_id')
+    title = request.form.get('title')
+    start_day = request.form.get('start_day')
+    end_day = request.form.get('end_day')
+    start_time = request.form.get('start_time')
+    end_time = request.form.get('end_time')
+    url = request.form.get('url')
+    explanation = request.form.get('explanation')
+
+    count = db.event_update(event_id,title,start_day,end_day,start_time,end_time,url,explanation)
+    if(count==1):
+        return redirect(url_for('event_edit_success'))
+    else:
+        msg = 'イベント編集に失敗しました。'
+        return redirect(url_for('event_edit',msg=msg))
+
+@app.route('/event_edit_success')
+def event_edit_success():
+    return redirect(url_for('event_thread_check',id=session['event_threadId']))
 
 
 
+@app.route('/event_delete')
+def event_delete():
+    event_id = session['event_threadId']
+    event_info = db.event_info_search(event_id)
 
+    if session['user_info'][0] != event_info[8]:
+        msg = '作成者ではないため削除出来ません'
+        session['message']=msg
+        return redirect(url_for('event_thread_check', id=event_info[0]))
+    else:
+        return render_template('user/event_delete.html', event_info=event_info)
 
+@app.route('/event_delete_result')
+def event_delete_result():
+    event_id = session['event_threadId']
+    event_post_info = db.select_event_post_by_id(event_id)
+    count1 = db.event_post_delete(event_id)
+    count2 = db.event_post_report_delete(event_post_info)
+    count3 = db.event_good_delete(event_post_info)
+    count4 = db.event_delete(event_id)
 
-
-
-
+    if(count4==1):
+        msg = 'イベントを一件を削除しました'
+        session['message'] = msg
+        return redirect(url_for('top',id=session['user_info'][0],checkcal=0,msg=msg))
+    else:
+        return redirect(url_for('event_thread_check', id=session['event_threadId']))
+      
 @app.route('/report/<int:post_id>', methods=['GET', 'POST'])
 def report(post_id):
     if request.method == 'POST':
@@ -965,9 +1023,9 @@ def editprofile():
         if file and file.filename != '':
             filename = f'user{account_id}_icon.png'
             s3 = boto3.client('s3',
-                              aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-                              aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
-                              region_name=os.environ.get('AWS_DEFAULT_REGION'))
+                            aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                            region_name=os.environ.get('AWS_DEFAULT_REGION'))
             s3.upload_fileobj(file, 'oshimore', f'img/{filename}')
             icon_url = filename
         else:
@@ -997,10 +1055,11 @@ def editprofile():
             'profile': user_info[6],
             'icon_url': user_info[7]
         }
-
-    oshi_list = db.get_oshi_list(account_id)
-    msg = session.pop('msg', None)  
+    msg=session['msg']
+    session['msg']=''
+    oshi_list = db.get_oshi_list(account_id)  
     return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
+
 
 @app.route('/community_auth_change', methods=['GET', 'POST'])
 def community_auth_change():
@@ -1028,6 +1087,55 @@ def community_auth_change():
 
     members = db.get_community_members(account_id)
     return render_template('user/community_auth_change.html', members=members)
+
+@app.route('/report_post_list')
+def report_post_list():
+    if 'user_info' in session:
+        report_list=db.community_post_reportList(session['comId'])
+        print(report_list)
+        msg=session['msg']
+        session['msg']=''
+        return render_template('user/community_post_reportList.html',report_list=report_list,msg=msg)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_check/<int:postId>')
+def report_post_check(postId):
+    if 'user_info' in session:
+        session['report_post_id']=postId
+        return redirect(url_for('report_post_select'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_select')
+def report_post_select():
+    if 'user_info' in session:
+        postId=session['report_post_id']
+        return render_template('user/community_post_report_check.html',id=postId)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_delete/<int:postId>')
+def report_post_delete(postId):
+    if 'user_info' in session:
+        print(postId)
+        session['msg']='投稿を削除しました'
+        db.del_community_post(session['report_post_id'])
+        db.del_community_post_reportList(session['report_post_id'])
+        return redirect(url_for('report_post_list'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/report_post_protect/<int:postId>')
+def report_post_protect(postId):
+    if 'user_info' in session:
+        print(postId)
+        session['msg']='投稿を保護しました'
+        db.del_community_post_reportList(session['report_post_id'])
+        return redirect(url_for('report_post_list'))
+    else:
+        return redirect(url_for('index'))
+
 
 if __name__ == "__main__":
         app.run(debug=True)
