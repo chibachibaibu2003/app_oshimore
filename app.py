@@ -550,14 +550,14 @@ def account_withdraw1():
         return redirect(url_for('index'))
 
 
-@app.route('/account_withdraw2')
+@app.route('/account_withdraw_confirm')
 def account_withdraw2():
     if 'user_info' in session:
         return render_template('user/account_withdraw2.html',accId=session['user_info'][0])
     else:
         return redirect(url_for('index'))
 
-@app.route('/account_withdraw3',methods=['POST'])
+@app.route('/account_withdraw_definition',methods=['POST'])
 def account_withdraw3():
     if 'user_info' in session:
         accId = request.form.get('accId')
@@ -566,7 +566,7 @@ def account_withdraw3():
     else:
         return redirect(url_for('index'))
 
-@app.route('/account_withdraw4')
+@app.route('/account_withdraw_result')
 def ac_withdraw_result():
     if 'user_info' in session:
         session.clear()
