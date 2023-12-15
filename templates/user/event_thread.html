@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block content %}
+{% block header_msg%}
+{% if msg!=null %}
+<a class="header_msg">{{msg}}</a>
+{% endif %}
+{%endblock%}
+
+
 <a  href="{{url_for('top',checkcal=0)}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
 <div class="thread_box">
     <div class="thread_header">

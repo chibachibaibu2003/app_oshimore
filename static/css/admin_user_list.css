@@ -12,8 +12,9 @@
 .detail_menu_title {
     display: flex;
     text-align: center;
-    font-size: 2rem;
+    font-size: 40px;
     width: 50vw;
+    margin-top: -22px;
     margin-left: 300px;
     justify-content: center;
 }
