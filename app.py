@@ -1016,7 +1016,7 @@ def editprofile():
         for key in request.form:
             if key.startswith('oshi_'):
                 oshi_id = key.split('_')[1]
-                oshi_list_settings[oshi_id] = 1
+                oshi_list_settings[oshi_id] = 1 - oshi_list_settings[oshi_id]
 
         # AWS S3への画像アップロード
         if file and file.filename != '':
@@ -1058,6 +1058,34 @@ def editprofile():
     session['msg']=''
     oshi_list = db.get_oshi_list(account_id)  
     return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
+
+
+@app.route('/community_auth_change', methods=['GET', 'POST'])
+def community_auth_change():
+    if 'user_info' not in session:
+        flash('ログインが必要です。')
+        return redirect(url_for('login'))
+    
+    account_id = session['user_info'][0]
+    community_id = session.get('community_id') 
+
+    if request.method == 'POST':
+        print("Received POST Data:", request.form)  
+        form_data = dict(request.form)
+        for key, values in request.form.lists():
+            if key.startswith('authority_'):
+                member_id = key.split('_')[-1]
+                new_authority = values[-1]  
+                db.update_authority(member_id, new_authority)
+            elif key.startswith('community_authority_'):
+                member_id = key.split('_')[-1]
+                new_community_authority = values[-1]  
+                db.update_community_authority(member_id, new_community_authority)
+
+        return redirect(url_for('community_auth_change', community_id=community_id))
+
+    members = db.get_community_members(account_id)
+    return render_template('user/community_auth_change.html', members=members)
 
 @app.route('/report_post_list')
 def report_post_list():
@@ -1106,6 +1134,7 @@ def report_post_protect(postId):
         return redirect(url_for('report_post_list'))
     else:
         return redirect(url_for('index'))
+
 
 @app.route('/calender_set',methods=['GET','POST'])
 def calender_set():

@@ -1261,6 +1261,92 @@ def check_user_id_exists(user_id):
     finally:
         cursor.close()
         connection.close()
+
+def update_authority(member_id, new_authority):
+    sql = "UPDATE register_community SET authority = %s WHERE account_id = %s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (new_authority, member_id))
+        connection.commit()
+
+        print(f"Updated authority for account_id {member_id} to {new_authority}")  # 更新結果をプリント
+
+    except Exception as e:
+        print(f"Error in update_authority: {e}")
+        connection.rollback()
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+    return True
+
+def update_community_authority(member_id, new_community_authorty):
+    sql = "UPDATE register_community SET community_authority = %s WHERE account_id = %s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (new_community_authorty, member_id))
+        connection.commit()
+    except Exception as e:
+        print(e)
+        connection.rollback()
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+    return True
+
+def get_members_with_auth():
+    sql = """
+    SELECT DISTINCT a.account_id, a.account_name, rc.authority, rc.community_authority
+    FROM account a
+    JOIN register_community rc ON a.account_id = rc.account_id
+    """
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        members = cursor.fetchall()
+        return members
+    except Exception as e:
+        print(e)
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+def get_community_members(account_id):
+    """
+    指定されたアカウントIDに基づいて、そのユーザーが所属するコミュニティのメンバー情報を取得します。
+    """
+    sql = """
+    SELECT a.account_id, a.account_name, rc.authority, rc.community_authority
+    FROM account a
+    JOIN register_community rc ON a.account_id = rc.account_id
+    WHERE rc.community_id = (SELECT community_id FROM register_community WHERE account_id = %s)
+    AND rc.community_authority != 1
+    """
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (account_id,))
+        members = cursor.fetchall()
+        return [
+            {
+                'account_id': member[0],
+                'account_name': member[1],
+                'authority': member[2],
+                'community_authority': member[3]
+            }
+            for member in members
+        ]
+    except Exception as e:
+        print(f"Error: {e}")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+
         
 def event_postList_toaccId(accId):
     sql="select*from event_post where account_id=%s"
@@ -1445,3 +1531,4 @@ def del_community_post_reportList(postId):
         cursor.close()
         connection.close()
     return count
+
