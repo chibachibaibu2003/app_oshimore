@@ -229,7 +229,6 @@ def mypage():
         if(len(comIdList3)!=0):
             for comId in comIdList3:
                 invitations.append(db.getcomInfo_to_comId(comId))
-        print(comIdList)
         searchDay=f"{session['year']}-{session['month']}-"
         return render_template('user/menu.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, num1=len(comIdList), searchDay=searchDay, msg=msg)
     else:
@@ -1107,6 +1106,30 @@ def report_post_protect(postId):
         return redirect(url_for('report_post_list'))
     else:
         return redirect(url_for('index'))
+
+@app.route('/calender_set',methods=['GET','POST'])
+def calender_set():
+    user_info = session['user_info']
+    if not user_info:
+        flash('セッション情報が不足しています。もう一度ログインしてください。')
+        return redirect(url_for('index'))
+    account_id = user_info[0]
+    comInfo_list = db.getcom_info_list(account_id)
+
+    if request.method == 'POST':
+        for comInfo in comInfo_list:
+            comId = comInfo[0]
+            calendar_hidden_flag = request.form.get('calendar_'+str(comId))
+
+            if calendar_hidden_flag==None:
+                calendar_hidden_flag=1
+
+            db.calendar_hidden(comId,account_id,calendar_hidden_flag)
+            msg = '変更を保存しました。'
+        return redirect(url_for('top',checkcal=0))
+
+
+    return render_template('user/calender_set.html',comInfo_list=comInfo_list)
 
 if __name__ == "__main__":
         app.run(debug=True)

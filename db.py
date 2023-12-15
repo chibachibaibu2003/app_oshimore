@@ -1363,6 +1363,38 @@ def del_comThread_toaccId(accId):
         connection.close()
     return count
 
+def getcom_info_list(accId):
+    sql='SELECT register_community.community_id,community.community_name,register_community.calendar_hidden_flag FROM register_community INNER JOIN community ON register_community.account_id=%s AND register_community.community_id=community.community_id ORDER BY register_community.community_id ASC'
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+
+def calendar_hidden(comId,account_id,calendar_hidden_flag):
+    sql = 'UPDATE register_community SET calendar_hidden_flag=%s WHERE account_id=%s and community_id=%s;'
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (calendar_hidden_flag,account_id,comId,))
+        count = cursor.rowcount
+        connection.commit()
+
+    except psycopg2.DatabaseError:
+        count = 0
+
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
 
 def community_post_reportList(comId):
     sql="select community_post.account_id,community_post.community_post_id,community_post_report.post_report_category,community_post_report.post_report_reason,community_post.post from community join community_post on community.community_id =community_post.community_id join community_post_report on community_post.community_post_id=community_post_report.community_post_id where community_post.delete_flag=0 and community.community_id=%s"
