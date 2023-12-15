@@ -738,12 +738,11 @@ def user_detail(user_id):
 アカウント退会
 """
 def account_withdraw(accId):
-    sql = 'UPDATE account SET del_flag=%s WHERE account_id=%s;'
-    
+    sql = 'UPDATE account SET del_flag=%s,mail=%s WHERE account_id=%s;'
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        cursor.execute(sql,(1,accId))
+        cursor.execute(sql,(1,accId,accId))
         count = cursor.rowcount 
         connection.commit()
         
