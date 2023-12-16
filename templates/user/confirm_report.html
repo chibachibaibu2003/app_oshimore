@@ -5,28 +5,21 @@
 {% endblock %}
 {% block content %}
 
-<h2>通報の確認</h2>
+<h1 class="title">通報の確認</h1>
 
 {% if report_category == 'その他' %}
-    <!-- 詳細理由の入力フォーム -->
     <div class="reason-form">
         <p class="txt">「その他」を選択した理由を入力してください</p>
-        <!-- 通報理由の詳細入力フォーム -->
         <form action="{{ url_for('confirm_report', post_id=post_id) }}" method="post" class="form-with-buttons">
             <input type="hidden" name="report_category" value="{{ report_category }}">
-            <textarea name="report_detail" required placeholder="通報理由を記述してください"></textarea>
-            <!-- ボタンコンテナ開始 -->
+            <textarea name="report_detail" required placeholder="通報理由を記述してください" maxlength="128"></textarea>
             <div class="buttons-container">
-                <!-- フォーム外の戻るボタン -->
                 <button type="button" class="back-button" onclick="history.back()">戻る</button>
-                <!-- 通報するボタン -->
                 <button type="submit" class="report-button">通報する</button>
             </div>
-            <!-- ボタンコンテナ終了 -->
         </form>
     </div>
 {% else %}
-    <!-- その他以外の通報理由での確認画面 -->
     <div class="report-confirm">
         <p class="txt">以下の内容で通報しますか？</p>
         <p>通報理由: {{ report_category }}</p>
