@@ -16,8 +16,10 @@ body {
     font-family: 'Meiryo', sans-serif;
 }
 
-h2{
-    text-align:center;
+.title {
+    font-size: 40px;
+    font-weight: normal;
+    text-align: center;
 }
 /* 通報理由のコンテナスタイル */
 .report-reason-container {

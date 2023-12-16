@@ -666,20 +666,25 @@ def get_community_data(community_id):
         cursor.close()
         connection.close()
 
-def search_users(query):
-    """
-    ユーザー名またはユーザーIDで部分一致検索を行い、該当するユーザーのリストを返す。
-    """
+def search_users(query, accId, comId):
     connection = get_connection()
     cursor = connection.cursor()
     try:
-        # ユーザー名またはユーザーIDで検索
-        sql = "SELECT account_name, user_id, icon_url FROM account WHERE account_name LIKE %s OR user_id LIKE %s "
-        cursor.execute(sql, (f'%{query}%', f'%{query}%'))
+        sql = """
+        SELECT a.account_name, a.user_id, a.icon_url, a.account_id FROM account a WHERE (a.account_name LIKE %s OR a.user_id LIKE %s) and a.ban_flag != 1 and a.del_flag != 1 and a.account_id != %s
+        and NOT EXISTS (
+            SELECT 1 
+            FROM register_community rc
+            WHERE rc.community_id = %s AND rc.account_id = a.account_id
+        )"""
+
+        keyword = '%' + query + '%'
+        cursor.execute(sql, (keyword, keyword, accId, comId))
         users = cursor.fetchall()
+
         return [{'account_name': user[0], 'user_id': user[1], 'icon_url': user[2]} for user in users]
     except Exception as e:
-        print(e)
+        print("エラー:", e)
         return []
     finally:
         cursor.close()
@@ -1315,21 +1320,21 @@ def get_members_with_auth():
     finally:
         cursor.close()
         connection.close()
-def get_community_members(account_id):
+def get_community_members(community_id):
     """
-    指定されたアカウントIDに基づいて、そのユーザーが所属するコミュニティのメンバー情報を取得します。
+    指定されたコミュニティIDに基づいて、そのコミュニティのメンバー情報を取得します。
     """
     sql = """
     SELECT a.account_id, a.account_name, rc.authority, rc.community_authority
     FROM account a
     JOIN register_community rc ON a.account_id = rc.account_id
-    WHERE rc.community_id = (SELECT community_id FROM register_community WHERE account_id = %s)
+    WHERE rc.community_id = %s
     AND rc.community_authority != 1
     """
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        cursor.execute(sql, (account_id,))
+        cursor.execute(sql, (community_id,))
         members = cursor.fetchall()
         return [
             {
