@@ -1,54 +1,69 @@
 {% extends "header.html" %}
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
-<link rel="stylesheet" href="/static/css/community_set_master.css">
+<link rel="stylesheet" href="/static/css/calender_set.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
 
 {% endblock %}
 
-{% block header_msg%}
-{% if msg!=null %}
-<a class="header_msg">{{msg}}</a>
-{% endif %}
-{%endblock%}
-
 {%block content%}
     <div>
-        <h1 class="h1">コミュニティ設定</h1>
-        <a  href="{{url_for('community',id=comId,checkcal=checkcal)}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
+        <h1 class="h1">カレンダー表示の変更</h1>
+        <a href="{{url_for('top',checkcal=0)}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
     </div>
-    <a href="{{url_for('community_edit')}}" class="btn_1 button-color">コミュニティ編集</a>
-    <a href="{{url_for('report_post_list') }}" class="btn_2 button-color">通報があった投稿</a>
-    <a href="{{url_for('community_delete_check')}}" class="btn_3 button-color">コミュニティ削除</a>
-    <a href="{{url_for('community_user_search')}}" class="btn_4 button-color">コミュニティ招待</a>
-    <a href="{{url_for('community_auth_change')}}" class="btn_5 button-color">権限変更</a>
-    <a href="{{url_for('community_withdrawal_check')}}" class="btn_6 button-color">コミュニティ退会</a>
+
+    <form action="{{ url_for("calender_set") }}" method="post">
+    <table>
+        <thead>
+            <tr>
+                <th class="th_box_size">コミュニティ名</th>
+                <th class="th_box_size2">非表示/表示</th>
+            </tr>
+        </thead>
+        <tbody class="scroll">
+            {%for list in comInfo_list%}
+                <tr>
+                    <td class="table_user_name">{{list[1]}}</td>
+                    <td class="table_auth">
+                        <div class="toggle_button">
+
+                            <input value=0 id="toggle" class="toggle_input" type="checkbox" name="calendar_{{list[0]}}" {% if list[2]==0 %}checked{%endif%} >
+                            <label for="toggle" class="toggle_label"></label>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            <button type="submit" class="btn">保存</button>
+        </tbody>
+    </table>
+    </form>
+
+
+
     <div class="popup_b">
         <a><img  class="backbutton"src="{{url_for('static',filename='/imges/back.png')}}"></a>
         <a class="popup_b_title">コミュニティ作成</a><br>
         <form action="{{url_for('register_community')}}"method="post"class="popup_b_form"name="popup_b_form"onsubmit="return checkEmpty()">
-            
+
             <a class="popup_b_text">コミュニティ名<span style="color:red;">　必須</span></a><br>
             <input type="text" name="com_name"class="input_a"autocomplete="off"value="{{data.com_name if data is defined else ''}}"placeholder="new community"maxlength="32"><br>
-            
+
             <a class="popup_b_text">推しの名前<span style="color:red;">　必須</span></a><br>
             <input  type="text" name="fav_name"class="input_a"autocomplete="off"value="{{data.fav_name if data is defined else ''}}"placeholder="No name"maxlength="16"><br>
-            
+
             <a class="popup_b_text">公開・非公開</a><br>
             <input type="radio"name="com_public"value="0"checked><a>公開</a><br>
             <input type="radio"name="com_public"value="1"><a>非公開</a><br>
-            
+
             <a class="popup_b_text">概要<span style="color:red;">　必須</span></a><br>
             <textarea class="com_explanation"name="com_explanation"rows="7"cols="70"value="{{data.com_explanation if data is defined else ''}}"maxlength="256"></textarea><br>
-            
+
             <input type="submit"class="submit_button">
         </form>
     </div>
-
 {%endblock%}
 
 {%block jscode%}
-
 let backbutton=document.querySelectorAll('.backbutton')
 let ul=document.querySelector('.popupList')
 
@@ -75,6 +90,4 @@ blackBg.addEventListener('click', function () {
     popupB.classList.remove('pop');
     ul.innerHTML=''
 })
-
-
 {%endblock%}

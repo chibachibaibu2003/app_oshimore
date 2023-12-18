@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+    <link rel="stylesheet" href="/static/css/ac_withdraw.css">
+    <title>投稿削除</title>
+</head>
+<body>
+    <div class="title">
+        <img class="title-size" src="/static/imges/icon.png" alt="icon">
+    </div>
+
+    <div class="form">
+        <a  href="{{url_for('report_post_list')}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
+        <p class="font1">投稿削除</p>
+        <p class="font2">この投稿を削除しますか？<br>削除するとスレッドに表示されなくなります。</p>
+        
+        <div class="title-button2">
+            <a class="back_bottun" href="{{url_for('report_post_protect',postId=id)}}">保護する</a>
+            <a class="submit_bottun2" href="{{url_for('report_post_delete',postId=id)}}">削除する</a>
+        </div>
+    </div>
+</body>
+</html>

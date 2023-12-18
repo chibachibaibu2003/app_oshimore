@@ -1,0 +1,106 @@
+.title h1 {
+  font-size: 40px;
+  font-weight: normal;
+  text-align: center;
+}
+
+.fontawesome-size {
+  font-size: 3.5em;
+  transform: rotate(180deg);
+  -webkit-text-stroke: 4px white;
+  position: absolute;
+  left: 20px;
+  top: 74px;
+  color: black; 
+  text-decoration: none; 
+}
+
+.members-table {
+  width: calc(100% - 40px);
+  margin: 50px auto; /* 上下のマージンと中央揃えを同時に指定 */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.members-table th,
+.members-table td {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 10px;
+  height:20px;
+}
+
+.members-table th:nth-child(1) {
+  width: 120px; /* ユーザー名の列の幅 */
+}
+
+.members-table th:nth-child(2),
+.members-table th:nth-child(3) {
+  width: 50px; /* トグルボタンの列の幅 */
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 80px; /* トグルスイッチの幅 */
+  height: 34px; /* トグルスイッチの高さ */
+  margin: 10px; /* トグルスイッチの左右の隙間 */
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.toggle-switch label:before {
+  content: "";
+  position: absolute;
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + label {
+  background-color: #2196F3;
+}
+
+.toggle-switch input:checked + label:before {
+  transform: translateX(45px);
+}
+
+.save-button {
+  background-color: #FFA500;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-left:475px;
+  display: block;
+  width: 30%;
+}
+
+.save-button:hover {
+  background-color: #cc8400;
+}
+.form{
+  margin-top:20px;
+}

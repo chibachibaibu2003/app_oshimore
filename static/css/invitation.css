@@ -1,4 +1,6 @@
-.center {
+.center h1{
+    font-size: 40px;
+    font-weight: normal;
     text-align: center;
 }
 

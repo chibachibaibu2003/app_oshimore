@@ -1,7 +1,8 @@
 /* 基本スタイル */
-.title h2 {
+.title h1 {
+  font-size: 40px;
+  font-weight: normal;
   text-align: center;
-  color: #333;
 }
 
 .fontawesome-size {
@@ -163,10 +164,10 @@
   appearance: none;
   width: 60px;
   height: 30px;
-  background-color: #2196F3; /* デフォルトで青色 */
+  background-color: #2196F3; /* デフォルト（チェックがついていないとき）はグレー */
   border-radius: 15px;
   position: relative;
-  outline: none;
+  outline: none; 
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -175,7 +176,7 @@
   content: "";
   position: absolute;
   top: 2px;
-  left: 2px;
+  left: 32px; /* デフォルト（チェックがついていないとき）は右側 */
   width: 26px;
   height: 26px;
   background-color: white;
@@ -184,9 +185,10 @@
 }
 
 .switch input:checked {
-  background-color: #ccc; /* チェックがついているときはグレー */
+  background-color:#ccc ; /* チェックがついているときは青色 */
+  
 }
 
 .switch input:checked:before {
-  left: 32px;
+  left: 2px; /* チェックがついているときは左側 */
 }

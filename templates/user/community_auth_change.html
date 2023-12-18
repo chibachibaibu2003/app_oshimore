@@ -1,0 +1,47 @@
+{% extends "header_edit.html" %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/community_auth_change.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+{% endblock %}
+
+{% block content %}
+<div class="title">
+    <h1>権限変更</h1>
+    <a href="{{ url_for('community_set') }}" class="fontawesome-size">
+        <i class="fa-solid fa-arrow-right"></i>
+    </a>
+</div>
+<form method="post" action="{{ url_for('community_auth_change') }}">
+    <table class="members-table">
+        <thead>
+            <tr>
+                <th>ユーザー名</th>
+                <th>編集/招待権限</th>
+                <th>副管理者</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr>
+                <td>{{ member.account_name }}</td>
+                <td>
+                    <input type="hidden" name="authority_{{ member.account_id }}" value="0">
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="authority_{{ member.account_id }}" name="authority_{{ member.account_id }}" value="1" {% if member.authority == 1 %}checked{% endif %}>
+                        <label for="authority_{{ member.account_id }}"></label>
+                    </div>
+                </td>
+                <td>
+                    <input type="hidden" name="community_authority_{{ member.account_id }}" value="0">
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="community_authority_{{ member.account_id }}" name="community_authority_{{ member.account_id }}" value="2" {% if member.community_authority == 2 %}checked{% endif %}>
+                        <label for="community_authority_{{ member.account_id }}"></label>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="save-button">保存</button>
+</form>
+{% endblock %}

@@ -1,4 +1,4 @@
-    {% extends "header.html" %}
+{% extends "header.html" %}
 {% block css %}
 <link rel="stylesheet" href="{{url_for('static', filename='/css/menu_user.css')}}">
 <link rel="stylesheet" href="/static/css/editprofile.css">
@@ -15,8 +15,8 @@
 {%endblock%}
 
 <div class="title">
-    <h2 style="text-align:center">プロフィール編集</h2>
-    <a href="{{ url_for('top', checkcal=0) }}" class="fontawesome-size">
+    <h1 style="text-align:center">プロフィール編集</h1>
+    <a href="{{ url_for('top',checkcal=0) }}" class="fontawesome-size">
     <i class="fa-solid fa-arrow-right"></i>
 </a>
 </div>
@@ -52,7 +52,7 @@
                     <thead>
                         <tr>
                             <th>推しリスト</th>
-                            <th>公開/非公開</th>
+                            <th>非公開/公開</th>
                         </tr>
                     </thead>
                     <tbody>
