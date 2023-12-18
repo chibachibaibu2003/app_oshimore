@@ -1,0 +1,17 @@
+{% extends "header_edit.html"%}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/admin_search.css')}}">
+{% endblock %}
+{% block content %}
+<div class="menu_title_box">
+    <a class="menu_title">コミュニティ管理</a>
+    <a  href="{{url_for('admin.community_menu')}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
+</div>
+    <form action="{{url_for('admin.community_search')}}" class="search-box" method="post">
+        <input type="text" name='name' class="search-input" placeholder="コミュニティ名 もしくは 推しで検索" name="search_query">
+        <button type="submit" class="search-button">検索</button>
+    </form>
+<div class="results-container"></div>
+
+
+{% endblock %}

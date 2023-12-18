@@ -719,6 +719,7 @@ def community_report_exe():
         if num == "4":
             flg = True
         reason = "スパム" if num == "0" else "攻撃またはハラスメント" if num == "1" else "有害な誤情報または暴力の是認" if num == "2" else "個人を特定できる情報を晒している" if num == "3" else "その他"
+        session['reason'] = reason
         return render_template('user/community_report_exe.html',flg=flg,reason=reason,community=community,num=num)
     else:
         return redirect(url_for('index'))
@@ -731,7 +732,7 @@ def community_report_success(id,num):
         reason = request.form.get('reason')
         if reason==None:
             reason = "None"
-        db.report_community(community[0],user_id,num,reason)
+        db.report_community(community[0],user_id,session['reason'],reason)
         msg = "通報完了しました"
         session['msg']=msg
         return redirect(url_for('top',checkcal=0))
@@ -996,7 +997,6 @@ def editprofile():
     oshi_list = db.get_oshi_list(account_id)
     msg = session.pop('msg', None)  
     return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
-
 
 if __name__ == "__main__":
         app.run(debug=True)
