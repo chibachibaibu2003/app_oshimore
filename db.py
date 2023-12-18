@@ -1520,6 +1520,16 @@ def del_community_post(postId):
     try:
         connection = get_connection()
         cursor = connection.cursor()
+        cursor.execute(sql, (postId,))
+        count = cursor.rowcount 
+        connection.commit()
+    
+    except psycopg2.DatabaseError:
+        count = 0
+    
+    finally:
+        cursor.close()
+        connection.close()
     return count
 
 def account_id_search(id):
@@ -1579,17 +1589,6 @@ def ban_community(id):
         connection.close()
     return count
 
-        cursor.execute(sql, (postId,))
-        count = cursor.rowcount 
-        connection.commit()
-    
-    except psycopg2.DatabaseError:
-        count = 0
-    
-    finally:
-        cursor.close()
-        connection.close()
-    return count
 
 def del_community_post_reportList(postId):
     sql="delete from community_post_report where community_post_id=%s"
