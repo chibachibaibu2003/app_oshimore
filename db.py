@@ -704,6 +704,21 @@ def report_user_search(query,accId):
         cursor.close()
         connection.close()
     return community_information
+
+def report_community_search(query):
+    sql="SELECT * FROM community WHERE community_name LIKE %s OR favorite_name LIKE %s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        keyword='%'+query+'%'
+        cursor.execute(sql,(keyword,keyword))
+        community_information = cursor.fetchall()
+    except psycopg2.DatabaseError:
+        community_information=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return community_information
     
 def user_detail(user_id):
     connection = get_connection()
@@ -1505,7 +1520,65 @@ def del_community_post(postId):
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        
+    return count
+
+def account_id_search(id):
+    sql="SELECT account_id FROM register_community WHERE community_id = %s and community_authority = 1"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        result=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def user_id_search(id):
+    sql="SELECT user_id FROM account WHERE account_id = %s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        result=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def report_count(id):
+    sql="SELECT * from community_report WHERE community_id = %s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def ban_community(id):
+    sql="delete from community where community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
         cursor.execute(sql, (postId,))
         count = cursor.rowcount 
         connection.commit()
@@ -1535,4 +1608,5 @@ def del_community_post_reportList(postId):
         cursor.close()
         connection.close()
     return count
+
 
