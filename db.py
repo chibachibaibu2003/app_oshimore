@@ -671,7 +671,7 @@ def search_users(query, accId, comId):
     cursor = connection.cursor()
     try:
         sql = """
-        SELECT a.account_name, a.user_id, a.icon_url, a.account_id FROM account a WHERE (a.account_name LIKE %s OR a.user_id LIKE %s) and a.ban_flag != 1 and a.del_flag != 1 and a.account_id != %s
+        SELECT a.account_name, a.user_id, a.icon_url, a.account_id FROM account a WHERE (a.account_name LIKE %s OR a.user_id LIKE %s) and a.ban_flag != 1 and a.del_flag != 1 and a.account_id != %s and a.account_auth!=1
         and NOT EXISTS (
             SELECT 1 
             FROM register_community rc
