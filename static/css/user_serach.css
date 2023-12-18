@@ -4,13 +4,14 @@ body {
     padding: 0;
     background-color: white;
 }
+
 .title {
     font-size: 40px;
     font-weight: normal;
     text-align: center;
 }
 
-.fontawesome-size{
+.fontawesome-size {
     font-size: 3.5em;
     transform: rotate(180deg);
     -webkit-text-stroke: 4px white;
@@ -19,6 +20,7 @@ body {
     top: 74px;
     cursor: pointer;
 }
+
 .search-container {
     text-align: center;
     margin: 20px 0;
@@ -27,31 +29,31 @@ body {
 .search-box {
     display: flex;
     justify-content: center;
-    gap: 10px; 
+    gap: 10px;
     margin-bottom: 20px;
 }
 
 .search-input {
-    margin-top:15px;
+    margin-top: 15px;
     padding: 15px;
     border: 2px solid #ccc;
     border-radius: 15px;
-    width: calc(100% - 500px); 
-    margin-right: 10px; 
-    font-size:20px;
+    width: calc(100% - 500px);
+    margin-right: 10px;
+    font-size: 20px;
 }
 
 .search-button {
-    font-size:20px;
-    margin-top :15px;
-    width:80px;
-    height:60px;
+    font-size: 20px;
+    margin-top: 15px;
+    width: 80px;
+    height: 60px;
     border: none;
     border-radius: 15px;
     background-color: #FFA954;
     color: white;
     cursor: pointer;
-    white-space: nowrap; 
+    white-space: nowrap;
 }
 
 .results-container {
@@ -60,75 +62,87 @@ body {
 
 .result-item {
     background-color: white;
+    text-decoration: none;
+    color: black;
     border: 1px solid #ccc;
-    border-radius: 50px; 
-    padding: 15px 20px; 
-    margin: 10px auto; 
+    border-radius: 50px;
+    padding: 15px 20px;
+    margin: 10px auto;
     display: flex;
     align-items: center;
-    max-width: 80%; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
-    cursor: pointer; 
-    transition: background-color 0.3s; 
+    max-width: 80%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .result-icon {
-    width: 40px; 
-    height: 40px; 
-    margin-right: 20px; 
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
     border-radius: 50%;
-    overflow: hidden; /* 画像が枠からはみ出さないようにする */
+    overflow: hidden;
+    /* 画像が枠からはみ出さないようにする */
 }
 
 .result-icon img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 画像を枠にフィットさせる */
+    object-fit: cover;
+    /* 画像を枠にフィットさせる */
 }
 
 .result-name,
 .result-id {
     flex-grow: 1;
-    margin: 0 10px; 
+    margin: 0 10px;
 }
+
 .no-result-message {
-    color: red; 
-    text-align: center; 
-    font-size: 20px; 
-    margin-top: 20px; 
+    color: red;
+    text-align: center;
+    font-size: 20px;
+    margin-top: 20px;
 }
 
 .modal {
-    display: none; /* デフォルトではモーダルを非表示に */
+    display: none;
+    /* デフォルトではモーダルを非表示に */
     position: fixed;
-    z-index: 2; /* コンテンツより前面に */
+    z-index: 2;
+    /* コンテンツより前面に */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* モーダルコンテンツが長い場合はスクロール可能に */
-    background-color: rgb(0,0,0); /* 背景色 */
-    background-color: rgba(0,0,0,0.4); /* 背景色の透明度 */
-  }
-  
-  .modal-content {
+    overflow: auto;
+    /* モーダルコンテンツが長い場合はスクロール可能に */
+    background-color: rgb(0, 0, 0);
+    /* 背景色 */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* 背景色の透明度 */
+}
+
+.modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* ページの中央に配置 */
+    margin: 15% auto;
+    /* ページの中央に配置 */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; /* モーダルの幅 */
-  }
-  
-  .close-button {
+    width: 80%;
+    /* モーダルの幅 */
+}
+
+.close-button {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-  }
-  
-  .close-button:hover,
-  .close-button:focus {
+}
+
+.close-button:hover,
+.close-button:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
-  }
+}
