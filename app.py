@@ -1091,6 +1091,7 @@ def community_auth_change():
         return redirect(url_for('community_auth_change', community_id=community_id))
 
     members = db.get_community_members(account_id)
+    print(members)
     return render_template('user/community_auth_change.html', members=members)
 
 @app.route('/report_post_list')
