@@ -752,6 +752,21 @@ def user_detail(user_id):
     except Exception as e:
         print(e)
         return None
+    
+def check_user_authority(account_id, community_id):
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        sql = "SELECT authority FROM register_community WHERE account_id = %s AND community_id = %s"
+        cursor.execute(sql, (account_id, community_id))
+        result = cursor.fetchone()
+        return result[0] if result else None
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        cursor.close()
+        connection.close()
 
 
 """
@@ -1148,7 +1163,6 @@ def get_user_profile(account_id):
         connection.close()
 
 def update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings):
-    print("これまでのセッション情報:", account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
     connection = get_connection()
     cursor = connection.cursor()
     try:
