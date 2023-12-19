@@ -1340,7 +1340,7 @@ def get_community_members(community_id):
     """
     sql = """
     SELECT a.account_id, a.account_name, rc.authority, rc.community_authority
-    FROM account a
+    FROM account as a
     JOIN register_community rc ON a.account_id = rc.account_id
     WHERE rc.community_id = %s
     AND rc.community_authority != 1
