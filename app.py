@@ -382,8 +382,6 @@ def register_community():
 @app.route('/community/<int:id>/<int:checkcal>',methods=['GET','POST'])
 def community(id,checkcal):
     if 'user_info' in session:
-        msg = session['msg']
-        session['msg'] = ''
 
         if request.method=='POST':
             postgood=request.form['post_good']
@@ -397,7 +395,7 @@ def community(id,checkcal):
         
         session['checkcal']=checkcal
         session['comId']=id
-        return redirect(url_for('community_page',msg=msg))
+        return redirect(url_for('community_page'))
     else:
         return redirect(url_for('index'))
 
@@ -417,6 +415,8 @@ def community_page():
         cnt=0
         comIdList=db.getcomId_to_accId_joined(session['user_info'][0])
         comIdList2=db.getcomId_to_accId_invit(session['user_info'][0])
+        msg = session['msg']
+        session['msg'] = ''
         if(len(comIdList)!=0):
             for comId in comIdList:
                 datas.append(db.getcomInfo_to_comId(comId))
@@ -433,7 +433,7 @@ def community_page():
             good_num=db.getcomThread_goodnum(data[0])
             community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
             cnt+=1
-        return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, searchDay=searchDay,thread_list=community_thread_list_all,comId=session['comId'],checkcal=session['checkcal'],comname=comname)
+        return render_template('user/community.html', month=session['month'], year=session['year'], datas=datas, invitations=invitations, eventList=eventList, searchDay=searchDay,thread_list=community_thread_list_all,comId=session['comId'],checkcal=session['checkcal'],comname=comname,msg=msg)
     else:
         return redirect(url_for('index'))
 
@@ -1036,10 +1036,10 @@ def confirm_report(post_id):
 
     success = db.insert_community_post_report(post_id, reporter_id, report_category, report_detail)
     if success:
-        session['msg'] = '通報が完了しました。'
+        msg = '通報が完了しました。'
     else:
-        session['msg'] = '通報に失敗しました。'
-    
+        msg = '通報に失敗しました。'
+    session['msg'] = msg
     comId = session.get('comId')  # セッションからcomIdを取得
     if comId is None:
         return redirect(url_for('index'))  
