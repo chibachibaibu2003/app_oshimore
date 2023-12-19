@@ -1073,7 +1073,7 @@ def community_auth_change():
         return redirect(url_for('login'))
     
     account_id = session['user_info'][0]
-    community_id = session.get('community_id')
+    community_id = session['comId']
 
     if request.method == 'POST':
         print("Received POST Data:", request.form)
@@ -1090,8 +1090,7 @@ def community_auth_change():
 
         return redirect(url_for('community_auth_change', community_id=community_id))
 
-    members = db.get_community_members(account_id)
-    print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    members = db.get_community_members(community_id)
     return render_template('user/community_auth_change.html', members=members)
 
 @app.route('/report_post_list')
