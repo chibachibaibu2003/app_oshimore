@@ -183,6 +183,7 @@ def community_ban():
         session['msg']=msg
         print(session['community_id'])
         db.ban_community(session['community_id'])
+        db.delete_rc(session['community_id'])
         return redirect('admin_menu')
     else:
         return redirect(url_for('index'))
