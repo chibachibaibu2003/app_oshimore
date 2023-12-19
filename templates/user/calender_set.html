@@ -7,6 +7,13 @@
 {% endblock %}
 
 {%block content%}
+
+{% block header_msg%}
+{% if msg!=null %}
+<a class="header_msg">{{msg}}</a>
+{% endif %}
+{%endblock%}
+
     <div>
         <h1 class="h1">カレンダー表示の変更</h1>
         <a href="{{url_for('top',checkcal=0)}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>

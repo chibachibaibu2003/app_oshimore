@@ -13,9 +13,6 @@
     <header id="js-header">
         <img class="title" src="{{url_for('static',filename='/imges/icon.png')}}">
         {% block header_msg %}
-            {% if msg!=null %}
-            <a class="header_msg">{{msg}}</a>
-            {% endif %}
         {% endblock %}
         <div class="hamburger" id="js-hamburger">
             <span class="hamburger_line hamburger_line-1"></span>

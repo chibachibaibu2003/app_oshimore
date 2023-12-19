@@ -1635,4 +1635,87 @@ def delete_rc(id):
     finally:
         cursor.close()
         connection.close()
+    return count  
+ 
+  
+def getcomId_authority_to_accId(id):
+    sql='SELECT community_id,community_authority FROM register_community WHERE account_id=%s order by community_id asc'
+
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+
+def get_communityAuthorityList_to_accId(id):
+    sql='SELECT account_id,community_authority FROM register_community WHERE community_id=%s order by community_id asc'
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        list=cursor.fetchall()
+    except psycopg2.DatabaseError:
+        list=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return list
+
+def community_authority_update(comId,account_id):
+    sql = 'UPDATE register_community SET community_authority=1 WHERE account_id=%s and community_id=%s;'
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, (account_id,comId,))
+        count = cursor.rowcount
+        connection.commit()
+
+    except psycopg2.DatabaseError:
+        count = 0
+
+    finally:
+        cursor.close()
+        connection.close()
     return count
+
+
+def count_community_member(comId):
+    sql="SELECT count(community_id) FROM register_community WHERE community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(comId,))
+        count=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+  
+
+def del_register_community(accId):
+    sql = "DELETE FROM register_community WHERE account_id=%s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(sql, (accId,))
+        count = cursor.rowcount
+        connection.commit()
+
+    except psycopg2.DatabaseError:
+        count = 0
+
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+

@@ -287,7 +287,10 @@ def event_thread():
         id=session['event_threadId']
         event_thread_list=[]
         event_thread_list_all=[]
-        
+
+        msg = session['msg']
+        session['msg'] = ''
+
         info_list=db.event_thread_info_search(id)
         event_thread_list=db.geteventThread_list_toeventId(id)
         
@@ -301,13 +304,13 @@ def event_thread():
             data_list=[]
             for data in info_list[0]:
                 data_list.append(data)
-            return render_template('user/event_thread.html',info=data_list,thread_list=event_thread_list_all)
+            return render_template('user/event_thread.html',info=data_list,thread_list=event_thread_list_all,msg=msg)
         else:
             data_list=[]
             for data in info_list[0]:
                 data_list.append(data)
             data_list[1]='notUrl'
-            return render_template('user/event_thread.html',info=data_list,thread_list=event_thread_list_all)
+            return render_template('user/event_thread.html',info=data_list,thread_list=event_thread_list_all,msg=msg)
     else:
         return redirect(url_for('index'))
 
@@ -379,6 +382,9 @@ def register_community():
 @app.route('/community/<int:id>/<int:checkcal>',methods=['GET','POST'])
 def community(id,checkcal):
     if 'user_info' in session:
+        msg = session['msg']
+        session['msg'] = ''
+
         if request.method=='POST':
             postgood=request.form['post_good']
             postId=int(request.form['postId'])
@@ -391,7 +397,7 @@ def community(id,checkcal):
         
         session['checkcal']=checkcal
         session['comId']=id
-        return redirect(url_for('community_page'))
+        return redirect(url_for('community_page',msg=msg))
     else:
         return redirect(url_for('index'))
 
@@ -437,13 +443,15 @@ def community_set():
         accId=session['user_info'][0]
         comId=session['comId']
         comAuth=db.get_comAuth(accId,comId)
+        msg = session['msg']
+        session['msg'] = ''
         print(comAuth)
         if (comAuth[0]==0):
-            return render_template('user/community_set_user.html',comId=comId,checkcal=0)
+            return render_template('user/community_set_user.html',comId=comId,checkcal=0,msg=msg)
         elif (comAuth[0]==1):
-            return render_template('user/community_set_master.html',comId=comId,checkcal=0)
+            return render_template('user/community_set_master.html',comId=comId,checkcal=0,msg=msg)
         elif (comAuth[0]==2):
-            return render_template('user/community_set_sub.html',comId=comId,checkcal=0)
+            return render_template('user/community_set_sub.html',comId=comId,checkcal=0,msg=msg)
         return redirect(url_for('community',id=session['comId'],checkcal=0))
     else:
         return redirect(url_for('index'))
@@ -545,6 +553,31 @@ def community_edit_end():
 @app.route('/account_withdraw')
 def account_withdraw1():
     if 'user_info' in session:
+        accId = session['user_info'][0]
+        com_list = db.getcomId_authority_to_accId(accId)
+        community_name = []
+        for com in com_list:
+            community_info = db.getcommunity_select(com[0])
+            member = db.count_community_member(com[0])
+
+
+            if com[1] == 1 and member[0]!=1:
+                lists = db.get_communityAuthorityList_to_accId(com[0])
+                cnt = 0
+                for list in lists:
+                    if list[1] == 2:
+                        cnt += 1
+
+                if cnt==0:
+                    community_name.append(community_info[1])
+
+        if  len(community_name) != 0:
+            msg = (f'「{",".join(community_name)}」コミュニティの副管理者を決めてから退会してください。')
+            session['msg'] = msg
+            return redirect(url_for('top',checkcal=0))
+
+
+
         return render_template('user/account_withdraw.html')
     else:
         return redirect(url_for('index'))
@@ -561,6 +594,15 @@ def account_withdraw2():
 def account_withdraw3():
     if 'user_info' in session:
         accId = request.form.get('accId')
+        com_list = db.getcomId_authority_to_accId(accId)
+        for com in com_list:
+            if(com[1] == 1):
+                lists = db.get_communityAuthorityList_to_accId(com[0])
+                for list in lists:
+                    if list[1] == 2:
+                        db.community_authority_update(list[0],com[0])
+                        continue
+        db.del_register_community(accId)
         count = db.account_withdraw(accId)
         return redirect(url_for('ac_withdraw_result'))
     else:
@@ -859,7 +901,7 @@ def event_register_exe():
     count = db.event_register(title,start_day,end_day,start_time,end_time,url,explanation,account_id,community_id)
 
     if count==0:
-        msg='イベント追加に失敗しました'
+        msg=('イベント追加に失敗しました')
         return render_template('user/event_register.html',comId=community_id,checkcal=0,msg=msg)
 
     return redirect(url_for('event_register_result'))
@@ -912,6 +954,7 @@ def event_edit():
 
     if session['user_info'][0]!=event_info[8]:
         msg = '作成者ではないため編集出来ません'
+        session['msg'] = msg
         return redirect(url_for('event_thread_check',id=event_info[0],msg=msg))
     else:
         return render_template('user/event_edit.html',event_info=event_info)
@@ -929,6 +972,8 @@ def event_edit_result():
 
     count = db.event_update(event_id,title,start_day,end_day,start_time,end_time,url,explanation)
     if(count==1):
+        msg = 'イベント編集しました。'
+        session['msg'] = msg
         return redirect(url_for('event_edit_success'))
     else:
         msg = 'イベント編集に失敗しました。'
@@ -947,7 +992,7 @@ def event_delete():
 
     if session['user_info'][0] != event_info[8]:
         msg = '作成者ではないため削除出来ません'
-        session['message']=msg
+        session['msg']=msg
         return redirect(url_for('event_thread_check', id=event_info[0]))
     else:
         return render_template('user/event_delete.html', event_info=event_info)
@@ -963,7 +1008,7 @@ def event_delete_result():
 
     if(count4==1):
         msg = 'イベントを一件を削除しました'
-        session['message'] = msg
+        session['msg'] = msg
         return redirect(url_for('top',id=session['user_info'][0],checkcal=0,msg=msg))
     else:
         return redirect(url_for('event_thread_check', id=session['event_threadId']))
@@ -1146,6 +1191,9 @@ def report_post_protect(postId):
 
 @app.route('/calender_set',methods=['GET','POST'])
 def calender_set():
+    msg = session['msg']
+    session['msg'] = ''
+
     user_info = session['user_info']
     if not user_info:
         flash('セッション情報が不足しています。もう一度ログインしてください。')
@@ -1163,8 +1211,10 @@ def calender_set():
 
             db.calendar_hidden(comId,account_id,calendar_hidden_flag)
             msg = '変更を保存しました。'
-        return redirect(url_for('top',checkcal=0))
-    return render_template('user/calender_set.html',comInfo_list=comInfo_list)
-  
+            session['msg'] = msg
+        return redirect(url_for('calender_set',checkcal=0))
+
+    return render_template('user/calender_set.html',comInfo_list=comInfo_list,msg=msg)
+
 if __name__ == "__main__":
         app.run(debug=True)
