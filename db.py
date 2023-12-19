@@ -531,7 +531,7 @@ def getcomname_tocomId(comId):
     return name
     
 def getcomtThread_list_tocomId(comId):
-    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s and community_post.delete_flag=0 order by community_post.post_number asc"
+    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s and community_post.delete_flag=0 order by community_post.community_post_id desc"
     try:
         connection=get_connection()
         cursor=connection.cursor()
