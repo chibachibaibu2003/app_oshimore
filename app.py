@@ -759,6 +759,7 @@ def community_report_exe():
         if num == "4":
             flg = True
         reason = "スパム" if num == "0" else "攻撃またはハラスメント" if num == "1" else "有害な誤情報または暴力の是認" if num == "2" else "個人を特定できる情報を晒している" if num == "3" else "その他"
+        session['reason'] = reason
         return render_template('user/community_report_exe.html',flg=flg,reason=reason,community=community,num=num)
     else:
         return redirect(url_for('index'))
@@ -771,7 +772,7 @@ def community_report_success(id,num):
         reason = request.form.get('reason')
         if reason==None:
             reason = "None"
-        db.report_community(community[0],user_id,num,reason)
+        db.report_community(community[0],user_id,session['reason'],reason)
         msg = "通報完了しました"
         session['msg']=msg
         return redirect(url_for('top',checkcal=0))
@@ -840,9 +841,11 @@ def community_invitation(community_id):
 @app.route('/community_user_search', methods=['GET', 'POST'])
 def community_user_search():
     if 'user_info' in session:
+        community_id = session.get('comId')
+        account_id = session['user_info'][0]
         if request.method == 'POST':
             search_query = request.json['search_query']  # Ajax リクエストからデータを取得
-            search_results = db.search_users(search_query)
+            search_results = db.search_users(search_query,account_id,comId=community_id)
             return jsonify(search_results)  # 検索結果を JSON で返す
         return render_template('user/community_user_search.html')
     else:
@@ -852,9 +855,13 @@ def community_user_search():
 def user_detail_route(user_id):
     if 'user_info' in session:
         community_id = session.get('comId')
+        current_user_id = session['user_info'][0]
+        user_authority = db.check_user_authority(current_user_id, community_id)
+        has_invite_permission = user_authority == 1
+
         user_info = db.user_detail(user_id)
         if user_info:
-            return render_template('user/user_detail.html', user=user_info, community_id=community_id)
+            return render_template('user/user_detail.html', user=user_info, community_id=community_id, has_invite_permission=has_invite_permission)
         else:
             return 'ユーザーが見つかりません', 404
     else:
@@ -1029,64 +1036,66 @@ def confirm_report(post_id):
 
     success = db.insert_community_post_report(post_id, reporter_id, report_category, report_detail)
     if success:
-        flash('通報が完了しました。', 'success')
+        session['msg'] = '通報が完了しました。'
     else:
-        flash('通報に失敗しました。', 'error')
+        session['msg'] = '通報に失敗しました。'
     
     comId = session.get('comId')  # セッションからcomIdを取得
     if comId is None:
-        return redirect(url_for('index'))  # comIdがない場合は別のページへリダイレクト
+        return redirect(url_for('index'))  
 
-    return redirect(url_for('community',id=comId,checkcal=0))
+    return redirect(url_for('community', id=comId, checkcal=0))
 
 @app.route('/editprofile', methods=['GET', 'POST'])
 def editprofile():
     user_info = session.get('user_info')
-    print("Session user_info:", user_info)
     if not user_info:
         flash('セッション情報が不足しています。もう一度ログインしてください。')
         return redirect(url_for('login'))
     account_id = user_info[0]
 
-    # POSTリクエストの処理
     if request.method == 'POST':
         account_name = request.form['account_name']
         new_user_id = request.form['user_id']
         profile = request.form['profile']
         file = request.files['file']
 
-        # 推しリストの公開/非公開設定
-        all_oshi_ids = [oshi['community_id'] for oshi in db.get_oshi_list(account_id)]
-        oshi_list_settings = {str(oshi_id): 0 for oshi_id in all_oshi_ids}
-        for key in request.form:
-            if key.startswith('oshi_'):
-                oshi_id = key.split('_')[1]
-                oshi_list_settings[oshi_id] = 1 - oshi_list_settings[oshi_id]
-
-        # AWS S3への画像アップロード
-        if file and file.filename != '':
-            filename = f'user{account_id}_icon.png'
-            s3 = boto3.client('s3',
-                            aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
-                            region_name=os.environ.get('AWS_DEFAULT_REGION'))
-            s3.upload_fileobj(file, 'oshimore', f'img/{filename}')
-            icon_url = filename
+        # ユーザーIDの重複チェック
+        if new_user_id != user_info[1] and db.check_user_id_exists(new_user_id):
+            msg = 'このユーザーIDは既に使用されています。別のIDを選択してください。'
         else:
-            # 画像がアップロードされていない場合、以前のアイコンURLを使用
-            icon_url = user_info[7]
+          # 推しリストの公開/非公開設定
+            all_oshi_ids = [oshi['community_id'] for oshi in db.get_oshi_list(account_id)]
+            oshi_list_settings = {str(oshi_id): 0 for oshi_id in all_oshi_ids}
+            for key in request.form:
+                if key.startswith('oshi_'):
+                    oshi_id = key.split('_')[1]
+                    oshi_list_settings[oshi_id] = 1 - oshi_list_settings[oshi_id]
 
-        # データベースの更新
-        update_result = db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
-        if update_result:  # update_resultがTrueの場合
-            updated_user_info = db.get_user_profile(account_id)
-            if updated_user_info:
-                session['user_info'] = updated_user_info
-                msg = 'プロフィールが更新されました。'
+            # AWS S3への画像アップロード
+            if file and file.filename != '':
+                filename = f'user{account_id}_icon.png'
+                s3 = boto3.client('s3',
+                                  aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                                  aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                                  region_name=os.environ.get('AWS_DEFAULT_REGION'))
+                s3.upload_fileobj(file, 'oshimore', f'img/{filename}')
+                icon_url = filename
+            else:
+                # 画像がアップロードされていない場合、以前のアイコンURLを使用
+                icon_url = user_info[7]
+
+            # データベースの更新
+            update_result = db.update_user_profile(account_id, new_user_id, account_name, profile, icon_url,oshi_list_settings)
+            if update_result:
+                updated_user_info = db.get_user_profile(account_id)
+                if updated_user_info:
+                    session['user_info'] = updated_user_info
+                    msg = 'プロフィールが更新されました。'
+                else:
+                    msg = 'プロフィールの更新に失敗しました。'
             else:
                 msg = 'プロフィールの更新に失敗しました。'
-        else:  # update_resultがFalseの場合
-            msg = 'プロフィールの更新に失敗しました。'
 
         session['msg'] = msg
         return redirect(url_for('editprofile'))
@@ -1099,11 +1108,10 @@ def editprofile():
             'profile': user_info[6],
             'icon_url': user_info[7]
         }
-    msg=session['msg']
-    session['msg']=''
-    oshi_list = db.get_oshi_list(account_id)  
-    return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
-
+        msg = session.get('msg', '')
+        session['msg'] = ''
+        oshi_list = db.get_oshi_list(account_id)  
+        return render_template('user/editprofile.html', user=user_data, oshis=oshi_list, msg=msg)
 
 @app.route('/community_auth_change', methods=['GET', 'POST'])
 def community_auth_change():
@@ -1112,24 +1120,24 @@ def community_auth_change():
         return redirect(url_for('login'))
     
     account_id = session['user_info'][0]
-    community_id = session.get('community_id') 
+    community_id = session['comId']
 
     if request.method == 'POST':
-        print("Received POST Data:", request.form)  
+        print("Received POST Data:", request.form)
         form_data = dict(request.form)
         for key, values in request.form.lists():
             if key.startswith('authority_'):
                 member_id = key.split('_')[-1]
-                new_authority = values[-1]  
+                new_authority = values[-1]
                 db.update_authority(member_id, new_authority)
             elif key.startswith('community_authority_'):
                 member_id = key.split('_')[-1]
-                new_community_authority = values[-1]  
+                new_community_authority = values[-1]
                 db.update_community_authority(member_id, new_community_authority)
 
         return redirect(url_for('community_auth_change', community_id=community_id))
 
-    members = db.get_community_members(account_id)
+    members = db.get_community_members(community_id)
     return render_template('user/community_auth_change.html', members=members)
 
 @app.route('/report_post_list')
@@ -1205,7 +1213,6 @@ def calender_set():
             msg = '変更を保存しました。'
             session['msg'] = msg
         return redirect(url_for('calender_set',checkcal=0))
-
 
     return render_template('user/calender_set.html',comInfo_list=comInfo_list,msg=msg)
 

@@ -123,3 +123,67 @@ def user_ban():
     else:
         return redirect(url_for('index'))
     
+@admin_bp.route('/community_menu')
+def community_menu():
+    if 'user_info' in session:
+        return render_template('admin/community_menu.html')
+    else:
+        return redirect(url_for('index'))
+    
+@admin_bp.route('/report_community_search')
+def report_community_search():
+    if 'user_info' in session:
+        return render_template('admin/community_search.html')
+    else:
+        return redirect(url_for('index'))
+    
+@admin_bp.route('/community_search',methods=['POST'])
+def community_search():
+    if 'user_info' in session:
+        keyword = request.form.get('name')
+        result = db.report_community_search(keyword)
+        return render_template('admin/community_search_result.html',keyword=keyword,result=result)
+    else:
+        return redirect(url_for('index'))
+    
+@admin_bp.route('/community_management_set/<int:id>')
+def community_management_set(id):
+    if 'user_info' in session:
+        session['id'] = id
+        return redirect(url_for('admin.community_management')) 
+    else:
+        return redirect(url_for('index'))
+    
+@admin_bp.route('/community_management')
+def community_management():
+    if 'user_info' in session:
+        id = session['id'] 
+        result = db.select_community(id)
+        cushion = db.account_id_search(result[0])
+        name = db.user_id_search(cushion)
+        report = db.report_count(result[0])
+        cnt = len(report)
+        session['community_id'] = id
+        return render_template('admin/community_ban.html',community=result,name=name,report=report,cnt=cnt)
+    else:
+        return redirect(url_for('index'))
+    
+@admin_bp.route('/commuinty_ban_check')
+def community_ban_check():
+    if 'user_info' in session:
+        return render_template('admin/community_ban_check.html')
+    else:
+        return redirect(url_for('index'))
+
+    
+@admin_bp.route('/community_ban')
+def community_ban():
+    if 'user_info' in session:
+        msg="BANしました！"
+        session['msg']=msg
+        print(session['community_id'])
+        db.ban_community(session['community_id'])
+        db.delete_rc(session['community_id'])
+        return redirect('admin_menu')
+    else:
+        return redirect(url_for('index'))

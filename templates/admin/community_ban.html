@@ -1,0 +1,27 @@
+{% extends "header_edit.html"%}
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='/css/admin_search.css')}}">
+<link rel="stylesheet" href="/static/css/search.css">
+{% endblock %}
+{% block content %}
+<div class="menu_title_box">
+    <a class="menu_title">コミュニティ管理</a>
+    <a class="ban_button"href="{{url_for('admin.community_ban_check')}}">アカウントBAN</a>
+    <a  href="{{url_for('admin.community_menu')}}"><i class="fa-solid fa-arrow-right fontawesome-size"></i></a>
+</div>
+<div  class='commu_title'>
+    <a><spam  class='lion'>{{community[1]}}　@{{name[0]}}</span><span class='gazelle'>通報回数：{{cnt}}</span></a>
+</div>
+<div class="commuinty_report">
+<div class="report_post_box">
+    {%for post in report%}
+    <div class="post_box">
+        <div class="report_reason_box">
+            <a class="report_reason">通報理由:{{post[3]}}</a><br>
+            <p class="report_post">{{post[4]}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}

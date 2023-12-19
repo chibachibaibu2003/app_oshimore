@@ -47,23 +47,22 @@ input:focus{
 
 
 .btn{
-    position: absolute;
-    left:  43%;
-    top:65%;
-
-    display: block;
+  position: absolute;
+  left:  43%;
+  top:65%;
+  display: block;
 	vertical-align: middle;
 	text-decoration: none;
 	width: 180px;
-    height: 45px;
+  height: 45px;
 	padding: 0;
 	font-weight: lighter;
 	border-radius: 0.4rem;
-    border: 1px gray solid;
+  border: 1px gray solid;
 	background: #FFA954;
 	color: #ffffff;
-    font-size: 27px;
-    text-align: center;
+  font-size: 27px;
+  text-align: center;
 }
 
 .btn:hover {
@@ -173,4 +172,30 @@ input:focus{
     border: none;
     color: black;
     width: 100%;
+}
+
+.hatafuku{
+  margin-top: -190px;
+}
+
+.commu_title{
+  text-align: center;
+  margin-top: 20px;
+  margin-left: 150px;
+  margin-right: 150px;
+  margin-bottom: auto;
+
+}
+
+.lion{
+  width: 100%;
+  float: left;
+  font-size: 24px;
+  border: 3px solid #000 ;
+}
+
+.gazelle{
+  width: 20%;
+  float: right;
+  font-size: 24px;
 }

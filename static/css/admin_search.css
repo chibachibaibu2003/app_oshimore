@@ -65,6 +65,8 @@
 .result-item {
     background-color: white;
     border: 1px solid #ccc;
+    text-decoration: none;
+    color: black;
     border-radius: 50px;
     padding: 15px 20px;
     margin: 10px auto;
@@ -216,4 +218,8 @@
     border: 1px solid black;
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.commuinty_report{
+    margin-top: 100px;
 }

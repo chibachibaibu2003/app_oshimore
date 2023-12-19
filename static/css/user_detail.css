@@ -1,8 +1,8 @@
-/* user_detail.css */
 
-.title h2{
-  text-align:center;
-  color:red;
+.title h1 {
+  font-size: 40px;
+  font-weight: normal;
+  text-align: center;
 }
 
 .fontawesome-size{
@@ -132,5 +132,29 @@
   background-color: #e5942d;
 }
 
+.no-permission {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.no-permission p {
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.no-permission button {
+  background-color: #ccc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: not-allowed;
+  border-radius: 5px;
+  width: 200px;
+}
+
+.no-permission button:hover {
+  background-color: #bbb;
+}
 
 

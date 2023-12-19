@@ -531,7 +531,7 @@ def getcomname_tocomId(comId):
     return name
     
 def getcomtThread_list_tocomId(comId):
-    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s and community_post.delete_flag=0 order by community_post.post_number asc"
+    sql="SELECT community_post.community_post_id, community_post.community_id, community_post.post, community_post.post_number, account.account_id, account.account_name, account.icon_url FROM community_post JOIN account ON community_post.account_id =account.account_id WHERE community_post.community_id=%s and community_post.delete_flag=0 order by community_post.community_post_id desc"
     try:
         connection=get_connection()
         cursor=connection.cursor()
@@ -666,20 +666,25 @@ def get_community_data(community_id):
         cursor.close()
         connection.close()
 
-def search_users(query):
-    """
-    ユーザー名またはユーザーIDで部分一致検索を行い、該当するユーザーのリストを返す。
-    """
+def search_users(query, accId, comId):
     connection = get_connection()
     cursor = connection.cursor()
     try:
-        # ユーザー名またはユーザーIDで検索
-        sql = "SELECT account_name, user_id, icon_url FROM account WHERE account_name LIKE %s OR user_id LIKE %s "
-        cursor.execute(sql, (f'%{query}%', f'%{query}%'))
+        sql = """
+        SELECT a.account_name, a.user_id, a.icon_url, a.account_id FROM account a WHERE (a.account_name LIKE %s OR a.user_id LIKE %s) and a.ban_flag != 1 and a.del_flag != 1 and a.account_id != %s and a.account_auth!=1
+        and NOT EXISTS (
+            SELECT 1 
+            FROM register_community rc
+            WHERE rc.community_id = %s AND rc.account_id = a.account_id
+        )"""
+
+        keyword = '%' + query + '%'
+        cursor.execute(sql, (keyword, keyword, accId, comId))
         users = cursor.fetchall()
+
         return [{'account_name': user[0], 'user_id': user[1], 'icon_url': user[2]} for user in users]
     except Exception as e:
-        print(e)
+        print("エラー:", e)
         return []
     finally:
         cursor.close()
@@ -692,6 +697,21 @@ def report_user_search(query,accId):
         cursor = connection.cursor()
         keyword='%'+query+'%'
         cursor.execute(sql,(keyword,keyword,accId))
+        community_information = cursor.fetchall()
+    except psycopg2.DatabaseError:
+        community_information=[]
+    finally:
+        cursor.close()
+        connection.close()
+    return community_information
+
+def report_community_search(query):
+    sql="SELECT * FROM community WHERE community_name LIKE %s OR favorite_name LIKE %s"
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        keyword='%'+query+'%'
+        cursor.execute(sql,(keyword,keyword))
         community_information = cursor.fetchall()
     except psycopg2.DatabaseError:
         community_information=[]
@@ -732,6 +752,21 @@ def user_detail(user_id):
     except Exception as e:
         print(e)
         return None
+    
+def check_user_authority(account_id, community_id):
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        sql = "SELECT authority FROM register_community WHERE account_id = %s AND community_id = %s"
+        cursor.execute(sql, (account_id, community_id))
+        result = cursor.fetchone()
+        return result[0] if result else None
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        cursor.close()
+        connection.close()
 
 
 """
@@ -1128,7 +1163,6 @@ def get_user_profile(account_id):
         connection.close()
 
 def update_user_profile(account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings):
-    print("これまでのセッション情報:", account_id, new_user_id, account_name, profile, icon_url, oshi_list_settings)
     connection = get_connection()
     cursor = connection.cursor()
     try:
@@ -1314,21 +1348,21 @@ def get_members_with_auth():
     finally:
         cursor.close()
         connection.close()
-def get_community_members(account_id):
+def get_community_members(community_id):
     """
-    指定されたアカウントIDに基づいて、そのユーザーが所属するコミュニティのメンバー情報を取得します。
+    指定されたコミュニティIDに基づいて、そのコミュニティのメンバー情報を取得します。
     """
     sql = """
     SELECT a.account_id, a.account_name, rc.authority, rc.community_authority
-    FROM account a
+    FROM account as a
     JOIN register_community rc ON a.account_id = rc.account_id
-    WHERE rc.community_id = (SELECT community_id FROM register_community WHERE account_id = %s)
+    WHERE rc.community_id = %s
     AND rc.community_authority != 1
     """
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        cursor.execute(sql, (account_id,))
+        cursor.execute(sql, (community_id,))
         members = cursor.fetchall()
         return [
             {
@@ -1500,7 +1534,6 @@ def del_community_post(postId):
     try:
         connection = get_connection()
         cursor = connection.cursor()
-        
         cursor.execute(sql, (postId,))
         count = cursor.rowcount 
         connection.commit()
@@ -1512,6 +1545,64 @@ def del_community_post(postId):
         cursor.close()
         connection.close()
     return count
+
+def account_id_search(id):
+    sql="SELECT account_id FROM register_community WHERE community_id = %s and community_authority = 1"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        result=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def user_id_search(id):
+    sql="SELECT user_id FROM account WHERE account_id = %s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        result=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def report_count(id):
+    sql="SELECT * from community_report WHERE community_id = %s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def ban_community(id):
+    sql="delete from community where community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
+
 
 def del_community_post_reportList(postId):
     sql="delete from community_post_report where community_post_id=%s"
@@ -1531,8 +1622,25 @@ def del_community_post_reportList(postId):
         connection.close()
     return count
 
+def delete_rc(id):
+    sql="delete from register_community where community_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(id,))
+        count=cursor.rowcount
+        connection.commit()
+    except psycopg2.DatabaseError:
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count  
+ 
+  
 def getcomId_authority_to_accId(id):
     sql='SELECT community_id,community_authority FROM register_community WHERE account_id=%s order by community_id asc'
+
     try:
         connection=get_connection()
         cursor=connection.cursor()
@@ -1591,7 +1699,7 @@ def count_community_member(comId):
         cursor.close()
         connection.close()
     return count
-
+  
 
 def del_register_community(accId):
     sql = "DELETE FROM register_community WHERE account_id=%s"
@@ -1610,3 +1718,4 @@ def del_register_community(accId):
         cursor.close()
         connection.close()
     return count
+
