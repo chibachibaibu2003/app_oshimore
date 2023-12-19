@@ -813,9 +813,13 @@ def community_user_search():
 def user_detail_route(user_id):
     if 'user_info' in session:
         community_id = session.get('comId')
+        current_user_id = session['user_info'][0]
+        user_authority = db.check_user_authority(current_user_id, community_id)
+        has_invite_permission = user_authority == 1
+
         user_info = db.user_detail(user_id)
         if user_info:
-            return render_template('user/user_detail.html', user=user_info, community_id=community_id)
+            return render_template('user/user_detail.html', user=user_info, community_id=community_id, has_invite_permission=has_invite_permission)
         else:
             return 'ユーザーが見つかりません', 404
     else:
@@ -987,15 +991,15 @@ def confirm_report(post_id):
 
     success = db.insert_community_post_report(post_id, reporter_id, report_category, report_detail)
     if success:
-        flash('通報が完了しました。', 'success')
+        session['msg'] = '通報が完了しました。'
     else:
-        flash('通報に失敗しました。', 'error')
+        session['msg'] = '通報に失敗しました。'
     
     comId = session.get('comId')  # セッションからcomIdを取得
     if comId is None:
-        return redirect(url_for('index'))  # comIdがない場合は別のページへリダイレクト
+        return redirect(url_for('index'))  
 
-    return redirect(url_for('community',id=comId,checkcal=0))
+    return redirect(url_for('community', id=comId, checkcal=0))
 
 @app.route('/editprofile', methods=['GET', 'POST'])
 def editprofile():
@@ -1015,8 +1019,6 @@ def editprofile():
         if new_user_id != user_info[1] and db.check_user_id_exists(new_user_id):
             msg = 'このユーザーIDは既に使用されています。別のIDを選択してください。'
         else:
-            
-            
           # 推しリストの公開/非公開設定
             all_oshi_ids = [oshi['community_id'] for oshi in db.get_oshi_list(account_id)]
             oshi_list_settings = {str(oshi_id): 0 for oshi_id in all_oshi_ids}

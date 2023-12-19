@@ -36,9 +36,16 @@
     </div>
 </div>
     <!-- 招待フォーム -->
-    <div class="invite-form">
-        <form action="{{ url_for('invite_user', community_id=community_id, account_id=user.account_id) }}" method="post">
-            <button type="submit">招待する</button>
-        </form>
-    </div>
+    {% if has_invite_permission %}
+        <div class="invite-form">
+            <form action="{{ url_for('invite_user', community_id=community_id, account_id=user.account_id) }}" method="post">
+                <button type="submit">招待する</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="no-permission">
+            <p>招待権限がありません</p>
+            <button disabled>招待する</button>
+        </div>
+{% endif %}
 {% endblock %}
