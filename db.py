@@ -137,7 +137,7 @@ def certification_mail(mail, code):
     return flg
 
 def pass_certification_exe(mail, code):
-    sql = "SELECT reset_id,mail,code from reset_password where mail = %s and code = %s"
+    sql = "SELECT reset_id,mail,code from password_reset where mail = %s and code = %s"
     flg = False
     
     try :
