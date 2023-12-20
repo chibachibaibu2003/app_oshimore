@@ -219,10 +219,12 @@ def mypage():
         comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
         if(len(comIdList)!=0):
             for comId in comIdList:
-                if (comId != 0):
-                    eventList.append(db.getevent_to_comId(comId,searchDay))
+                print(comId[0])
+                if comId[0] != 0:
+                     eventList.append(db.getevent_to_comId(comId,searchDay))
                 else:
-                    eventList.append(db.getevent_to_accId(accId,comId,searchDay))
+                    eventList.append(db.getevent_to_accId(accId,searchDay))
+
         if(len(comIdList2)!=0):
             for comId in comIdList2:
                 datas.append(db.getcomInfo_to_comId(comId))
