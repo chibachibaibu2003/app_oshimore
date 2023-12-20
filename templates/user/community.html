@@ -26,12 +26,12 @@
                     {%if data[7]==0%}
                         <label for="goodcheck{{loop.index}}">
                             <img src="{{url_for('static',filename='/imges/empty_good.png')}}" id="test1">
-                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}">いいね
+                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}"><a>{{data[8]}}</a>いいね
                         </label>
                     {% else %}
                         <label for="goodcheck{{loop.index}}">
                             <img src="{{url_for('static',filename='/imges/good.png')}}" id="test1">
-                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}"checked>いいね
+                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}"checked><a>{{data[8]}}</a>いいね
                         </label>
                     {% endif %}
                     {% if data[4] != session['user_info'][0] %}
@@ -221,6 +221,8 @@ goodlabel.forEach((elm,i)=>{
                 url:'/community/'+comId+'/'+checkcal
             })
             e.srcElement.setAttribute('checked','')
+            let goodnum=Number(e.srcElement.nextElementSibling.firstChild.data)
+            e.srcElement.nextElementSibling.firstChild.data=goodnum+1
             e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/good.png')}}"
         }else{
             let num= e.srcElement.dataset.num -1
@@ -234,6 +236,8 @@ goodlabel.forEach((elm,i)=>{
                 url:'/community/'+comId+'/'+checkcal
             })
             e.srcElement.removeAttribute('checked')
+            let goodnum=Number(e.srcElement.nextElementSibling.firstChild.data)
+            e.srcElement.nextElementSibling.firstChild.data=goodnum-1
             e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/empty_good.png')}}"
         }
     })
