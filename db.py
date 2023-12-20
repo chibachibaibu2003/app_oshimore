@@ -572,6 +572,9 @@ def getcomThread_goodnum(compostId):
         connection.close()
     return count
 
+def geteventThread_goodnum(eventpostId):
+    sql="SELECT count(event_good_id) FROM event_good WHERE event_post_id=%s"
+
 def geteventThread_list_toeventId(eventId):
     sql="SELECT event_post.event_post_id, event_post.event_id, event_post.post, account.account_id, account.account_name FROM event_post JOIN account ON event_post.account_id =account.account_id WHERE event_post.event_id=%s and event_post.delete_flag=0 order by event_post.event_post_id asc"
     try:
@@ -1395,8 +1398,39 @@ def event_postList_toaccId(accId):
         connection.close()
     return result
 
+def community_postList_toaccId(accId):
+    sql="select*from community_post where account_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(accId,))
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
 def event_reportList_toPostId(postId):
     sql="select event_post_report.reporter_id, event_post_report.post_report_reason, event_post_report.post_report_category, event_post.post, event_post.post_day from event_post join event_post_report on event_post_report.event_post_id =event_post.event_post_id where event_post.event_post_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(postId,))
+        result=cursor.fetchone()
+        cnt=cursor.rowcount
+        if (cnt==0):
+            result=0
+    except psycopg2.DatabaseError :
+        result = 0
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def community_reportList_toPostId(postId):
+    sql="select community_post_report.reporter_id, community_post_report.post_report_reason, community_post_report.post_report_category, community_post.post, community_post.post_day from community_post join community_post_report on community_post_report.community_post_id =community_post.community_post_id where community_post.community_post_id=%s"
     try:
         connection=get_connection()
         cursor=connection.cursor()

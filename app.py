@@ -295,7 +295,7 @@ def event_thread():
         event_thread_list=db.geteventThread_list_toeventId(id)
         
         for data in event_thread_list:
-            goodcheck=db.geteventThread_good(data[0],data[3])
+            goodcheck=db.geteventThread_good(data[0],session['user_info'][0])
             event_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],goodcheck[0]])
         URL=info_list[0][1]
         pattern='https?://'
@@ -429,7 +429,7 @@ def community_page():
         searchDay=f"{session['year']}-{session['month']}-"
         community_thread_list=db.getcomtThread_list_tocomId(session['comId'])
         for data in community_thread_list:
-            goodcheck=db.getcomThread_good(data[0],data[4])
+            goodcheck=db.getcomThread_good(data[0],session['user_info'][0])
             good_num=db.getcomThread_goodnum(data[0])
             community_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],data[5],data[6],goodcheck[0],good_num[0]])
             cnt+=1
