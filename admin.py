@@ -51,6 +51,7 @@ def user_detail(id):
     if 'user_info' in session and session['user_info'][8]==1:
         report_post_list=[]
         events=db.event_postList_toaccId(id)
+        events2=db.community_postList_toaccId(id)
         cnt=0
         for event_info in events:
             info_list=[]
@@ -78,6 +79,16 @@ def user_detail(id):
                     info_list[2]='その他'
                     report_post_list.append(info_list)
                     cnt+=1
+                    
+        for event_info2 in events2:
+            info_list=[]
+            event=db.community_reportList_toPostId(event_info2[0])
+            if event!=0:
+                cnt+=1
+                for info in event:
+                    info_list.append(info)
+                report_post_list.append(info_list)
+        
         session['reporter_id']=id
         session['event_post_list']=report_post_list
         session['report_num']=cnt
