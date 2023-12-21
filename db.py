@@ -574,6 +574,17 @@ def getcomThread_goodnum(compostId):
 
 def geteventThread_goodnum(eventpostId):
     sql="SELECT count(event_good_id) FROM event_good WHERE event_post_id=%s"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,(eventpostId,))
+        count=cursor.fetchone()
+    except psycopg2.DatabaseError :
+        count=0
+    finally:
+        cursor.close()
+        connection.close()
+    return count
 
 def geteventThread_list_toeventId(eventId):
     sql="SELECT event_post.event_post_id, event_post.event_id, event_post.post, account.account_id, account.account_name FROM event_post JOIN account ON event_post.account_id =account.account_id WHERE event_post.event_id=%s and event_post.delete_flag=0 order by event_post.event_post_id asc"
@@ -1465,8 +1476,22 @@ def ban_user_toaccId(accId):
         
     return count
 
-def ban_userList_search():
-    sql="select distinct on (account.account_id) account.account_name , account.user_id , event_post_report.event_post_id from account join event_post on account.account_id=event_post.account_id join event_post_report on event_post.event_post_id =event_post_report.event_post_id where account.ban_flag!=1 and account.del_flag!=1"
+def ban_event_userList_search():
+    sql="select distinct on (account.account_id) account.account_name , account.user_id , event_post_report.event_post_id,account.account_id from account join event_post on account.account_id=event_post.account_id join event_post_report on event_post.event_post_id =event_post_report.event_post_id where account.ban_flag!=1 and account.del_flag!=1 order by account.account_id asc"
+    try:
+        connection=get_connection()
+        cursor=connection.cursor()
+        cursor.execute(sql,())
+        result=cursor.fetchall()
+    except psycopg2.DatabaseError :
+        result = []
+    finally:
+        cursor.close()
+        connection.close()
+    return result
+
+def ban_community_userList_search():
+    sql="select distinct on (account.account_id) account.account_name , account.user_id , community_post_report.community_post_id,account.account_id from account join community_post on account.account_id=community_post.account_id join community_post_report on community_post.community_post_id =community_post_report.community_post_id where account.ban_flag!=1 and account.del_flag!=1 order by account.account_id asc"
     try:
         connection=get_connection()
         cursor=connection.cursor()

@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.secret_key=os.environ['sec_key']
 
 app.register_blueprint(admin_bp)
-app.register_blueprint(user_bp)
 
 @app.route('/')
 def index():
@@ -171,9 +170,7 @@ def password_update_success():
     b_password = request.form.get('password')
     mail = session['email']
     salt = db.get_salt()
-    print(salt)
     password = db.get_hash(b_password,salt)
-    print(password)
     db.update_password(password,salt,mail)
     db.delete_reset_password(mail)
     return render_template('user/update_success.html')
@@ -219,9 +216,8 @@ def mypage():
         comIdList3=db.getcomId_to_accId_invit(session['user_info'][0])
         if(len(comIdList)!=0):
             for comId in comIdList:
-                print(comId[0])
                 if comId[0] != 0:
-                     eventList.append(db.getevent_to_comId(comId,searchDay))
+                    eventList.append(db.getevent_to_comId(comId,searchDay))
                 else:
                     eventList.append(db.getevent_to_accId(accId,searchDay))
 
@@ -279,11 +275,10 @@ def event_thread():
         if request.method=='POST':
             postgood=request.form['post_good']
             postId=int(request.form['postId'])
-            accId=int(request.form['accId'])
             if (postgood=="0"):
-                cnt=db.event_post_good_del(postId,accId)
+                cnt=db.event_post_good_del(postId,session['user_info'][0])
             elif (postgood=="1"):
-                cnt=db.event_post_good(postId,accId)
+                cnt=db.event_post_good(postId,session['user_info'][0])
             return jsonify({'msg' : 'success'})
         
         id=session['event_threadId']
@@ -298,7 +293,9 @@ def event_thread():
         
         for data in event_thread_list:
             goodcheck=db.geteventThread_good(data[0],session['user_info'][0])
-            event_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],goodcheck[0]])
+            good_num=db.geteventThread_goodnum(data[0])
+            print(good_num)
+            event_thread_list_all.append([data[0],data[1],data[2],data[3],data[4],goodcheck[0],good_num])
         URL=info_list[0][1]
         pattern='https?://'
         res = re.match(pattern, URL)
@@ -447,7 +444,6 @@ def community_set():
         comAuth=db.get_comAuth(accId,comId)
         msg = session['msg']
         session['msg'] = ''
-        print(comAuth)
         if (comAuth[0]==0):
             return render_template('user/community_set_user.html',comId=comId,checkcal=0,msg=msg)
         elif (comAuth[0]==1):
@@ -660,7 +656,6 @@ def community_withdrawal_result():
                 accId=db.get_nextReader_num(session['comId'])
                 db.change_community_reader(accId[0],session['comId'])
         else:
-            print(com_auth)
             db.remove_register_community(session['user_info'][0],session['comId'])
         return render_template('user/withdrawl_result.html')
     else:
@@ -1125,7 +1120,6 @@ def community_auth_change():
     community_id = session['comId']
 
     if request.method == 'POST':
-        print("Received POST Data:", request.form)
         form_data = dict(request.form)
         for key, values in request.form.lists():
             if key.startswith('authority_'):
@@ -1146,7 +1140,6 @@ def community_auth_change():
 def report_post_list():
     if 'user_info' in session:
         report_list=db.community_post_reportList(session['comId'])
-        print(report_list)
         msg=session['msg']
         session['msg']=''
         return render_template('user/community_post_reportList.html',report_list=report_list,msg=msg)
@@ -1172,7 +1165,6 @@ def report_post_select():
 @app.route('/report_post_delete/<int:postId>')
 def report_post_delete(postId):
     if 'user_info' in session:
-        print(postId)
         session['msg']='投稿を削除しました'
         db.del_community_post(session['report_post_id'])
         db.del_community_post_reportList(session['report_post_id'])
@@ -1183,7 +1175,6 @@ def report_post_delete(postId):
 @app.route('/report_post_protect/<int:postId>')
 def report_post_protect(postId):
     if 'user_info' in session:
-        print(postId)
         session['msg']='投稿を保護しました'
         db.del_community_post_reportList(session['report_post_id'])
         return redirect(url_for('report_post_list'))
