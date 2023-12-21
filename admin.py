@@ -29,9 +29,32 @@ def user_menu():
 @admin_bp.route('/report_user_list')
 def report_user_list():
     if 'user_info' in session and session['user_info'][8]==1:
-        user_list=db.ban_userList_search()
-        print(user_list)
-        return render_template('admin/user_list.html',user_list=user_list)
+        Info_list=[]
+        checknum=0
+        user_list=db.ban_event_userList_search()
+        user_list2=db.ban_community_userList_search()
+        if len(user_list)==0:
+            for Info in user_list2:
+                Info_list.append(Info)
+        elif len(user_list2)==0:
+            for Info in user_list:
+                Info_list.append(Info)
+        else:
+            # for Info in user_list:
+            #     Info_list.append(Info)
+            # for Info in user_list2:
+            #     Info_list.append(Info)
+            Info_list.extend(user_list)
+            Info_list.extend(user_list2)
+            for Info in Info_list:
+                cnt=0
+                accId=Info[3]
+                for Info2 in Info_list:
+                    if cnt!=checknum and accId ==Info2[3]:
+                        del Info_list[cnt]
+                    cnt+=1
+                checknum+=1
+        return render_template('admin/user_list.html',user_list=Info_list)
     else:
         return redirect(url_for('index'))    
 
@@ -192,7 +215,6 @@ def community_ban():
     if 'user_info' in session:
         msg="BANしました！"
         session['msg']=msg
-        print(session['community_id'])
         db.ban_community(session['community_id'])
         db.delete_rc(session['community_id'])
         return redirect('admin_menu')

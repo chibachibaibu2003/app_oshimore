@@ -38,12 +38,12 @@
                     {%if data[5]==0%}
                         <label for="goodcheck{{loop.index}}">
                             <img src="{{url_for('static',filename='/imges/empty_good.png')}}" id="test1">
-                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}">いいね
+                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}"><a>{{data[6][0]}}</a>いいね
                         </label>
                     {% else %}
                         <label for="goodcheck{{loop.index}}">
                             <img src="{{url_for('static',filename='/imges/good.png')}}" id="test1">
-                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}"checked>いいね
+                            <input type="checkbox"id="goodcheck{{loop.index}}" class="goodcheck"data-num="{{loop.index}}"checked><a>{{data[6][0]}}</a>いいね
                         </label>
                     {% endif %}
                     <a class="thread_report" href="{{url_for('event_thread_report_check',id=data[0])}}">通報</a>
@@ -76,6 +76,8 @@ goodlabel.forEach((elm,i)=>{
                 url:'/event_thread'
             })
             e.srcElement.setAttribute('checked','')
+            let goodnum=Number(e.srcElement.nextElementSibling.firstChild.data)
+            e.srcElement.nextElementSibling.firstChild.data=goodnum+1
             e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/good.png')}}"
         }else{
             let num= e.srcElement.dataset.num -1
@@ -89,6 +91,8 @@ goodlabel.forEach((elm,i)=>{
                 url:'/event_thread'
             })
             e.srcElement.removeAttribute('checked')
+            let goodnum=Number(e.srcElement.nextElementSibling.firstChild.data)
+            e.srcElement.nextElementSibling.firstChild.data=goodnum-1
             e.srcElement.previousElementSibling.src="{{url_for('static',filename='/imges/empty_good.png')}}"
         }
     })
